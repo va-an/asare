@@ -9,17 +9,8 @@
 <body class="bg-light">
 
 <br>
-<div class="container">
-    <div class="row">
-        <div class="col-md-2 mb-3">
-            <label for="rebalance-amount">Rebalance amount</label>
-            <input type="number" class="form-control" id="rebalance-amount" placeholder="" value="" required>
-            <div class="invalid-feedback">
-                Valid first name is required.
-            </div>
-        </div>
-    </div>
 
+<div class="container">
     <div class="row">
         <div class="col-md-2 mb-3">
             <label for="asset-1">Asset 1</label>
@@ -53,16 +44,16 @@
         </div>
 
         <div class="col-md-2 mb-3">
-            <label for="buy-or-sell-1">Buy or sell</label>
-            <input type="number" class="form-control" id="buy-or-sell-1" placeholder="" value="" required>
+            <label for="allocation-1">Current allocation</label>
+            <input type="number" class="form-control" id="allocation-1" placeholder="" value="" required>
             <div class="invalid-feedback">
                 Valid last name is required.
             </div>
         </div>
 
         <div class="col-md-2 mb-3">
-            <label for="allocation-1">Current allocation</label>
-            <input type="number" class="form-control" id="allocation-1" placeholder="" value="" required>
+            <label for="buy-or-sell-1">Buy or sell</label>
+            <input type="number" class="form-control" id="buy-or-sell-1" placeholder="" value="" required>
             <div class="invalid-feedback">
                 Valid last name is required.
             </div>
@@ -102,24 +93,192 @@
         </div>
 
         <div class="col-md-2 mb-3">
-            <label for="buy-or-sell-2">Buy or sell</label>
-            <input type="number" class="form-control" id="buy-or-sell-2" placeholder="" value="" required>
-            <div class="invalid-feedback">
-                Valid last name is required.
-            </div>
-        </div>
-
-        <div class="col-md-2 mb-3">
             <label for="allocation-2">Current allocation</label>
             <input type="number" class="form-control" id="allocation-2" placeholder="" value="" required>
             <div class="invalid-feedback">
                 Valid last name is required.
             </div>
         </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="buy-or-sell-2">Buy or sell</label>
+            <input type="number" class="form-control" id="buy-or-sell-2" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
     </div>
 
-    <button onclick="calculate()" class="btn btn-primary btn-lg btn-block" type="submit">Calculate rebalance</button>
+    <div class="row">
+        <div class="col-md-2 mb-3">
+            <label for="asset-3">Asset 3</label>
+            <input type="text" class="form-control" id="asset-3" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid first name is required.
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="count-3">Count</label>
+            <input type="number" class="form-control" id="count-3" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
 
+        <div class="col-md-2 mb-3">
+            <label for="price-3">Price</label>
+            <input type="number" class="form-control" id="price-3" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="desired-allocation-3">Desired allocation</label>
+            <input type="number" class="form-control" id="desired-allocation-3" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="allocation-3">Current allocation</label>
+            <input type="number" class="form-control" id="allocation-3" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="buy-or-sell-3">Buy or sell</label>
+            <input type="number" class="form-control" id="buy-or-sell-3" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2 mb-3">
+            <label for="asset-4">Asset 4</label>
+            <input type="text" class="form-control" id="asset-4" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid first name is required.
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="count-4">Count</label>
+            <input type="number" class="form-control" id="count-4" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="price-4">Price</label>
+            <input type="number" class="form-control" id="price-4" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="desired-allocation-4">Desired allocation</label>
+            <input type="number" class="form-control" id="desired-allocation-4" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="allocation-4">Current allocation</label>
+            <input type="number" class="form-control" id="allocation-4" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="buy-or-sell-4">Buy or sell</label>
+            <input type="number" class="form-control" id="buy-or-sell-4" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2 mb-3">
+            <label for="asset-5">Asset 5</label>
+            <input type="text" class="form-control" id="asset-5" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid first name is required.
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="count-5">Count</label>
+            <input type="number" class="form-control" id="count-5" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="price-5">Price</label>
+            <input type="number" class="form-control" id="price-5" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="desired-allocation-5">Desired allocation</label>
+            <input type="number" class="form-control" id="desired-allocation-5" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="allocation-5">Current allocation</label>
+            <input type="number" class="form-control" id="allocation-5" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="buy-or-sell-5">Buy or sell</label>
+            <input type="number" class="form-control" id="buy-or-sell-5" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+    </div>
+
+    <hr class="mb-4">
+
+    <div class="row">
+        <div class="col-md-2 mb-3">
+            <label for="rebalance-amount">Rebalance amount</label>
+            <input type="number" class="form-control" id="rebalance-amount" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid first name is required.
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <button onclick="calculate()" class="btn btn-primary btn-lg btn-block" type="submit">Calculate rebalance</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2 mb-3">
+            <button onclick="clear()" class="btn btn-primary btn-lg btn-block" type="submit">Clear</button>
+        </div>
+    </div>
 </div>
 
 

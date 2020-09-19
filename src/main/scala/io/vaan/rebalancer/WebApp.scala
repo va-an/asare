@@ -1,5 +1,7 @@
 package io.vaan.rebalancer
 
+import io.vaan.rebalancer.utils.JsUtils._
+import io.vaan.rebalancer.utils.MathUtils._
 import org.scalajs.dom
 import org.scalajs.dom.document
 import org.scalajs.dom.html.Input
@@ -72,16 +74,4 @@ object WebApp {
         x.copy(allocation = roundTo2(allocation))
       }
   }
-
-  def setDoubleById(id: String, number: Double): Unit =
-    document.getElementById(id).asInstanceOf[Input].valueAsNumber = number
-
-  def getStringById(id: String): String =
-    document.getElementById(id).asInstanceOf[Input].value
-
-  def getDoubleById(id: String): Double =
-    document.getElementById(id).asInstanceOf[Input].valueAsNumber
-
-  def roundTo2(x: Double): Double =
-    math.round(x * 100.0) / 100.0
 }
