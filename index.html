@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>rebalance service scala-js</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2 mb-3">
+            <label for="rebalance-amount">Rebalance amount</label>
+            <input type="number" class="form-control" id="rebalance-amount" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid first name is required.
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2 mb-3">
+            <label for="asset-1">Asset 1</label>
+            <input type="text" class="form-control" id="asset-1" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid first name is required.
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="count-1">Count</label>
+            <input type="number" class="form-control" id="count-1" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="price-1">Price</label>
+            <input type="number" class="form-control" id="price-1" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="desired-allocation-1">Desired allocation</label>
+            <input type="number" class="form-control" id="desired-allocation-1" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="buy-or-sell-1">Buy or sell</label>
+            <input type="number" class="form-control" id="buy-or-sell-1" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="allocation-1">Current allocation</label>
+            <input type="number" class="form-control" id="allocation-1" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2 mb-3">
+            <label for="asset-2">Asset 2</label>
+            <input type="text" class="form-control" id="asset-2" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid first name is required.
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <label for="count-2">Count</label>
+            <input type="number" class="form-control" id="count-2" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="price-2">Price</label>
+            <input type="number" class="form-control" id="price-2" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="desired-allocation-2">Desired allocation</label>
+            <input type="number" class="form-control" id="desired-allocation-2" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="buy-or-sell-2">Buy or sell</label>
+            <input type="number" class="form-control" id="buy-or-sell-2" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <label for="allocation-2">Current allocation</label>
+            <input type="number" class="form-control" id="allocation-2" placeholder="" value="" required>
+            <div class="invalid-feedback">
+                Valid last name is required.
+            </div>
+        </div>
+    </div>
+
+    <button onclick="calculate()" class="btn btn-primary btn-lg btn-block" type="submit">Calculate rebalance</button>
+
+</div>
+
+
+<!-- Include Scala.js compiled code -->
+<script type="text/javascript" src="./target/scala-2.13/asset-allocation-rebalancer-fastopt.js"></script>
+
+</body>
+</html>
