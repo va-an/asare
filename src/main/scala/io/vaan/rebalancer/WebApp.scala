@@ -36,33 +36,23 @@ object WebApp {
     val records = getRecords
     println(records)
 
-    val currentAllocation = calcCurrentAllocation(records)
-    println(currentAllocation)
+    val allocationCalculated = calcCurrentAllocation(records)
+    println("current allocation calculated")
+    allocationCalculated.foreach(x => println(x.ticker -> x.currentAllocation))
 
-    setDoubleById("allocation-1", currentAllocation(0).allocation)
-    setDoubleById("allocation-2", currentAllocation(1).allocation)
+    allocationCalculated.foreach(x =>
+      setDoubleById(
+        id = s"current-allocation-${x.rowId}",
+        doubleValue = x.currentAllocation.get
+      )
+    )
   }
 
   def getRecords: List[Record] = {
-    val r1 = Record(
-      ticker = getStringById("asset-1"),
-      count = getDoubleById("count-1").toInt,
-      price = getDoubleById("price-1"),
-      allocation = getDoubleById("desired-allocation-1"),
-      buyOrSell = None,
-      currentAllocation = None
-    )
-
-    val r2 = Record(
-      ticker = getStringById("asset-2"),
-      count = getDoubleById("count-2").toInt,
-      price = getDoubleById("price-2"),
-      allocation = getDoubleById("desired-allocation-2"),
-      buyOrSell = None,
-      currentAllocation = None
-    )
-
-    List(r1, r2)
+    (1 to 5).toList
+      .map(fetchRow)
+      .filter(_.isRight)
+      .map(_.right.get)
   }
 
   def calcCurrentAllocation(records: List[Record]): List[Record] = {
@@ -71,7 +61,7 @@ object WebApp {
       .map { x =>
         val amount = x.price * x.count
         val allocation = amount / sum * 100
-        x.copy(allocation = roundTo2(allocation))
+        x.copy(currentAllocation = Option(roundTo2(allocation)))
       }
   }
 }
