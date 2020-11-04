@@ -37,6 +37,7 @@ object WebApp {
     println(records)
 
     val allocationCalculated = calcCurrentAllocation(records)
+
     println("current allocation calculated")
     allocationCalculated.foreach(x => println(x.ticker -> x.currentAllocation))
 
