@@ -5,6 +5,7 @@ import io.vaan.rebalancer.utils.MathUtils._
 import org.scalajs.dom
 import org.scalajs.dom.document
 import org.scalajs.dom.html.Input
+import cats.implicits._
 
 import scala.scalajs.js.annotation.JSExportTopLevel
 
@@ -49,6 +50,7 @@ object WebApp {
     )
   }
 
+  // FIXME: looks like shit
   def getRecords: List[Record] = {
     (1 to 5).toList
       .map(fetchRow)
@@ -59,10 +61,11 @@ object WebApp {
   def calcCurrentAllocation(records: List[Record]): List[Record] = {
     val sum = records.map(x => x.price * x.count).sum
     records
-      .map { x =>
-        val amount = x.price * x.count
+      .map { record =>
+        val amount = record.price * record.count
         val allocation = amount / sum * 100
-        x.copy(currentAllocation = Option(roundTo2(allocation)))
+
+        record.copy(currentAllocation = roundTo2(allocation).some)
       }
   }
 }
