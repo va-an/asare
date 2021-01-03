@@ -7,3 +7,4 @@ jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "1.1.0"
 libraryDependencies += "org.typelevel" %%% "cats-core" % "2.3.1"
+libraryDependencies += "org.typelevel" %%% "cats-effect" % "2.3.1"
