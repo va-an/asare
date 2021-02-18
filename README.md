@@ -1,3 +1,10 @@
 # asset-allocation-rebalancer
 
-How to run build with auto-recompile: `$ ~fastOptJS`
+How to run: 
+
+```
+$ sbt
+~fastOptJS
+```
+
+Then open index.html in the project root.

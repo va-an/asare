@@ -12,7 +12,7 @@ import scala.scalajs.js.annotation.JSExportTopLevel
 import java.util.concurrent.atomic.AtomicInteger
 
 // FIXME: calculate allocation works with 5 rows only
-// TODO: only main method must be here
+// FIXME: refactor this big ball of mud
 // TODO: create buttons from scala-code
 object WebApp {
   val rowCounter = new AtomicInteger(1)
