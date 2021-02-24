@@ -1,10 +1,3 @@
-# asset-allocation-rebalancer
+# asare - asset allocation rebalancer
 
-How to run: 
-
-```
-$ sbt
-~fastOptJS
-```
-
-Then open index.html in the project root.
+2 projects in repo - for frontend and backend.
