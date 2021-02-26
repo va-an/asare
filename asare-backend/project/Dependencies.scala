@@ -12,5 +12,10 @@ object Dependencies {
       val `kind-projector` =
         "org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full
     }
+
+    case object augustjune {
+      val `context-applied` =
+        "org.augustjune" %% "context-applied" % "0.1.4"
+    }
   }
 }

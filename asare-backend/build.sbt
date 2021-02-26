@@ -19,14 +19,21 @@ ThisBuild / scalacOptions ++= Seq(
 lazy val core =
   project
     .in(file("core"))
-    .dependsOn(
-      org.typelevel.`cats-core`,
-      org.typelevel.`cats-effect`,
+    .settings(
+      libraryDependencies ++= Seq(
+        org.typelevel.`cats-core`,
+        org.typelevel.`cats-effect`
+      )
     )
+    .settings(commonSettings: _*)
 
-lazy val root =
+lazy val `asare-backend` =
   project
     .in(file("."))
     .aggregate(
       core
     )
+
+lazy val commonSettings = Seq(
+  addCompilerPlugin(org.augustjune.`context-applied`)
+)
