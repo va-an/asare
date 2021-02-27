@@ -22,7 +22,8 @@ lazy val core =
     .settings(
       libraryDependencies ++= Seq(
         org.typelevel.`cats-core`,
-        org.typelevel.`cats-effect`
+        org.typelevel.`cats-effect`,
+        org.scalatest.scalatest
       )
     )
     .settings(commonSettings: _*)

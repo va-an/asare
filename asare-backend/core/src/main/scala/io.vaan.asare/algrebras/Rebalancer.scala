@@ -29,12 +29,10 @@ object Rebalancer {
         )
 
       override def calcPurchase(rebalanceInput: RebalanceInput): F[Portfolio] =
-        calcExpectedPortfolio(rebalanceInput).map { expectedPortfolio =>
-          val actualPortfolio = rebalanceInput.actualPortfolio
-
+        F.map(calcExpectedPortfolio(rebalanceInput)) { expectedPortfolio =>
           expectedPortfolio.map {
             case (ticker: String, value: Double) =>
-              (ticker, value - actualPortfolio(ticker))
+              (ticker, value - rebalanceInput.actualPortfolio(ticker))
           }
         }
     }

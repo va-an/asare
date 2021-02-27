@@ -17,5 +17,10 @@ object Dependencies {
       val `context-applied` =
         "org.augustjune" %% "context-applied" % "0.1.4"
     }
+
+    case object scalatest {
+      val scalatest =
+        "org.scalatest" %% "scalatest" % "3.2.5"
+    }
   }
 }
