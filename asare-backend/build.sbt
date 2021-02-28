@@ -1,9 +1,7 @@
 import Dependencies._
 
-scalaVersion := "2.13.4"
-
-ThisBuild / organization := "io.vaan.asare"
-ThisBuild / scalaVersion := "2.13.4"
+ThisBuild / organization := "io.vaan"
+ThisBuild / scalaVersion := "2.13.5"
 ThisBuild / version := "0.0.1-SNAPSHOT"
 
 ThisBuild / scalacOptions ++= Seq(
