@@ -1,16 +1,18 @@
-package `io.vaan.asare`
+package io.vaan.asare
 
-import io.vaan.asare.algrebras.Rebalancer
+import io.vaan.asare.algrebras._
 import cats._
 import cats.implicits._
 
 final class Algebras[F[_]] private (
-    val rebalancer: Rebalancer[F]
+    val rebalancer: Rebalancer[F],
+    val healthCheck: HealthCheck[F]
 )
 
 object Algebras {
-  def make[F[_]: Applicative](): F[Algebras[F]] =
+  def make[F[_]: Monad](): F[Algebras[F]] =
     for {
-      rebalancer <- Rebalancer.make[F]()
-    } yield new Algebras[F](rebalancer)
+      rebalancer  <- Rebalancer.make[F]()
+      healthCheck <- HealthCheck.make[F]()
+    } yield new Algebras[F](rebalancer, healthCheck)
 }

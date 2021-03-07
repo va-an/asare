@@ -1,4 +1,4 @@
-package `io.vaan.asare`
+package io.vaan.asare
 
 import cats.effect.IOApp
 import cats.effect.{ ExitCode, IO }
