@@ -21,7 +21,9 @@ lazy val core =
       libraryDependencies ++= Seq(
         org.typelevel.`cats-core`,
         org.typelevel.`cats-effect`,
-        org.scalatest.scalatest
+        org.scalatest.scalatest,
+        org.http4s.`http4s-dsl`,
+        org.http4s.`http4s-blaze-server`
       )
     )
     .settings(commonSettings: _*)

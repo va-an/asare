@@ -22,5 +22,13 @@ object Dependencies {
       val scalatest =
         "org.scalatest" %% "scalatest" % "3.2.5"
     }
+
+    case object http4s {
+      val http4sVersion = "0.21.18"
+
+      val `http4s-dsl`          = "org.http4s" %% "http4s-dsl"          % http4sVersion
+      val `http4s-blaze-server` = "org.http4s" %% "http4s-blaze-server" % http4sVersion
+      val `http4s-blaze-client` = "org.http4s" %% "http4s-blaze-client" % http4sVersion
+    }
   }
 }
