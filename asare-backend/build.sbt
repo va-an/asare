@@ -19,11 +19,11 @@ lazy val core =
     .in(file("core"))
     .settings(
       libraryDependencies ++= Seq(
-        org.typelevel.`cats-core`,
-        org.typelevel.`cats-effect`,
-        org.scalatest.scalatest,
-        org.http4s.`http4s-dsl`,
-        org.http4s.`http4s-blaze-server`
+        Libraries.cats,
+        Libraries.catsEffect,
+        Libraries.scalaTest,
+        Libraries.http4sDsl,
+        Libraries.http4sServer
       )
     )
     .settings(commonSettings: _*)
@@ -36,5 +36,5 @@ lazy val `asare-backend` =
     )
 
 lazy val commonSettings = Seq(
-  addCompilerPlugin(org.augustjune.`context-applied`)
+  addCompilerPlugin(Libraries.contextApplied)
 )
