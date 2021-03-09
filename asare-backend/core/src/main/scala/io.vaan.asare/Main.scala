@@ -4,6 +4,7 @@ import cats.effect.IOApp
 import cats.effect.{ ExitCode, IO }
 import org.http4s.server.blaze.BlazeServerBuilder
 import scala.concurrent.ExecutionContext
+import io.vaan.asare.config.Config
 
 object Main extends IOApp {
   override def run(args: List[String]): IO[ExitCode] =
@@ -13,8 +14,8 @@ object Main extends IOApp {
       _ <-
         BlazeServerBuilder[IO](ExecutionContext.global)
           .bindHttp(
-            port = 8080, // TODO: get from config
-            host = "0.0.0.0"
+            port = Config.httpPort,
+            host = Config.httpHost
           )
           .withHttpApp(api.httpApp)
           .serve
