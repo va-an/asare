@@ -23,7 +23,9 @@ lazy val core =
         Libraries.catsEffect,
         Libraries.scalaTest,
         Libraries.http4sDsl,
-        Libraries.http4sServer
+        Libraries.http4sServer,
+        Libraries.http4sCirce,
+        Libraries.circeGeneric
       )
     )
     .settings(commonSettings: _*)
