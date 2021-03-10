@@ -19,19 +19,24 @@ object HttpApi {
     )
 }
 
-// TODO: запилить 2-ю версию API для получения текущего распределения - с округлением
 final class HttpApi[F[_]: Concurrent] private (
     algrebras: Algebras[F]
 ) {
-  private val healthRoutes     = new HealthRoutes[F](algrebras.healthCheck).routes
-  private val rebalancerRoutes = new RebalancerRoutes[F](algrebras.rebalancer).routes
+  private val healthRoutes = new HealthRoutes[F](algrebras.healthCheck).routes
 
-  private val openRouters: HttpRoutes[F] =
-    healthRoutes <+> rebalancerRoutes
+  private val rebalancerRoutesV1 = new RebalancerRoutes[F](algrebras.rebalancerV.v1).routes
+  private val rebalancerRoutesV2 = new RebalancerRoutes[F](algrebras.rebalancerV.v2).routes
+
+  private val openRoutersV1: HttpRoutes[F] =
+    healthRoutes <+> rebalancerRoutesV1
+
+  private val openRoutersV2: HttpRoutes[F] =
+    healthRoutes <+> rebalancerRoutesV2
 
   private val routers: HttpRoutes[F] =
     Router(
-      version.v1 -> openRouters
+      version.v1 -> openRoutersV1,
+      version.v2 -> openRoutersV2
     )
 
   val httpApp: HttpApp[F] = routers.orNotFound

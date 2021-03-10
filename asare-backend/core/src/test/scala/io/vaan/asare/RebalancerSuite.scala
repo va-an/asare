@@ -3,8 +3,9 @@ package io.vaan.asare
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers._
 import cats._
+import cats.effect.IO
 import io.vaan.asare.domain.rebalance._
-import io.vaan.asare.algrebras.Rebalancer
+import io.vaan.asare.algrebras.rebalancer._
 
 class RebalancerSuite extends AnyFlatSpec {
   val currentPortfolio: Map[String, Double] = Map(
@@ -25,10 +26,15 @@ class RebalancerSuite extends AnyFlatSpec {
     target = 300_000
   )
 
-  val rebalancer = Rebalancer.make[Id]()
+  val rebalancer = RebalancerA
+    .makeV[IO]()
+    .unsafeRunSync()
+    .v1
 
   it should "calculate current allocation" in {
-    val result = rebalancer.calcCurrentAllocation(currentPortfolio)
+    val result = rebalancer
+      .calcCurrentAllocation(currentPortfolio)
+      .unsafeRunSync()
 
     result.values.sum should equal(100)
 
@@ -38,7 +44,9 @@ class RebalancerSuite extends AnyFlatSpec {
   }
 
   it should "calculate expected allocation" in {
-    val result = rebalancer.calcExpectedPortfolio(rebalanceInput)
+    val result = rebalancer
+      .calcExpectedPortfolio(rebalanceInput)
+      .unsafeRunSync()
 
     result.values.sum should equal(300_000)
 
