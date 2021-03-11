@@ -10,10 +10,10 @@ import io.circe.generic.auto._
 import io.circe.syntax._
 import org.http4s.circe.CirceEntityEncoder._
 import io.vaan.asare.algrebras.rebalancer.RebalancerA
-import io.vaan.asare.domain.rebalance.Portfolio
+import io.vaan.asare.domain.rebalance._
 
 final class RebalancerRoutes[F[_]: Monad: Defer: JsonDecoder](
-    rebalancer: RebalancerA[F]
+    rebalancerA: RebalancerA[F]
 ) extends Http4sDsl[F] {
   private val httpRoutes: HttpRoutes[F] =
     HttpRoutes.of[F] {
@@ -21,11 +21,18 @@ final class RebalancerRoutes[F[_]: Monad: Defer: JsonDecoder](
         request
           .asJsonDecode[Portfolio]
           .flatMap { current =>
-            Ok(rebalancer.calcCurrentAllocation(current))
+            Ok(rebalancerA.calcCurrentAllocation(current))
+          }
+
+      case request @ POST -> Root / "rebalance" =>
+        request
+          .asJsonDecode[RebalanceInput]
+          .flatMap { input =>
+            Ok(rebalancerA.calcPurchase(input))
           }
     }
 
   val routes: HttpRoutes[F] = Router(
-    "rebalance" -> httpRoutes
+    "rebel" -> httpRoutes
   )
 }

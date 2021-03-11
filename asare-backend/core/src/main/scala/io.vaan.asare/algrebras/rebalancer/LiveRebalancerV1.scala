@@ -7,7 +7,7 @@ import cats.syntax.all._
 
 class LiveRebalancerV1[F[_]: Sync] private[rebalancer] () extends RebalancerA[F] {
   override def calcCurrentAllocation(portfolio: Portfolio): F[Portfolio] =
-    F.pure {
+    F.delay {
       val sum = portfolio.values.sum
       portfolio.map {
         case (ticker: String, value: Double) => (ticker, value / sum.toDouble * 100)
@@ -15,8 +15,8 @@ class LiveRebalancerV1[F[_]: Sync] private[rebalancer] () extends RebalancerA[F]
     }
 
   override def calcExpectedPortfolio(rebalanceInput: RebalanceInput): F[Portfolio] =
-    F.pure(
-      rebalanceInput.expectedAllocation.map {
+    F.delay(
+      rebalanceInput.requiredAllocation.map {
         case (ticker: String, value: Double) => (ticker, value / 100 * rebalanceInput.target)
       }
     )
@@ -25,7 +25,7 @@ class LiveRebalancerV1[F[_]: Sync] private[rebalancer] () extends RebalancerA[F]
     F.map(calcExpectedPortfolio(rebalanceInput)) { expectedPortfolio =>
       expectedPortfolio.map {
         case (ticker: String, value: Double) =>
-          (ticker, value - rebalanceInput.actualPortfolio(ticker))
+          (ticker, value - rebalanceInput.currentPortfolio(ticker))
       }
     }
 }

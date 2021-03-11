@@ -14,15 +14,15 @@ class RebalancerSuite extends AnyFlatSpec {
     "C" -> 125_000
   )
 
-  val expectedAllocation: Map[String, Double] = Map(
+  val requiredAllocation: Map[String, Double] = Map(
     "A" -> 33,
     "B" -> 33,
     "C" -> 34
   )
 
   val rebalanceInput = RebalanceInput(
-    actualPortfolio = currentPortfolio,
-    expectedAllocation = expectedAllocation,
+    currentPortfolio,
+    requiredAllocation,
     target = 300_000
   )
 
