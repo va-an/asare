@@ -12,7 +12,8 @@ object Main extends IOApp {
   override def run(args: List[String]): IO[ExitCode] =
     for {
       algrebras <- Algebras.make[IO]()
-      api       <- HttpApi.make[IO](algrebras)
+      programs  <- Programs.make[IO](algrebras)
+      api       <- HttpApi.make[IO](algrebras, programs)
       _ <-
         BlazeServerBuilder[IO](ExecutionContext.global)
           .bindHttp(

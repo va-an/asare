@@ -40,3 +40,21 @@ Content-Type: application/json
     "C": 34
   }
 }
+
+###
+# rebalance v3
+POST http://localhost:8080/v3/rebel/rebalance
+Content-Type: application/json
+
+{
+  "currentPortfolio": {
+    "A": 75000,
+    "B": 100000,
+    "C": 125000
+  },
+  "requiredAllocation": {
+    "A": 33,
+    "B": 33,
+    "C": 34
+  }
+}
