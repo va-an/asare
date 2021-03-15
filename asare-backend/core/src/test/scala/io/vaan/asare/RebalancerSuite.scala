@@ -3,6 +3,7 @@ package io.vaan.asare
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers._
 import cats._
+import cats.implicits._
 import cats.effect.IO
 import io.vaan.asare.domain.rebalance._
 import io.vaan.asare.algrebras.rebalancer._
@@ -23,7 +24,7 @@ class RebalancerSuite extends AnyFlatSpec {
   val rebalanceInput = RebalanceInput(
     currentPortfolio,
     requiredAllocation,
-    target = 300_000
+    target = 300_000.0.some
   )
 
   val rebalancer = RebalancerA
