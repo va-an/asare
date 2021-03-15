@@ -1,4 +1,4 @@
-package io.vaan.asare
+package io.vaan.asare.modules
 
 import io.vaan.asare.algrebras.rebalancer._
 import io.vaan.asare.algrebras._

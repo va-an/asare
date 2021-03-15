@@ -5,6 +5,7 @@ import cats.effect.{ ExitCode, IO }
 import org.http4s.server.blaze.BlazeServerBuilder
 import scala.concurrent.ExecutionContext
 import io.vaan.asare.config.Config
+import io.vaan.asare.modules._
 
 // TODO: add logging
 object Main extends IOApp {
