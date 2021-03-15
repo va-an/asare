@@ -1,0 +1,42 @@
+# healthcheck
+GET http://localhost:8080/v1/health
+
+###
+
+
+# rebalance with target
+POST http://localhost:8080/v2/rebel/rebalance
+Content-Type: application/json
+
+{
+  "currentPortfolio": {
+    "A": 75000,
+    "B": 100000,
+    "C": 125000
+  },
+  "requiredAllocation": {
+    "A": 33,
+    "B": 33,
+    "C": 34
+  },
+  "target": 305000
+}
+
+###
+
+# rebalance without target
+POST http://localhost:8080/v2/rebel/rebalance
+Content-Type: application/json
+
+{
+  "currentPortfolio": {
+    "A": 75000,
+    "B": 100000,
+    "C": 125000
+  },
+  "requiredAllocation": {
+    "A": 33,
+    "B": 33,
+    "C": 34
+  }
+}
