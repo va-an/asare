@@ -17,7 +17,11 @@ class LiveRebalancerV1[F[_]: Sync] private[rebalancer] () extends RebalancerA[F]
   override def calcExpectedPortfolio(rebalanceInput: RebalanceInput): F[Portfolio] =
     F.delay(
       rebalanceInput.requiredAllocation.map {
-        case (ticker: String, value: Double) => (ticker, value / 100 * rebalanceInput.target)
+        case (ticker: String, value: Double) =>
+          rebalanceInput.target match {
+            case Some(targetValue) => (ticker, value / 100 * targetValue)
+            case None              => (ticker, value / 100 * rebalanceInput.currentPortfolio.values.sum)
+          }
       }
     )
 

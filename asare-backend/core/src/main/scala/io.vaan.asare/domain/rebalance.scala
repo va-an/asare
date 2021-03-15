@@ -6,6 +6,6 @@ object rebalance {
   final case class RebalanceInput(
       currentPortfolio: Map[String, Double],
       requiredAllocation: Map[String, Double],
-      target: Double
+      target: Option[Double]
   )
 }
