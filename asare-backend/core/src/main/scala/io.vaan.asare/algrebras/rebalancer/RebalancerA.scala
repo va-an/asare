@@ -11,11 +11,6 @@ trait RebalancerA[F[_]] {
   def calcPurchase(rebalanceInput: RebalanceInput): F[Portfolio]
 }
 
-trait RebalancerV[F[_]] {
-  def v1: RebalancerA[F]
-  def v2: RebalancerA[F]
-}
-
 object RebalancerA {
   def makeV[F[_]: Sync](): F[RebalancerV[F]] =
     F.delay {
