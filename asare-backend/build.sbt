@@ -26,7 +26,8 @@ lazy val core =
         Libraries.http4sServer,
         Libraries.http4sCirce,
         Libraries.circeGeneric
-      )
+      ),
+      mainClass in assembly := Some("io.vaan.asare.Main")
     )
     .settings(commonSettings: _*)
 
@@ -38,5 +39,9 @@ lazy val `asare-backend` =
     )
 
 lazy val commonSettings = Seq(
+  version := "1.0.0",
+  organization := "io.vaan",
+  scalaVersion := "2.13.5",
+  test in assembly := {},
   addCompilerPlugin(Libraries.contextApplied)
 )
