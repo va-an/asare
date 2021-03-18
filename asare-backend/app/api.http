@@ -1,11 +1,11 @@
 # healthcheck
-GET http://localhost:8080/v1/health
+GET http://localhost:8090/v1/health
 
 ###
 
 
 # rebalance with target
-POST http://localhost:8080/v2/rebel/rebalance
+POST http://localhost:8090/v2/rebel/rebalance
 Content-Type: application/json
 
 {
@@ -25,7 +25,7 @@ Content-Type: application/json
 ###
 
 # rebalance without target
-POST http://localhost:8080/v2/rebel/rebalance
+POST http://localhost:8090/v2/rebel/rebalance
 Content-Type: application/json
 
 {
@@ -43,7 +43,25 @@ Content-Type: application/json
 
 ###
 # rebalance v3
-POST http://localhost:8080/v3/rebel/rebalance
+POST http://localhost:8090/v3/rebel/rebalance
+Content-Type: application/json
+
+{
+  "currentPortfolio": {
+    "A": 75000,
+    "B": 100000,
+    "C": 125000
+  },
+  "requiredAllocation": {
+    "A": 33,
+    "B": 33,
+    "C": 34
+  }
+}
+
+###
+# rebalance v3
+POST https://api.asare.vaan.io/v3/rebel/rebalance
 Content-Type: application/json
 
 {

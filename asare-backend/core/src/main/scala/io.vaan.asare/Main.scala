@@ -8,6 +8,7 @@ import io.vaan.asare.config.Config
 import io.vaan.asare.modules._
 
 // TODO: add logging
+// TODO: generate API docs (tapir, rho)
 object Main extends IOApp {
   override def run(args: List[String]): IO[ExitCode] =
     for {
