@@ -42,7 +42,7 @@ lazy val `asare-backend` =
     )
 
 lazy val commonSettings = Seq(
-  version := "1.0.1",
+  version := "1.0.2",
   organization := "io.vaan",
   scalaVersion := "2.13.5",
   test in assembly := {},

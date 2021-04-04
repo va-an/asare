@@ -10,6 +10,7 @@ import io.vaan.asare.config.Config
 import io.vaan.asare.modules._
 
 // TODO: generate API docs (tapir, rho)
+// TODO: get prices from some public API and make version of API for this
 object Main extends IOApp {
   override def run(args: List[String]): IO[ExitCode] =
     for {

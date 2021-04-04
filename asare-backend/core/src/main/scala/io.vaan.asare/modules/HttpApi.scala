@@ -5,6 +5,7 @@ import org.http4s.server.Router
 import cats.effect._
 import cats.syntax.all._
 import org.http4s.HttpApp
+import org.http4s.server.middleware._
 import org.http4s.implicits._
 import io.vaan.asare.modules.Algebras
 import io.vaan.asare.algrebras.HealthCheck
@@ -46,5 +47,17 @@ final class HttpApi[F[_]: Concurrent] private (
       version.v3 -> openRoutersV3
     )
 
-  val httpApp: HttpApp[F] = routers.orNotFound
+  // format: off
+  private val middleware: HttpRoutes[F] => HttpRoutes[F] = { 
+    http: HttpRoutes[F] =>
+      AutoSlash(http)
+  }
+
+  private val loggers: HttpApp[F] => HttpApp[F] = { 
+    http: HttpApp[F] =>
+      RequestLogger.httpApp(false, false)(http)
+  }
+
+  // format: on
+  val httpApp: HttpApp[F] = loggers(middleware(routers).orNotFound)
 }
