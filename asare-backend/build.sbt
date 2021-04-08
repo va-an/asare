@@ -30,9 +30,21 @@ lazy val core =
         Libraries.log4catsSlf4j,
         Libraries.logback
       ),
-      mainClass in assembly := Some("io.vaan.asare.Main")
+      assembly / mainClass := Some("io.vaan.asare.Main")
     )
     .settings(commonSettings: _*)
+
+lazy val loadtest = 
+  project
+    .in(file("loadtest"))
+    .settings(
+      libraryDependencies ++= Seq(
+        Libraries.gatling,
+        Libraries.gatlingHighcharts
+      )
+    )
+    .settings(commonSettings: _*)
+    .enablePlugins(GatlingPlugin)
 
 lazy val `asare-backend` =
   project
@@ -45,6 +57,6 @@ lazy val commonSettings = Seq(
   version := "1.0.2",
   organization := "io.vaan",
   scalaVersion := "2.13.5",
-  test in assembly := {},
+  assembly / test := {},
   addCompilerPlugin(Libraries.contextApplied)
 )

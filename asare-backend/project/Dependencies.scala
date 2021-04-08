@@ -10,6 +10,7 @@ object Dependencies {
     val circe          = "0.13.0"
     val log4cats       = "1.2.0"
     val logback        = "1.2.3"
+    val gatling        = "3.5.1"
   }
 
   object Libraries {
@@ -34,6 +35,11 @@ object Dependencies {
     val circeGeneric = circe("circe-generic")
 
     val scalaTest = "org.scalatest" %% "scalatest" % Versions.scalaTest
+
+    // format: off
+    val gatlingHighcharts = "io.gatling.highcharts" % "gatling-charts-highcharts" % Versions.gatling % "it"
+    val gatling           = "io.gatling"            % "gatling-test-framework"    % Versions.gatling % "it"
+    // format: on
 
     val contextApplied = "org.augustjune" %% "context-applied" % Versions.contextApplied
   }
