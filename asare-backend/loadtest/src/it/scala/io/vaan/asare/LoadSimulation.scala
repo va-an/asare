@@ -2,25 +2,51 @@ package io.vaan.asare
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import io.gatling.http.request._
 
 import scala.concurrent.duration._
+import scala.util.Random
 
 class LoadSimulation extends Simulation {
-  val httpProtocol = http
-    .baseUrl("http://localhost:8090")
-    .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-    .acceptEncodingHeader("gzip, deflate")
-    .acceptLanguageHeader("en-US,en;q=0.5")
-    .userAgentHeader(
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0"
-    )
+  import LoadSimulation.genRebalanceV3Request
 
-  val scn = scenario("Yeah Boi")
+  val users   = System.getProperty("users").toInt
+  val baseUrl = "http://localhost:8090"
+
+  val scn = scenario("rebalance v3")
     .exec(
-      http("request_1")
-        .get("/v1/health")
+      repeat(10) {
+        exec(
+          http("rebalance v3 request")
+            .post(baseUrl + "/v3/rebel/rebalance")
+            .body(StringBody(_ => genRebalanceV3Request))
+            .header("Content-Type", "application/json")
+        ).pause(1 second, 2 seconds)
+      }
     )
-    .pause(7)
 
-  setUp(scn.inject(atOnceUsers(10)).protocols(httpProtocol))
+  setUp(
+    scn.inject(rampUsers(users) during (10 seconds))
+  )
+}
+
+object LoadSimulation {
+  def genRebalanceV3Request: String = {
+    def between: Double = Random.between(10_000, 100_000)
+
+    s"""
+{
+  "currentPortfolio": {
+    "A": ${Random.between(10_000, 100_000)},
+    "B": ${Random.between(10_000, 100_000)},
+    "C": ${Random.between(10_000, 100_000)}
+  },
+  "requiredAllocation": {
+    "A": 33,
+    "B": 33,
+    "C": 34
+  }
+}
+  """
+  }
 }

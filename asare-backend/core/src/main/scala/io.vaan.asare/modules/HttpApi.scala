@@ -52,12 +52,16 @@ final class HttpApi[F[_]: Concurrent] private (
     http: HttpRoutes[F] =>
       AutoSlash(http)
   }
+  // format: on
 
-  private val loggers: HttpApp[F] => HttpApp[F] = { 
-    http: HttpApp[F] =>
-      RequestLogger.httpApp(false, false)(http)
+  // TODO: request logging only for load test, delete after tests
+  private val loggers: HttpApp[F] => HttpApp[F] = {
+    { http: HttpApp[F] =>
+      RequestLogger.httpApp(false, true)(http)
+    } andThen { http: HttpApp[F] =>
+      ResponseLogger.httpApp(true, true)(http)
+    }
   }
 
-  // format: on
   val httpApp: HttpApp[F] = loggers(middleware(routers).orNotFound)
 }
