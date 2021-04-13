@@ -32,19 +32,27 @@ class LoadSimulation extends Simulation {
 
 object LoadSimulation {
   def genRebalanceV3Request: String = {
-    def between: Double = Random.between(10_000, 100_000)
+    def genBetween: Double = Random.between(10_000, 100_000)
+
+    val allocation: (Int, Int, Int) = {
+      val a1: Int = Random.between(25, 40)
+      val a2: Int = Random.between(25, 40)
+      val a3: Int = 100 - (a1 + a2)
+
+      (a1, a2, a3)
+    }
 
     s"""
 {
   "currentPortfolio": {
-    "A": ${Random.between(10_000, 100_000)},
-    "B": ${Random.between(10_000, 100_000)},
-    "C": ${Random.between(10_000, 100_000)}
+    "A": $genBetween,
+    "B": $genBetween,
+    "C": $genBetween
   },
   "requiredAllocation": {
-    "A": 33,
-    "B": 33,
-    "C": 34
+    "A": ${allocation._1},
+    "B": ${allocation._2},
+    "C": ${allocation._3}
   }
 }
   """
