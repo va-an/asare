@@ -5,9 +5,9 @@ $ sbt assembly
 ```
 
 ---
-Run load test:
+Run load test (in sbt console):
 ```
-$ sbt -Dusers=10 '; project loadtest; gatling-it:testOnly io.vaan.asare.LoadSimulation'
+eval System.setProperty("users", "3"); gatling-it:testOnly io.vaan.asare.LoadSimulation
 ```
 
 Show report:
