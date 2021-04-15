@@ -15,8 +15,7 @@ ThisBuild / scalacOptions ++= Seq(
 )
 
 lazy val core =
-  project
-    .in(file("core"))
+  (project in file("core"))
     .settings(
       libraryDependencies ++= Seq(
         Libraries.cats,
@@ -35,8 +34,7 @@ lazy val core =
     .settings(commonSettings: _*)
 
 lazy val loadtest = 
-  project
-    .in(file("loadtest"))
+  (project in file("loadtest"))
     .settings(
       libraryDependencies ++= Seq(
         Libraries.gatling,
@@ -47,8 +45,7 @@ lazy val loadtest =
     .enablePlugins(GatlingPlugin)
 
 lazy val `asare-backend` =
-  project
-    .in(file("."))
+  (project in file("."))
     .aggregate(
       core
     )
