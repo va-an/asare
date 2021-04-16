@@ -11,7 +11,7 @@ class LoadSimulation extends Simulation {
   import LoadSimulation.genRebalanceV3Request
 
   val users   = System.getProperty("users", "1").toInt
-  val baseUrl = "http://localhost:8090"
+  val baseUrl = System.getProperty("url", "http://localhost:8090")
 
   val scn = scenario("rebalance v3")
     .exec(

@@ -21,8 +21,8 @@ object Main extends IOApp {
       _ <-
         BlazeServerBuilder[IO](ExecutionContext.global)
           .bindHttp(
-            port = Config.httpPort,
-            host = Config.httpHost
+            host = Config.httpHost,
+            port = Config.httpPort
           )
           .withHttpApp(api.httpApp)
           .serve

@@ -1,6 +1,6 @@
 Build jar-file:
 
-```
+```shell
 $ sbt assembly
 ```
 
@@ -11,6 +11,6 @@ eval System.setProperty("users", "3"); gatling-it:testOnly io.vaan.asare.LoadSim
 ```
 
 Show report:
-```
+```shell
 $ sbt '; project loadtest; gatling-it:lastReport'
 ```
