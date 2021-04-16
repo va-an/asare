@@ -1,5 +1,7 @@
 import Dependencies._
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 ThisBuild / organization := "io.vaan"
 ThisBuild / scalaVersion := "2.13.5"
 ThisBuild / version := "0.0.1-SNAPSHOT"
