@@ -1,18 +1,19 @@
 package io.vaan.asare.modules
 
-import org.http4s.HttpRoutes
-import org.http4s.server.Router
+import cats.{ Defer, Monad }
 import cats.effect._
 import cats.syntax.all._
-import org.http4s.HttpApp
+import org.http4s.{ HttpApp, HttpRoutes }
+import org.http4s.server.Router
 import org.http4s.server.middleware._
 import org.http4s.implicits._
+import org.http4s.circe.JsonDecoder
 import io.vaan.asare.modules.Algebras
 import io.vaan.asare.algrebras.HealthCheck
 import io.vaan.asare.http.routes._
 
 object HttpApi {
-  def make[F[_]: Concurrent: Timer](
+  def make[F[_]: Sync: Async](
       algrebras: Algebras[F],
       programs: Programs[F]
   ): F[HttpApi[F]] =
@@ -21,7 +22,7 @@ object HttpApi {
     )
 }
 
-final class HttpApi[F[_]: Concurrent] private (
+final class HttpApi[F[_]: Defer: Monad: JsonDecoder: Async] private (
     algrebras: Algebras[F],
     programs: Programs[F]
 ) {

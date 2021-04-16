@@ -5,6 +5,7 @@ import org.scalatest.matchers.should.Matchers._
 import cats._
 import cats.implicits._
 import cats.effect.IO
+import cats.effect.unsafe.implicits.global
 import io.vaan.asare.domain.rebalance._
 import io.vaan.asare.algrebras.rebalancer._
 
