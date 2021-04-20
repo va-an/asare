@@ -1,7 +1,7 @@
-Build jar-file:
+Build backend jar-file:
 
 ```shell
-$ sbt assembly
+$ sbt 'project backend; assembly'
 ```
 
 ---

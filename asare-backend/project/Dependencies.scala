@@ -11,6 +11,7 @@ object Dependencies {
     val log4cats       = "2.0.1"
     val logback        = "1.2.3"
     val gatling        = "3.5.1"
+    val canoe          = "0.5.1"
   }
 
   object Libraries {

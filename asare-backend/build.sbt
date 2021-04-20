@@ -4,7 +4,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 ThisBuild / organization := "io.vaan"
 ThisBuild / scalaVersion := "2.13.5"
-ThisBuild / version := "0.0.1-SNAPSHOT"
+ThisBuild / version := "1.1.0"
 
 ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
@@ -16,8 +16,8 @@ ThisBuild / scalacOptions ++= Seq(
   "-Ymacro-annotations"
 )
 
-lazy val core =
-  (project in file("core"))
+lazy val backend =
+  (project in file("backend"))
     .settings(
       libraryDependencies ++= Seq(
         Libraries.cats,
@@ -46,16 +46,7 @@ lazy val loadtest =
     .settings(commonSettings: _*)
     .enablePlugins(GatlingPlugin)
 
-lazy val `asare-backend` =
-  (project in file("."))
-    .aggregate(
-      core
-    )
-
 lazy val commonSettings = Seq(
-  version := "1.1.0",
-  organization := "io.vaan",
-  scalaVersion := "2.13.5",
   assembly / test := {},
   addCompilerPlugin(Libraries.contextApplied)
 )

@@ -26,7 +26,7 @@ object Main extends IOApp {
             port = Config.httpPort
           )
           .withHttpApp(api.httpApp)
-          .withMaxConnections(4096)
+          .withMaxConnections(1024)
           .withResponseHeaderTimeout(60 seconds)
           .serve
           .compile
