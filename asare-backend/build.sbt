@@ -35,8 +35,12 @@ lazy val backend =
     )
     .settings(commonSettings: _*)
 
-lazy val loadtest = 
-  (project in file("loadtest"))
+lazy val `telegram-bot` = 
+  (project in file("telegram-bot"))
+    .settings(commonSettings: _*)
+
+lazy val `load-test` = 
+  (project in file("load-test"))
     .settings(
       libraryDependencies ++= Seq(
         Libraries.gatling,
