@@ -4,7 +4,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 ThisBuild / organization := "io.vaan"
 ThisBuild / scalaVersion := "2.13.5"
-ThisBuild / version := "1.1.0"
+ThisBuild / version := "1.1.1"
 
 ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
@@ -22,14 +22,16 @@ lazy val backend =
       libraryDependencies ++= Seq(
         Libraries.cats,
         Libraries.catsEffect,
+        Libraries.circeGeneric,
+        Libraries.cirisCore,
+        Libraries.cirisRefined,
         Libraries.scalaTest,
         Libraries.http4sDsl,
         Libraries.http4sServer,
         Libraries.http4sCirce,
-        Libraries.circeGeneric,
-        Libraries.log4catsCore,
         Libraries.log4catsSlf4j,
-        Libraries.logback
+        Libraries.logback,
+        Libraries.refined
       ),
       assembly / mainClass := Some("io.vaan.asare.Main")
     )
@@ -37,6 +39,13 @@ lazy val backend =
 
 lazy val `telegram-bot` = 
   (project in file("telegram-bot"))
+    .settings(
+      libraryDependencies ++= Seq(
+        Libraries.canoe,
+        Libraries.log4catsSlf4j % "1.2.2",
+        Libraries.logback
+      )
+    )
     .settings(commonSettings: _*)
 
 lazy val `load-test` = 
