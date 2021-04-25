@@ -1,7 +1,7 @@
-package io.vaan.asare.programs
+package io.vaan.asare.backend.programs
 
-import io.vaan.asare.algrebras.rebalancer.RebalancerA
-import io.vaan.asare.domain.rebalance._
+import io.vaan.asare.backend.algrebras.rebalancer.RebalancerA
+import io.vaan.asare.backend.domain.rebalance._
 import cats.effect._
 import cats.syntax.all._
 

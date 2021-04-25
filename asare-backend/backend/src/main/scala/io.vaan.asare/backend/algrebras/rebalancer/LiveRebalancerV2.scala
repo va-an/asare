@@ -1,10 +1,10 @@
-package io.vaan.asare.algrebras.rebalancer
+package io.vaan.asare.backend.algrebras.rebalancer
 
 import cats.Functor
 import cats.syntax.all._
 import cats.effect.Sync
-import io.vaan.asare.domain.rebalance._
-import io.vaan.asare.utils.NumUtils._
+import io.vaan.asare.backend.domain.rebalance._
+import io.vaan.asare.backend.utils.NumUtils._
 
 class LiveRebalancerV2[F[_]: Functor: Sync] private[rebalancer] () extends LiveRebalancerV1[F] {
   override def calcCurrentAllocation(portfolio: Portfolio): F[Portfolio] =

@@ -1,4 +1,4 @@
-package io.vaan.asare.modules
+package io.vaan.asare.backend.modules
 
 import cats.{ Defer, Monad }
 import cats.effect._
@@ -8,9 +8,9 @@ import org.http4s.server.Router
 import org.http4s.server.middleware._
 import org.http4s.implicits._
 import org.http4s.circe.JsonDecoder
-import io.vaan.asare.modules.Algebras
-import io.vaan.asare.algrebras.HealthCheck
-import io.vaan.asare.http.routes._
+import io.vaan.asare.backend.modules.Algebras
+import io.vaan.asare.backend.algrebras.HealthCheck
+import io.vaan.asare.backend.http.routes._
 
 object HttpApi {
   def make[F[_]: Sync: Async](

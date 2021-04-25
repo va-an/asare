@@ -1,4 +1,4 @@
-package io.vaan.asare.domain
+package io.vaan.asare.backend.domain
 
 object rebalance {
   type Portfolio = Map[String, Double]

@@ -18,7 +18,7 @@ ThisBuild / scalacOptions ++= Seq(
 lazy val backend =
   (project in file("backend"))
     .settings(
-      version := "1.1.1",
+      version := "1.1.2",
       libraryDependencies ++= Seq(
         Libraries.cats,
         Libraries.catsEffect,
@@ -33,7 +33,7 @@ lazy val backend =
         Libraries.logback,
         Libraries.refined
       ),
-      assembly / mainClass := Some("io.vaan.asare.Main")
+      assembly / mainClass := Some("io.vaan.asare.backend.Main")
     )
     .settings(commonSettings: _*)
 

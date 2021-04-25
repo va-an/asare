@@ -1,4 +1,4 @@
-package io.vaan.asare.http.routes
+package io.vaan.asare.backend.http.routes
 
 object version {
   val v1 = "/v1"

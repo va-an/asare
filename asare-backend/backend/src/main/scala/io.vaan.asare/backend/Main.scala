@@ -1,14 +1,14 @@
-package io.vaan.asare
+package io.vaan.asare.backend
 
 import cats.effect.IOApp
 import cats.effect.{ ExitCode, IO }
 import org.http4s.server.blaze.BlazeServerBuilder
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import io.vaan.asare.config
-import io.vaan.asare.modules._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
+import io.vaan.asare.backend.config.Configuration._
+import io.vaan.asare.backend.modules._
 
 object Main extends IOApp {
   override def run(args: List[String]): IO[ExitCode] =

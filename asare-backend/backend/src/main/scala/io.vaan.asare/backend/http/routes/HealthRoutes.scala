@@ -1,6 +1,6 @@
-package io.vaan.asare.http.routes
+package io.vaan.asare.backend.http.routes
 
-import io.vaan.asare.algrebras.HealthCheck
+import io.vaan.asare.backend.algrebras.HealthCheck
 import org.http4s.dsl.Http4sDsl
 import org.http4s.server.Router
 import org.http4s._

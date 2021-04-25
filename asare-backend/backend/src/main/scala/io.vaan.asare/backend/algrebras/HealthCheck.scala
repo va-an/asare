@@ -1,4 +1,4 @@
-package io.vaan.asare.algrebras
+package io.vaan.asare.backend.algrebras
 
 import cats._
 import cats.syntax.all._

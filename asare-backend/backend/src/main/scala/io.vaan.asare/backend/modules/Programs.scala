@@ -1,7 +1,8 @@
-package io.vaan.asare.modules
+package io.vaan.asare.backend.modules
 
-import io.vaan.asare.programs.RebalancerP
 import cats.effect.Sync
+import io.vaan.asare.backend.programs.RebalancerP
+import io.vaan.asare.backend.algrebras
 
 final class Programs[F[_]: Sync] private (
     algrebras: Algebras[F]

@@ -1,7 +1,7 @@
-package io.vaan.asare.modules
+package io.vaan.asare.backend.modules
 
-import io.vaan.asare.algrebras.rebalancer._
-import io.vaan.asare.algrebras._
+import io.vaan.asare.backend.algrebras.rebalancer._
+import io.vaan.asare.backend.algrebras._
 import cats._
 import cats.implicits._
 import cats.effect.Sync

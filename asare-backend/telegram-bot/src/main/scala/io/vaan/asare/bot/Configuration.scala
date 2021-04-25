@@ -21,7 +21,7 @@ object Configuration {
     )
     """
 
-  def config: ConfigValue[Config] =
+  val config: ConfigValue[Config] =
     (
       (env("TOKEN") or prop("token")).as[NonEmptyString]
     ).map { token =>

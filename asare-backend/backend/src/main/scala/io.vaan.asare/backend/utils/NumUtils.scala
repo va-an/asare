@@ -1,4 +1,4 @@
-package io.vaan.asare.utils
+package io.vaan.asare.backend.utils
 
 object NumUtils {
   implicit class NumSyntax(x: Double) {
