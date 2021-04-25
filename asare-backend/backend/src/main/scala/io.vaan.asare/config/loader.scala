@@ -7,7 +7,6 @@ import eu.timepit.refined.types.string.NonEmptyString
 import eu.timepit.refined.auto._
 import cats.implicits._
 import cats.effect.Async
-import eu.timepit.refined.string
 
 object load {
   def apply[F[_]: Async]: F[Config] =

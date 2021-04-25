@@ -4,7 +4,6 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 ThisBuild / organization := "io.vaan"
 ThisBuild / scalaVersion := "2.13.5"
-ThisBuild / version := "1.1.1"
 
 ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
@@ -19,6 +18,7 @@ ThisBuild / scalacOptions ++= Seq(
 lazy val backend =
   (project in file("backend"))
     .settings(
+      version := "1.1.1",
       libraryDependencies ++= Seq(
         Libraries.cats,
         Libraries.catsEffect,
@@ -40,10 +40,16 @@ lazy val backend =
 lazy val `telegram-bot` = 
   (project in file("telegram-bot"))
     .settings(
+      version := "0.0.1",
       libraryDependencies ++= Seq(
+        Libraries.cats,
+        Libraries.catsEffect withRevision "2.5.0",
         Libraries.canoe,
-        Libraries.log4catsSlf4j % "1.2.2",
-        Libraries.logback
+        Libraries.log4catsSlf4j withRevision "1.2.2",
+        Libraries.logback,
+        Libraries.cirisCore withRevision "1.2.1",
+        Libraries.cirisRefined withRevision "1.2.1",
+        Libraries.refined
       )
     )
     .settings(commonSettings: _*)

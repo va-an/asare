@@ -5,7 +5,7 @@ import cats.effect.{ ExitCode, IO }
 import org.http4s.server.blaze.BlazeServerBuilder
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import io.vaan.asare.config.load
+import io.vaan.asare.config
 import io.vaan.asare.modules._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
