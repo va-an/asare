@@ -5,6 +5,7 @@ import ciris.refined._
 import eu.timepit.refined.types.net.UserPortNumber
 import eu.timepit.refined.types.string.NonEmptyString
 import eu.timepit.refined.auto._
+import cats.Show
 import cats.implicits._
 import cats.effect.Async
 
@@ -13,6 +14,14 @@ object Configuration {
       apiHost: NonEmptyString,
       apiPort: UserPortNumber
   )
+
+  implicit val showConfig: Show[Config] =
+    (config: Config) => s"""
+    Config(
+      apiHost = ${config.apiHost},
+      apiPort = ${config.apiPort}
+    )
+    """
 
   val config: ConfigValue[Effect, Config] =
     (

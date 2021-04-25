@@ -1,5 +1,6 @@
 package io.vaan.asare.backend
 
+import cats.implicits._
 import cats.effect.IOApp
 import cats.effect.{ ExitCode, IO }
 import org.http4s.server.blaze.BlazeServerBuilder
@@ -15,6 +16,7 @@ object Main extends IOApp {
     config.load[IO] flatMap { cfg =>
       for {
         logger    <- Slf4jLogger.create[IO]
+        _         <- logger.info(s"Loaded config: ${cfg.show}")
         algrebras <- Algebras.make[IO]()
         programs  <- Programs.make[IO](algrebras)
         api       <- HttpApi.make[IO](algrebras, programs)
