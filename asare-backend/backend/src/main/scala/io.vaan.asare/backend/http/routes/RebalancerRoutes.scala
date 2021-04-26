@@ -6,9 +6,9 @@ import org.http4s._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.server.Router
 import org.http4s.circe._
+import org.http4s.circe.CirceEntityEncoder._
 import io.circe.generic.auto._
 import io.circe.syntax._
-import org.http4s.circe.CirceEntityEncoder._
 import io.vaan.asare.backend.algrebras.rebalancer.RebalancerA
 import io.vaan.asare.backend.domain.rebalance._
 

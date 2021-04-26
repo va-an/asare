@@ -4,27 +4,14 @@ import ciris._
 import ciris.refined._
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.string.Url
-import eu.timepit.refined.types.net.UserPortNumber
 import eu.timepit.refined.types.string.NonEmptyString
 import eu.timepit.refined.auto._
 import cats.implicits._
 import cats.effect.Async
 import cats.Show
+import io.vaan.asare.bot.config.data.config._
 
-object Configuration {
-  final case class Config(
-      token: NonEmptyString,
-      backendUrl: String Refined Url
-  )
-
-  implicit val showConfig: Show[Config] =
-    (config: Config) => s"""
-    Config(
-      token       = ${config.token},
-      backendUrl  = ${config.backendUrl}
-    )
-    """
-
+object configuration {
   val config: ConfigValue[Config] =
     (
       // format: off

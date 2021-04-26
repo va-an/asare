@@ -32,15 +32,14 @@ lazy val backend =
         Libraries.log4catsSlf4j,
         Libraries.logback,
         Libraries.refined
-      ),
-      assembly / mainClass := Some("io.vaan.asare.backend.Main")
+      )
     )
     .settings(commonSettings: _*)
 
 lazy val `telegram-bot` = 
   (project in file("telegram-bot"))
     .settings(
-      version := "0.0.1",
+      version := "0.1.0",
       libraryDependencies ++= Seq(
         Libraries.cats,
         Libraries.catsEffect withRevision "2.5.0",
@@ -49,7 +48,10 @@ lazy val `telegram-bot` =
         Libraries.logback,
         Libraries.cirisCore withRevision "1.2.1",
         Libraries.cirisRefined withRevision "1.2.1",
-        Libraries.refined
+        Libraries.refined,
+        Libraries.http4sClient withRevision "0.21.22",
+        Libraries.http4sCirce withRevision "0.21.22",
+        Libraries.circeGeneric
       )
     )
     .settings(commonSettings: _*)
