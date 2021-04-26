@@ -8,7 +8,7 @@ import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
-import io.vaan.asare.backend.config.Configuration._
+import io.vaan.asare.backend.config.configuration._
 import io.vaan.asare.backend.modules._
 
 object Main extends IOApp {

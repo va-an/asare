@@ -6,7 +6,7 @@ import org.http4s.circe._
 import org.http4s.circe.CirceEntityEncoder._
 import cats.effect.Sync
 import io.vaan.asare.bot.http.clients.RebalanceClient
-import io.vaan.asare.bot.config.data.config.Config
+import io.vaan.asare.bot.config.data._
 import io.vaan.asare.bot.domain.rebalance._
 import io.vaan.asare.bot.http.clients.LiveRebalanceClient
 

@@ -9,7 +9,7 @@ import eu.timepit.refined.auto._
 import cats.implicits._
 import cats.effect.Async
 import cats.Show
-import io.vaan.asare.bot.config.data.config._
+import io.vaan.asare.bot.config.data._
 
 object configuration {
   val config: ConfigValue[Config] =

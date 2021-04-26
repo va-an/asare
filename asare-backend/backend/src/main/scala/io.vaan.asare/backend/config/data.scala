@@ -1,22 +1,22 @@
-package io.vaan.asare.bot.config
+package io.vaan.asare.backend.config
 
+import eu.timepit.refined.api.Refined
 import eu.timepit.refined.types.net.UserPortNumber
 import eu.timepit.refined.types.string.NonEmptyString
-import eu.timepit.refined.api.Refined
-import eu.timepit.refined.string.Url
+import eu.timepit.refined.string._
 import cats.Show
 
 object data {
   final case class Config(
-      token: NonEmptyString,
-      backendUrl: String Refined Url
+      apiHost: String Refined IPv4,
+      apiPort: UserPortNumber
   )
 
   implicit val showConfig: Show[Config] =
     (config: Config) => s"""
     Config(
-      token       = ${config.token},
-      backendUrl  = ${config.backendUrl}
+      apiHost = ${config.apiHost},
+      apiPort = ${config.apiPort}
     )
     """
 }

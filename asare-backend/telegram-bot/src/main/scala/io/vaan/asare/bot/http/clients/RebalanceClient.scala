@@ -6,7 +6,7 @@ import org.http4s.circe._
 import io.circe.generic.auto._
 import org.http4s.circe.CirceEntityEncoder._
 import io.vaan.asare.bot.domain.rebalance._
-import io.vaan.asare.bot.config.data
+import io.vaan.asare.bot.config.data._
 import cats.effect.Sync
 
 trait RebalanceClient[F[_]] {
@@ -14,7 +14,7 @@ trait RebalanceClient[F[_]] {
 }
 
 final class LiveRebalanceClient[F[_]: Sync](
-    config: data.config.Config,
+    config: Config,
     client: Client[F]
 ) extends RebalanceClient[F] {
   override def rebalanceV3(input: RebalanceInput): F[RebalanceOutput] =
