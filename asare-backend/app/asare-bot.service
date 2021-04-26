@@ -1,0 +1,9 @@
+[Unit]
+Description=asare-bot
+
+[Service]
+ExecStart=/opt/jdk-12/bin/java -Xms32m -Xmx64m -jar /opt/asare/telegram-bot-assembly-0.1.0.jar
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

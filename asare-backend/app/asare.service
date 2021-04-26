@@ -1,9 +1,0 @@
-[Unit]
-Description=asare
-
-[Service]
-ExecStart=/opt/jdk-12/bin/java -Xms64m -Xmx64m -jar /opt/asare/core-assembly-1.0.0.jar
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
