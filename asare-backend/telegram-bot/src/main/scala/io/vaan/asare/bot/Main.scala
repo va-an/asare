@@ -14,9 +14,10 @@ import io.vaan.asare.bot.http.clients.RebalanceClient
 import io.vaan.asare.bot.scenarios._
 import io.vaan.asare.bot.algebras._
 
-// TODO: show bot commands
 // TODO: show help for unknown command
 // TODO: ru lang version and settings for this
+// TODO: rebalance with target
+// TODO: parse amount with "_", example 123_456.78
 // FIXME: blow up when input requared allocation is != 100
 object Main extends IOApp {
   override def run(args: List[String]): IO[ExitCode] =
@@ -39,7 +40,8 @@ object Main extends IOApp {
                     ExampleS[IO],
                     RebalanceS[IO](clients.rebalanceClient, inputParser),
                     HelpS[IO],
-                    AboutS[IO]
+                    AboutS[IO],
+                    Commands[IO]
                   )
               )
               .compile
