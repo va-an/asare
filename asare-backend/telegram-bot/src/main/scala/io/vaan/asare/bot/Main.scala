@@ -15,8 +15,9 @@ import io.vaan.asare.bot.scenarios._
 import io.vaan.asare.bot.algebras._
 
 // TODO: show bot commands
-// TODO: message after start
-// TODO: help page
+// TODO: show help for unknown command
+// TODO: ru lang version and settings for this
+// FIXME: blow up when input requared allocation is != 100
 object Main extends IOApp {
   override def run(args: List[String]): IO[ExitCode] =
     config.load[IO] flatMap { cfg =>
@@ -34,8 +35,11 @@ object Main extends IOApp {
                 Bot
                   .polling[IO]
                   .follow(
-                    rebalanceScenario(clients.rebalanceClient, inputParser),
-                    exampleScenario
+                    StartS[IO],
+                    ExampleS[IO],
+                    RebalanceS[IO](clients.rebalanceClient, inputParser),
+                    HelpS[IO],
+                    AboutS[IO]
                   )
               )
               .compile

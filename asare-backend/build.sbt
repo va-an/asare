@@ -39,7 +39,7 @@ lazy val backend =
 lazy val `telegram-bot` = 
   (project in file("telegram-bot"))
     .settings(
-      version := "0.1.0",
+      version := "0.2.0",
       libraryDependencies ++= Seq(
         Libraries.cats,
         Libraries.catsEffect withRevision "2.5.0",
