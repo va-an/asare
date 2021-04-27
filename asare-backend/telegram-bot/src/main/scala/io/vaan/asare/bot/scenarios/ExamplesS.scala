@@ -5,7 +5,7 @@ import canoe.syntax._
 import cats.syntax.show._
 import io.vaan.asare.bot.scanarios._
 
-object ExampleS {
+object ExamplesS {
   def apply[F[_]: TelegramClient]: Scenario[F, Unit] =
     for {
       chat <- Scenario.expect((command("example") orElse command("e")).chat)

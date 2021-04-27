@@ -5,7 +5,7 @@ import canoe.syntax._
 import canoe.methods.commands.SetMyCommands
 import canoe.models.BotCommand
 
-object Commands {
+object CommandsS {
   def apply[F[_]: TelegramClient]: Scenario[F, Unit] =
     for {
       commands <- Scenario.pure(
