@@ -14,9 +14,9 @@ object data {
 
   implicit val showConfig: Show[Config] =
     (config: Config) => s"""
-    Config(
-      token       = ${config.token},
-      backendUrl  = ${config.backendUrl}
-    )
-    """
+      |Config(
+      |  token       = ${config.token},
+      |  backendUrl  = ${config.backendUrl}
+      |)
+    """.stripMargin
 }

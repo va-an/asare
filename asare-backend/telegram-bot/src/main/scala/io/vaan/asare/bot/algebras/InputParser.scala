@@ -22,9 +22,13 @@ object LiveInputParser {
                   .map(line => line.split(" "))
                   .toList
 
-              val currentPortfolio = inputList
-                .map(array => array(0) -> array(1).toDouble)
-                .toMap
+              val currentPortfolio = inputList.map { array =>
+                val value = array(1)
+                  .filterNot(x => x == '_')
+                  .toDouble
+
+                array(0) -> value
+              }.toMap
 
               val requiredAllocation = inputList
                 .map(array => array(0) -> array(2).toDouble)

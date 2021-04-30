@@ -18,7 +18,6 @@ import io.vaan.asare.bot.algebras._
 // TODO: ru lang version and settings for this
 // TODO: rebalance with target
 // TODO: rebalance with price (not amount)
-// TODO: parse amount with "_", example 123_456.78
 // FIXME: blow up when input requared allocation is != 100
 object Main extends IOApp {
   override def run(args: List[String]): IO[ExitCode] =
