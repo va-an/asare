@@ -8,9 +8,8 @@ import io.vaan.asare.bot.scanarios._
 object ExamplesS {
   def apply[F[_]: TelegramClient]: Scenario[F, Unit] =
     for {
-      chat <- Scenario.expect((command("example") orElse command("e")).chat)
-
-      _ <- Scenario.eval(chat send exampleMessage)
-      _ <- Scenario.eval(chat send example)
+      chat <- Scenario.expect(command("example").chat)
+      _    <- Scenario.eval(chat send exampleMessage)
+      _    <- Scenario.eval(chat send example)
     } yield ()
 }

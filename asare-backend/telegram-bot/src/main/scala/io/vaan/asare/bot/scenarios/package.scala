@@ -5,9 +5,9 @@ package object scanarios {
     |Bot for calculation asset allocation rebalance.
     |
     |Commands:
-    |/rebalance or /r - calculate rebalance
-    |/example or /e - example input message for /r
-    |/help or /h - help
+    |/rebalance - calculate rebalance
+    |/example - example input message for /rebalance
+    |/help - help
     |/about - for feature request and bug reports
     """.stripMargin.strip
 

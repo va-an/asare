@@ -7,7 +7,7 @@ import io.vaan.asare.bot.scanarios._
 object HelpS {
   def apply[F[_]: TelegramClient]: Scenario[F, Unit] =
     for {
-      chat <- Scenario.expect((command("help") orElse command("h")).chat)
+      chat <- Scenario.expect(command("help").chat)
       _    <- Scenario.eval(chat send help)
     } yield ()
 }

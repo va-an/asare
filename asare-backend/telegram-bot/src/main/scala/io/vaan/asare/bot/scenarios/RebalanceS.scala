@@ -14,7 +14,7 @@ object RebalanceS {
       inputParser: InputParser[F]
   ): Scenario[F, Unit] =
     for {
-      chat <- Scenario.expect((command("rebalance") orElse command("r")).chat)
+      chat <- Scenario.expect(command("rebalance").chat)
 
       _ <- Scenario.eval(
         chat send "Enter your portfolio and desired allocation" // (show /example)")
