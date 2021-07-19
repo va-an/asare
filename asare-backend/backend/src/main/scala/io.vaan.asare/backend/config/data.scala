@@ -14,9 +14,9 @@ object data {
 
   implicit val showConfig: Show[Config] =
     (config: Config) => s"""
-    Config(
-      apiHost = ${config.apiHost},
-      apiPort = ${config.apiPort}
-    )
-    """
+    |Config(
+    |  apiHost = ${config.apiHost},
+    |  apiPort = ${config.apiPort}
+    |)
+    |""".stripMargin
 }

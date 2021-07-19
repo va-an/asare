@@ -21,7 +21,10 @@ final class RebalancerRoutesV3[F[_]: Monad: Defer: JsonDecoder](
         request
           .asJsonDecode[RebalanceInput]
           .flatMap { input =>
-            Ok(rebalancerP.rebalance(input))
+            input.requiredAllocation.values.sum match {
+              case 100.0 => Ok(rebalancerP.rebalance(input))
+              case _     => UnprocessableEntity("required allocation sum != 100")
+            }
           }
     }
 

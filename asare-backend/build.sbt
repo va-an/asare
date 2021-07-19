@@ -1,5 +1,6 @@
 import Dependencies._
 
+Global / cancelable := true
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 ThisBuild / organization := "io.vaan"
@@ -18,7 +19,7 @@ ThisBuild / scalacOptions ++= Seq(
 lazy val backend =
   (project in file("backend"))
     .settings(
-      version := "1.1.3",
+      version := "1.2.0",
       libraryDependencies ++= Seq(
         Libraries.cats,
         Libraries.catsEffect,
