@@ -6,6 +6,8 @@ import cats.implicits._
 object rebalance {
   type Portfolio = Map[String, Double]
 
+  val formatter = java.text.NumberFormat.getInstance()
+
   final case class RebalanceInput(
       currentPortfolio: Portfolio,
       requiredAllocation: Portfolio,
@@ -19,7 +21,8 @@ object rebalance {
 
   implicit val rebalanceOutputBotShow: Show[RebalanceOutput] = {
     def mapToString(m: Map[String, Double]) =
-      m.map(_.productIterator.mkString("\t: "))
+      m.map { case (ticker: String, value: Double) => ticker -> (formatter format value) }
+        .map(_.productIterator.mkString("\t: "))
         .mkString("\n")
 
     (output: RebalanceOutput) => s"""

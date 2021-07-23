@@ -2,7 +2,7 @@
 Build backend jar-file:
 
 ```shell
-$ sbt 'project backend; assembly'
+$ sbt 'project telegram-bot; assembly'
 ```
 
 ---
