@@ -3,12 +3,12 @@ import sbt._
 object Dependencies {
   object Versions {
     val cats           = "2.6.1"
-    val catsEffect     = "3.1.1"
+    val catsEffect     = "3.2.0"
     val http4s         = "1.0.0-M21"
     val scalaTest      = "3.2.5"
     val contextApplied = "0.1.4"
     val circe          = "0.14.1"
-    val log4cats       = "2.0.1"
+    val log4cats       = "2.1.1"
     val logback        = "1.2.3"
     val gatling        = "3.5.1"
     val canoe          = "0.5.1"

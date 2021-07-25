@@ -4,7 +4,7 @@ Global / cancelable := true
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 ThisBuild / organization := "io.vaan"
-ThisBuild / scalaVersion := "2.13.5"
+ThisBuild / scalaVersion := "2.13.6"
 
 ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
@@ -19,7 +19,7 @@ ThisBuild / scalacOptions ++= Seq(
 lazy val backend =
   (project in file("backend"))
     .settings(
-      version := "1.2.0",
+      version := "1.2.1",
       libraryDependencies ++= Seq(
         Libraries.cats,
         Libraries.catsEffect,
