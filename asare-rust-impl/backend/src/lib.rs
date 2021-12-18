@@ -18,38 +18,35 @@ trait Rebalancer {
 impl Rebalancer for RebalancerV1 {
     fn calc_current_allocation(portfolio: &Portfolio) -> Portfolio {
         let sum: f32 = portfolio.values().sum();
-        let mut allocation: Portfolio = Portfolio::new();
 
-        for (ticker, value) in portfolio {
-            allocation.insert(ticker.clone(), *value / sum * 100.0);
-        }
-
-        allocation
+        portfolio
+            .iter()
+            .map(|(ticker, value)| (ticker.clone(), value / sum * 100.0))
+            .collect()
     }
 
     fn calc_expected_portfolio(input: &RebalanceInput) -> Portfolio {
         let sum: f32 = input.current_portfolio.values().sum();
-        let mut expected: Portfolio = Portfolio::new();
 
-        for (ticker, value) in &input.required_allocation {
-            expected.insert(ticker.clone(), value / 100.0 * sum);
-        }
-
-        expected
+        input
+            .required_allocation
+            .iter()
+            .map(|(ticker, value)| (ticker.clone(), value / 100.0 * sum))
+            .collect()
     }
 
     fn calc_purchase(input: &RebalanceInput) -> Portfolio {
         let expected_portfolio = RebalancerV1::calc_expected_portfolio(input);
-        let mut purchaseMap: Portfolio = Portfolio::new();
 
-        for (ticker, value) in &expected_portfolio {
-            purchaseMap.insert(
-                ticker.clone(),
-                value - input.current_portfolio.get(ticker).unwrap(),
-            );
-        }
-
-        purchaseMap
+        expected_portfolio
+            .iter()
+            .map(|(ticker, value)| {
+                (
+                    ticker.clone(),
+                    value - input.current_portfolio.get(ticker).unwrap(),
+                )
+            })
+            .collect()
     }
 }
 
@@ -67,7 +64,7 @@ mod tests {
         ])
     }
 
-    fn reqqired_allocation() -> HashMap<String, f32> {
+    fn required_allocation() -> HashMap<String, f32> {
         HashMap::from([
             ("A".to_string(), 33.0),
             ("B".to_string(), 33.0),
@@ -78,7 +75,7 @@ mod tests {
     fn rebalance_input() -> RebalanceInput {
         RebalanceInput {
             current_portfolio: current_portfolio(),
-            required_allocation: reqqired_allocation(),
+            required_allocation: required_allocation(),
         }
     }
 
@@ -121,7 +118,17 @@ mod tests {
 
     #[test]
     fn calculate_purchase() {
-        // FIXME: write test
-        assert_eq!(true, true);
+        let current_portfolio = current_portfolio();
+        let expected_allocation = RebalancerV1::calc_expected_portfolio(&rebalance_input());
+        let purchases = RebalancerV1::calc_purchase(&rebalance_input());
+
+        for (ticker, value) in &expected_allocation {
+            let current_value = current_portfolio.get(ticker).unwrap();
+            let purchase_value = purchases.get(ticker).unwrap();
+
+            let actual = current_value + purchase_value;
+
+            assert_abs_diff_eq!(actual, value, epsilon = 0.01)
+        }
     }
 }
