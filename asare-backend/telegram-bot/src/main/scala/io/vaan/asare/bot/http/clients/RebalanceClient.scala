@@ -20,7 +20,7 @@ final class LiveRebalanceClient[F[_]: Sync](
   override def rebalanceV3(input: RebalanceInput): F[RebalanceOutput] =
     client.expect[RebalanceOutput] {
       Request[F](Method.POST)
-        .withUri(Uri.unsafeFromString(config.backendUrl.value + "v3/rebel/rebalance"))
+        .withUri(Uri.unsafeFromString(config.backendUrl.value + "v4/rebel/rebalance"))
         .withEntity(input)
         .withHeaders(Header("Content-Type", "application/json"))
     }

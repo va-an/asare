@@ -9,14 +9,14 @@ object rebalance {
   val formatter = java.text.NumberFormat.getInstance()
 
   final case class RebalanceInput(
-      currentPortfolio: Portfolio,
-      requiredAllocation: Portfolio,
+      current_portfolio: Portfolio,
+      required_allocation: Portfolio,
       target: Option[Double]
   )
 
   final case class RebalanceOutput(
-      currentAllocation: Portfolio,
-      requiredOperations: Portfolio
+      current_allocation: Portfolio,
+      required_operations: Portfolio
   )
 
   implicit val rebalanceOutputBotShow: Show[RebalanceOutput] = {
@@ -25,12 +25,13 @@ object rebalance {
         .map(_.productIterator.mkString("\t: "))
         .mkString("\n")
 
-    (output: RebalanceOutput) => s"""
+    (output: RebalanceOutput) =>
+      s"""
       |current allocation:
-      |${mapToString(output.currentAllocation)}
+      |${mapToString(output.current_allocation)}
 
       |required operations:
-      |${mapToString(output.requiredOperations)}
+      |${mapToString(output.required_operations)}
       """.stripMargin
   }
 }

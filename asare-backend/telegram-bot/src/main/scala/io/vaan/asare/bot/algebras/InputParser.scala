@@ -35,8 +35,8 @@ object LiveInputParser {
                 .toMap
 
               RebalanceInput(
-                currentPortfolio = currentPortfolio,
-                requiredAllocation = requiredAllocation,
+                current_portfolio = currentPortfolio,
+                required_allocation = requiredAllocation,
                 target = None
               )
             }
