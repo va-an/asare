@@ -1,8 +1,9 @@
-use warp::Filter;
+use backend::AsareApp;
 
-#[tokio::main]
-async fn main() {
-    let hello = warp::path!("hello" / String).map(|name| format!("Hello, {}!", name));
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    let port = 8008;
 
-    warp::serve(hello).run(([127, 0, 0, 1], 8008)).await;
+    let app = AsareApp::new(port);
+    app.run().await
 }

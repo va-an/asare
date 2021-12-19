@@ -1,7 +1,44 @@
+use actix_web::web::Json;
+use actix_web::{
+    middleware, post, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder, Result,
+};
+use env_logger::Env;
+use serde_derive::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 type Portfolio = HashMap<String, f32>;
 
+pub struct AsareApp {
+    port: u16,
+}
+
+#[post("/rebalance")]
+async fn rebalance_request(req: web::Json<RebalanceInput>) -> Result<HttpResponse, Error> {
+    let response = RebalancerV1::calc_purchase(&req.0);
+
+    Ok(HttpResponse::Ok().json(response))
+}
+
+impl AsareApp {
+    pub fn new(port: u16) -> AsareApp {
+        AsareApp { port }
+    }
+
+    pub async fn run(self) -> std::io::Result<()> {
+        env_logger::from_env(Env::default().default_filter_or("info")).init();
+
+        HttpServer::new(|| {
+            App::new()
+                .service(rebalance_request)
+                .wrap(middleware::Logger::default())
+        })
+        .bind(("127.0.0.1", self.port))?
+        .run()
+        .await
+    }
+}
+
+#[derive(Deserialize)]
 struct RebalanceInput {
     current_portfolio: Portfolio,
     required_allocation: Portfolio,
