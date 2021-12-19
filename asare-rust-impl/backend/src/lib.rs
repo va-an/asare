@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use actix_web::{middleware, App, HttpServer};
+use actix_web::{middleware, web, App, HttpServer};
 use env_logger::Env;
 use serde_derive::Deserialize;
 
@@ -20,11 +20,11 @@ impl AsareApp {
     }
 
     pub async fn run(self) -> std::io::Result<()> {
-        env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
+        env_logger::Builder::from_env(Env::default().default_filter_or("debug")).init();
 
         HttpServer::new(|| {
             App::new()
-                .service(rebalance_request)
+                .service(web::scope("/v4/rebel/").service(rebalance_request))
                 .wrap(middleware::Logger::default())
         })
         .bind(("127.0.0.1", self.port))?
@@ -34,7 +34,7 @@ impl AsareApp {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct RebalanceInput {
     current_portfolio: Portfolio,
     required_allocation: Portfolio,
