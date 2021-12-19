@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use actix_web::{middleware, web, App, HttpServer};
-use env_logger::Env;
 use serde_derive::Deserialize;
 
 use crate::routes::rebalance_request;
@@ -20,8 +19,6 @@ impl AsareApp {
     }
 
     pub async fn run(self) -> std::io::Result<()> {
-        env_logger::Builder::from_env(Env::default().default_filter_or("debug")).init();
-
         HttpServer::new(|| {
             App::new()
                 .service(web::scope("/v4/rebel/").service(rebalance_request))
