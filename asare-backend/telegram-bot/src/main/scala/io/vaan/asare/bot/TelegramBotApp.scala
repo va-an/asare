@@ -3,7 +3,7 @@ package io.vaan.asare.bot
 import ciris._
 import canoe.api._
 import canoe.syntax._
-import cats.effect.{ ExitCode, IO, IOApp }
+import cats.effect.{ExitCode, IO, IOApp}
 import cats.implicits._
 import fs2.Stream
 import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
@@ -20,7 +20,7 @@ import io.vaan.asare.bot.algebras._
 // TODO: rebalance with price (not amount)
 // TODO: API for show version
 // FIXME: blow up when input requared allocation is != 100
-object Main extends IOApp {
+object TelegramBotApp extends IOApp {
   override def run(args: List[String]): IO[ExitCode] =
     config.load[IO] flatMap { cfg =>
       AppResources.make[IO]().use { res =>
@@ -30,10 +30,10 @@ object Main extends IOApp {
           clients     <- HttpClients.make[IO](cfg, res.client)
           inputParser <- LiveInputParser.make[IO] // TODO: to Algebras
 
-          bot <-
-            Stream
-              .resource(TelegramClient.global[IO](cfg.token.value))
-              .flatMap(implicit client =>
+          bot <- Stream
+            .resource(TelegramClient.global[IO](cfg.token.value))
+            .flatMap(
+              implicit client =>
                 Bot
                   .polling[IO]
                   .follow(
@@ -43,11 +43,10 @@ object Main extends IOApp {
                     HelpS[IO],
                     AboutS[IO],
                     CommandsS[IO]
-                  )
-              )
-              .compile
-              .drain
-              .as(ExitCode.Success)
+                ))
+            .compile
+            .drain
+            .as(ExitCode.Success)
         } yield bot
       }
     }
