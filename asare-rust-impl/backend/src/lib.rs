@@ -1,11 +1,8 @@
-use std::collections::HashMap;
-
-use actix_web::{middleware, web, App, HttpServer};
-use serde_derive::Deserialize;
-
-use crate::routes::rebalance_request;
-
 mod routes;
+
+use routes::Routes;
+use serde_derive::Deserialize;
+use std::collections::HashMap;
 
 type Portfolio = HashMap<String, f32>;
 
@@ -19,15 +16,7 @@ impl AsareApp {
     }
 
     pub async fn run(self) -> std::io::Result<()> {
-        HttpServer::new(|| {
-            App::new()
-                .service(web::scope("/v4/rebel/").service(rebalance_request))
-                .wrap(middleware::Logger::default())
-        })
-        .bind(("127.0.0.1", self.port))?
-        .workers(8)
-        .run()
-        .await
+        Routes::run_http_server(self.port).await
     }
 }
 
