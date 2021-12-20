@@ -1,4 +1,4 @@
-use backend::{config::Config, AsareApp};
+use backend::{AsareApp, Config};
 use env_logger::Env;
 
 #[actix_web::main]
