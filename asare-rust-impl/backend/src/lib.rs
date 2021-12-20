@@ -1,5 +1,6 @@
 mod routes;
 
+use config::Config;
 use routes::Routes;
 use serde_derive::Deserialize;
 use std::collections::HashMap;
@@ -7,16 +8,16 @@ use std::collections::HashMap;
 type Portfolio = HashMap<String, f32>;
 
 pub struct AsareApp {
-    port: u16,
+    config: Config,
 }
 
 impl AsareApp {
-    pub fn new(port: u16) -> AsareApp {
-        AsareApp { port }
+    pub fn new(config: Config) -> AsareApp {
+        AsareApp { config }
     }
 
     pub async fn run(self) -> std::io::Result<()> {
-        Routes::run_http_server(self.port).await
+        Routes::run_http_server(self.config.http_port).await
     }
 }
 
@@ -66,6 +67,32 @@ impl Rebalancer for RebalancerV1 {
                 )
             })
             .collect()
+    }
+}
+
+pub mod config {
+    use dotenv::dotenv;
+    use serde::Deserialize;
+    #[derive(Deserialize, Debug)]
+
+    pub struct Config {
+        pub http_port: u16,
+    }
+
+    impl Config {
+        pub fn load() -> Config {
+            dotenv().ok();
+
+            let config = match envy::from_env::<Config>() {
+                Ok(config) => {
+                    log::info!("Loaded config: \n{:#?}", config);
+                    config
+                }
+                Err(error) => panic!("{:#?}", error),
+            };
+
+            config
+        }
     }
 }
 
