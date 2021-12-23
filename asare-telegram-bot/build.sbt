@@ -16,27 +16,6 @@ ThisBuild / scalacOptions ++= Seq(
   "-Ymacro-annotations"
 )
 
-lazy val backend =
-  (project in file("backend"))
-    .settings(
-      version := "1.2.1",
-      libraryDependencies ++= Seq(
-        Libraries.cats,
-        Libraries.catsEffect,
-        Libraries.circeGeneric,
-        Libraries.cirisCore,
-        Libraries.cirisRefined,
-        Libraries.scalaTest,
-        Libraries.http4sDsl,
-        Libraries.http4sServer,
-        Libraries.http4sCirce,
-        Libraries.log4catsSlf4j,
-        Libraries.logback,
-        Libraries.refined
-      )
-    )
-    .settings(commonSettings: _*)
-
 lazy val `telegram-bot` = 
   (project in file("telegram-bot"))
     .settings(
