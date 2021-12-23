@@ -77,7 +77,6 @@ mod tests {
     use crate::*;
     use approx::*;
 
-    // TODO: how store shared objects instead functions?
     fn current_portfolio() -> Portfolio {
         Portfolio::from([
             ("A".to_string(), 75_000.0),
@@ -108,13 +107,9 @@ mod tests {
         let sum: f32 = result.values().sum();
         assert_abs_diff_eq!(sum, 100.0);
 
-        let get_and_compare = |key: &str, to_compare: f32| {
-            assert_abs_diff_eq!(*result.get(key).unwrap(), to_compare, epsilon = 0.01);
-        };
-
-        get_and_compare("A", 25.0);
-        get_and_compare("B", 33.33);
-        get_and_compare("C", 41.66);
+        assert_abs_diff_eq!(result["A"], 25.0, epsilon = 0.01);
+        assert_abs_diff_eq!(result["B"], 33.33, epsilon = 0.01);
+        assert_abs_diff_eq!(result["C"], 41.66, epsilon = 0.01);
     }
 
     #[test]
@@ -124,18 +119,9 @@ mod tests {
         let sum: f32 = expected_allocation.values().sum();
         assert_abs_diff_eq!(sum, 300_000.0);
 
-        // TODO: duplicated - move to function?
-        let get_and_compare = |key: &str, to_compare: f32| {
-            assert_abs_diff_eq!(
-                *expected_allocation.get(key).unwrap(),
-                to_compare,
-                epsilon = 0.01
-            );
-        };
-
-        get_and_compare("A", 99_000.0);
-        get_and_compare("B", 99_000.0);
-        get_and_compare("C", 102_000.0);
+        assert_abs_diff_eq!(expected_allocation["A"], 99_000.0, epsilon = 0.01);
+        assert_abs_diff_eq!(expected_allocation["B"], 99_000.0, epsilon = 0.01);
+        assert_abs_diff_eq!(expected_allocation["C"], 102_000.0, epsilon = 0.01);
     }
 
     #[test]
