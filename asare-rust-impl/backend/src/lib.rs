@@ -19,7 +19,7 @@ impl AsareApp {
     }
 
     pub async fn run(self) -> std::io::Result<()> {
-        Routes::run_http_server(self.config.http_port).await
+        Routes::run_http_server(self.config).await
     }
 }
 

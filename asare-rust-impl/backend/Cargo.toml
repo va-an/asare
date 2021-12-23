@@ -22,3 +22,5 @@ dotenv = "0.15.0"
 
 # utils 
 approx = "0.5.0"
+
+clap = "2.34.0"

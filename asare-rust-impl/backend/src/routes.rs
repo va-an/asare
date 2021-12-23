@@ -1,5 +1,6 @@
 use actix_web::{middleware, post, web, App, Error, HttpResponse, HttpServer, Result};
 
+use crate::conf::Config;
 use crate::{Portfolio, RebalancerV1};
 use crate::{RebalanceInput, Rebalancer};
 use serde_derive::Serialize;
@@ -7,13 +8,13 @@ use serde_derive::Serialize;
 pub struct Routes {}
 
 impl Routes {
-    pub async fn run_http_server(port: u16) -> std::io::Result<()> {
+    pub async fn run_http_server(config: Config) -> std::io::Result<()> {
         HttpServer::new(|| {
             App::new()
                 .service(web::scope("/v4/rebel/").service(rebalance_request))
                 .wrap(middleware::Logger::default())
         })
-        .bind(("127.0.0.1", port))?
+        .bind((config.http_host, config.http_port))?
         .workers(8)
         .run()
         .await
