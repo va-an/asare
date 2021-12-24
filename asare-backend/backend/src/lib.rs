@@ -3,7 +3,7 @@ mod routes;
 
 pub use crate::conf::Config;
 
-use routes::Routes;
+use routes::{ActixHttpServer, AsareHttpServer};
 use serde_derive::Deserialize;
 use std::collections::HashMap;
 
@@ -19,7 +19,7 @@ impl AsareApp {
     }
 
     pub async fn run(self) -> std::io::Result<()> {
-        Routes::run_http_server(self.config).await
+        ActixHttpServer::run_http_server(self.config).await
     }
 }
 

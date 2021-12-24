@@ -3,12 +3,18 @@ use actix_web::{middleware, post, web, App, Error, HttpResponse, HttpServer, Res
 use crate::conf::Config;
 use crate::{Portfolio, RebalancerV1};
 use crate::{RebalanceInput, Rebalancer};
+use async_trait::async_trait;
 use serde_derive::Serialize;
 
-pub struct Routes {}
+#[async_trait(?Send)]
+pub trait AsareHttpServer {
+    async fn run_http_server(config: Config) -> std::io::Result<()>;
+}
+pub struct ActixHttpServer {}
 
-impl Routes {
-    pub async fn run_http_server(config: Config) -> std::io::Result<()> {
+#[async_trait(?Send)]
+impl AsareHttpServer for ActixHttpServer {
+    async fn run_http_server(config: Config) -> std::io::Result<()> {
         HttpServer::new(|| {
             App::new()
                 .service(web::scope("/v4/rebel/").service(rebalance_request))
@@ -20,6 +26,7 @@ impl Routes {
         .await
     }
 }
+
 #[derive(Serialize, Debug)]
 struct RebalanceOutput {
     current_allocation: Portfolio,
