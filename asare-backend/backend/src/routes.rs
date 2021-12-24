@@ -1,8 +1,8 @@
 use actix_web::{middleware, post, web, App, Error, HttpResponse, HttpServer, Result};
 
 use crate::conf::Config;
-use crate::{Portfolio, RebalancerV1};
-use crate::{RebalanceInput, Rebalancer};
+use crate::rebalancer::{Portfolio, RebalanceInput, RebalancerV1};
+use crate::Rebalancer;
 use async_trait::async_trait;
 use serde_derive::Serialize;
 
@@ -10,7 +10,7 @@ use serde_derive::Serialize;
 pub trait AsareHttpServer {
     async fn run_http_server(config: Config) -> std::io::Result<()>;
 }
-pub struct ActixHttpServer {}
+pub struct ActixHttpServer;
 
 #[async_trait(?Send)]
 impl AsareHttpServer for ActixHttpServer {
