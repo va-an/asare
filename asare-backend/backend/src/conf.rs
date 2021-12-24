@@ -11,29 +11,10 @@ pub struct Config {
 impl Config {
     pub fn load() -> Config {
         let args = Config::parse_args();
-        let is_custom_path = args.value_of("config");
+        let dotenv_path = args.value_of("config");
 
-        // FIXME: error handling
-        match is_custom_path {
-            Some(config_path) => {
-                dotenv::from_path(config_path);
-                ()
-            }
-            None => {
-                dotenv();
-                ()
-            }
-        }
-
-        let config = match envy::from_env::<Config>() {
-            Ok(config) => {
-                log::info!("Loaded config: \n{:#?}", config);
-                config
-            }
-            Err(error) => panic!("{:#?}", error),
-        };
-
-        config
+        Config::load_dotenv(dotenv_path);
+        Config::load_envy()
     }
 
     fn parse_args() -> ArgMatches<'static> {
@@ -46,5 +27,41 @@ impl Config {
                     .help("Sets a path for .env file"),
             )
             .get_matches()
+    }
+
+    // TODO: to Result
+    fn load_dotenv(dotenv_path: Option<&str>) {
+        match dotenv_path {
+            Some(config_path) => match dotenv::from_path(config_path) {
+                Ok(_) => log::debug!("dotenv - loaded .env file from {}", config_path),
+                Err(error) => {
+                    log::error!("dotenv - error with load .env file from {}", config_path);
+                    panic!("{:#?}", error)
+                }
+            },
+            None => match dotenv() {
+                Ok(_) => log::debug!("dotenv - loaded config"),
+                Err(error) => {
+                    log::error!("error loading .env file");
+                    panic!("{:#?}", error)
+                }
+            },
+        }
+    }
+
+    // TODO: to Result
+    fn load_envy() -> Config {
+        let config = match envy::from_env::<Config>() {
+            Ok(config) => {
+                log::info!("Loaded config: \n{:#?}", config);
+                config
+            }
+            Err(error) => {
+                log::error!("Error loading config: {}", error);
+                panic!("{:#?}", error)
+            }
+        };
+
+        config
     }
 }
