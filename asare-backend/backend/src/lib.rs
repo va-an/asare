@@ -1,11 +1,16 @@
+mod app;
 mod conf;
 mod rebalancer;
-mod routes;
+mod users;
+
+use std::collections::HashMap;
+
+use app::{ActixHttpServer, AsareHttpServer};
 
 pub use crate::conf::Config;
-pub use crate::rebalancer::{RebalanceInput, Rebalancer, RebalancerV1};
+pub use crate::rebalancer::domain::{RebalanceInput, Rebalancer, RebalancerV1};
 
-use routes::{ActixHttpServer, AsareHttpServer};
+pub type Portfolio = HashMap<String, f32>;
 
 pub struct AsareApp {
     config: Config,
