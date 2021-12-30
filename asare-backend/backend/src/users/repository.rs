@@ -1,16 +1,16 @@
 use std::{cell::RefCell, collections::HashMap};
 
 #[derive(Debug, PartialEq, Clone)]
-struct User {
+pub struct User {
     id: i32,
 }
 
-trait UserReposotory {
+pub trait UserReposotory {
     fn create(&self) -> User;
     fn delete(&self, id: &i32);
 }
 
-struct UserRepoInMemory {
+pub struct UserRepoInMemory {
     users: RefCell<HashMap<i32, User>>,
     id_counter: RefCell<i32>,
 }
