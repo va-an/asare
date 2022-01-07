@@ -1,6 +1,8 @@
-use std::{cell::RefCell, collections::HashMap};
+use std::{cell::RefCell, collections::HashMap, sync::Mutex};
 
-#[derive(Debug, PartialEq, Clone)]
+use serde::Serialize;
+
+#[derive(Debug, PartialEq, Clone, Serialize)]
 pub struct User {
     id: i32,
 }
@@ -8,24 +10,26 @@ pub struct User {
 pub trait UserReposotory {
     fn create(&self) -> User;
     fn delete(&self, id: &i32);
+    fn find_all(&self) -> Vec<User>;
 }
 
+#[derive(Debug)]
 pub struct UserRepoInMemory {
-    users: RefCell<HashMap<i32, User>>,
-    id_counter: RefCell<i32>,
+    users: Mutex<HashMap<i32, User>>,
+    id_counter: Mutex<i32>,
 }
 
 impl UserRepoInMemory {
-    fn new() -> UserRepoInMemory {
+    pub fn new() -> UserRepoInMemory {
         UserRepoInMemory {
-            users: RefCell::new(HashMap::new()),
-            id_counter: RefCell::new(0),
+            users: Mutex::new(HashMap::new()),
+            id_counter: Mutex::new(0),
         }
     }
 
     fn next_id(&self) -> i32 {
-        let next = *self.id_counter.borrow() + 1;
-        *self.id_counter.borrow_mut() = next;
+        let next = *self.id_counter.lock().unwrap() + 1;
+        *self.id_counter.lock().unwrap() = next;
 
         next
     }
@@ -36,13 +40,22 @@ impl UserReposotory for UserRepoInMemory {
         let id = self.next_id();
         let user = User { id };
 
-        self.users.borrow_mut().insert(user.id, user.clone());
+        self.users.lock().unwrap().insert(user.id, user.clone());
 
         user
     }
 
     fn delete(&self, id: &i32) {
         todo!()
+    }
+
+    fn find_all(&self) -> Vec<User> {
+        self.users
+            .lock()
+            .unwrap()
+            .values()
+            .map(|user| user.clone())
+            .collect()
     }
 }
 

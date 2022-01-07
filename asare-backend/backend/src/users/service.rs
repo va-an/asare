@@ -1,23 +1,22 @@
-use crate::users::repository::{UserRepoInMemory, UserReposotory};
+use crate::{users::repository::UserReposotory, UserRepoInMemory};
 
 use super::repository::User;
 
-trait UserService {
-    fn create_user(&self) -> User;
+#[derive(Debug)]
+pub struct UserService {
+    user_repo: UserRepoInMemory,
 }
 
-struct UserServiceImpl {
-    user_repo: Box<dyn UserReposotory>,
-}
-
-impl UserServiceImpl {
-    fn new(user_repo: Box<dyn UserReposotory>) -> UserServiceImpl {
-        UserServiceImpl { user_repo }
+impl UserService {
+    pub fn new(user_repo: UserRepoInMemory) -> UserService {
+        UserService { user_repo }
     }
-}
 
-impl UserService for UserServiceImpl {
-    fn create_user(&self) -> User {
+    pub fn create_user(&self) -> User {
         self.user_repo.create()
+    }
+
+    pub fn find_all(&self) -> Vec<User> {
+        self.user_repo.find_all()
     }
 }
