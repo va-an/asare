@@ -1,14 +1,16 @@
-use std::{cell::RefCell, collections::HashMap, sync::Mutex};
-
 use serde::Serialize;
+use std::{collections::HashMap, sync::Mutex};
 
 #[derive(Debug, PartialEq, Clone, Serialize)]
 pub struct User {
     id: i32,
+    login: String,
+    password: String, // FIXME: store hash instead raw password
+    api_key: String,
 }
 
 pub trait UserReposotory {
-    fn create(&self) -> User;
+    fn create(&self, login: &str, password: &str, api_key: &str) -> User;
     fn delete(&self, id: &i32);
     fn find_all(&self) -> Vec<User>;
 }
@@ -36,9 +38,14 @@ impl UserRepoInMemory {
 }
 
 impl UserReposotory for UserRepoInMemory {
-    fn create(&self) -> User {
+    fn create(&self, login: &str, password: &str, api_key: &str) -> User {
         let id = self.next_id();
-        let user = User { id };
+        let user = User {
+            id,
+            login: login.to_owned(),
+            password: password.to_owned(),
+            api_key: api_key.to_owned(),
+        };
 
         self.users.lock().unwrap().insert(user.id, user.clone());
 
