@@ -69,13 +69,13 @@ impl UserReposotory for UserRepoInMemory {
 #[cfg(test)]
 mod tests {
     use super::{UserRepoInMemory, UserReposotory};
-    use crate::users::apikey::ApiKey;
+    use crate::users::generators::ApiKeyGenerator;
 
     #[test]
     fn create_user() {
         let user_repo = UserRepoInMemory::new();
-        let user_1 = user_repo.create("one", "pass1", &ApiKey::new());
-        let user_2 = user_repo.create("two", "pass2", &ApiKey::new());
+        let user_1 = user_repo.create("one", "pass1", &ApiKeyGenerator::generate());
+        let user_2 = user_repo.create("two", "pass2", &ApiKeyGenerator::generate());
 
         assert_ne!(user_1, user_2);
     }

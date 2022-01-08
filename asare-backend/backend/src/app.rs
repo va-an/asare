@@ -1,8 +1,32 @@
+use std::collections::HashMap;
+
 use crate::rebalancer::routes::rebalance_request;
 use crate::users::routes::{create_user, login_user};
-use crate::AsareApp;
+use crate::{Config, UserService};
 use actix_web::{middleware, web, App, HttpServer};
 use async_trait::async_trait;
+
+pub type Portfolio = HashMap<String, f32>;
+
+pub struct AsareApp {
+    config: Config,
+    user_service: UserService,
+}
+
+impl AsareApp {
+    pub fn new(config: Config) -> AsareApp {
+        let user_service = UserService::new();
+
+        AsareApp {
+            config,
+            user_service,
+        }
+    }
+
+    pub async fn run(self) -> std::io::Result<()> {
+        ActixHttpServer::run_http_server(self).await
+    }
+}
 
 #[async_trait(?Send)]
 pub trait AsareHttpServer {

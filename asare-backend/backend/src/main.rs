@@ -1,4 +1,13 @@
-use backend::{AsareApp, Config};
+pub mod app;
+pub mod conf;
+pub mod rebalancer;
+pub mod users;
+
+pub use crate::conf::Config;
+pub use crate::rebalancer::service::{RebalanceInput, Rebalancer, RebalancerV1};
+pub use crate::users::service::UserService;
+
+use app::AsareApp;
 use env_logger::Env;
 
 #[actix_web::main]

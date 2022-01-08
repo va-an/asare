@@ -1,5 +1,6 @@
-use crate::Portfolio;
 use serde::Deserialize;
+
+use crate::app::Portfolio;
 
 #[derive(Deserialize, Debug)]
 pub struct RebalanceInput {
