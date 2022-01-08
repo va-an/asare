@@ -68,8 +68,7 @@ impl UserReposotory for UserRepoInMemory {
 
 #[cfg(test)]
 mod tests {
-    use super::UserRepoInMemory;
-    use super::UserReposotory;
+    use super::{UserRepoInMemory, UserReposotory};
     use crate::users::apikey::ApiKey;
 
     #[test]

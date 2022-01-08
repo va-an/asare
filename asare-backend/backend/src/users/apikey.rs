@@ -14,9 +14,7 @@ static API_KEY_GENERATOR: PasswordGenerator = PasswordGenerator {
 
 #[derive(PartialEq, Debug, Serialize, Clone)]
 
-pub struct ApiKey {
-    api_key: String,
-}
+pub struct ApiKey;
 
 impl ApiKey {
     pub fn new() -> String {

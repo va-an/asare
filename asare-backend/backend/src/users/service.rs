@@ -1,6 +1,9 @@
-use crate::{users::repository::UserReposotory, UserRepoInMemory};
+use crate::{
+    users::{password_generator::UserPasswordGenerator, repository::UserReposotory},
+    UserRepoInMemory,
+};
 
-use super::{apikey::ApiKey, repository::User};
+use super::{apikey::ApiKey, repository::User, routes::CreateUserRequest};
 
 #[derive(Debug)]
 pub struct UserService {
@@ -12,9 +15,17 @@ impl UserService {
         UserService { user_repo }
     }
 
-    pub fn create_user(&self, login: &str, password: &str) -> User {
+    pub fn create_user(&self, create_user_request: &CreateUserRequest) -> User {
         let api_key = ApiKey::new();
-        let new_user = self.user_repo.create(login, password, &api_key);
+
+        let password = match &create_user_request.password {
+            Some(password) => password.to_owned(),
+            None => UserPasswordGenerator::new(),
+        };
+
+        let new_user = self
+            .user_repo
+            .create(&create_user_request.login, &password, &api_key);
 
         let all_users = self.user_repo.find_all();
         log::debug!("{:#?}", all_users);

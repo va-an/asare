@@ -3,29 +3,32 @@ use actix_web::{http::Error, post, web, HttpResponse};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
+pub struct CreateUserRequest {
+    pub login: String,
+    pub password: Option<String>,
+}
+
+// TODO: password check
+#[post("/create")]
+pub async fn create_user(
+    req: web::Json<CreateUserRequest>,
+    user_service: web::Data<UserService>,
+) -> Result<HttpResponse, Error> {
+    let new_user = user_service.create_user(&req);
+
+    Ok(HttpResponse::Ok().json(new_user))
+}
+
+#[derive(Debug, Deserialize)]
 struct AuthUserRequest {
     login: String,
     password: String,
 }
 
-// TODO: password may be optional - generate if None
-// TODO: password check
-#[post("/create")]
-pub async fn create_user(
-    req: web::Json<AuthUserRequest>,
-    state: web::Data<UserService>,
-) -> Result<HttpResponse, Error> {
-    let login = &req.login;
-    let password = &req.password;
-    let new_user = state.create_user(login, password);
-
-    Ok(HttpResponse::Ok().json(new_user))
-}
-
 #[post("/refresh_api_key")]
 pub async fn login_user(
     req: web::Json<AuthUserRequest>,
-    state: web::Data<UserService>,
+    user_service: web::Data<UserService>,
 ) -> Result<HttpResponse, Error> {
     todo!();
 }
