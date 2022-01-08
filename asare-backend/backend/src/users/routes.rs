@@ -8,7 +8,7 @@ pub struct CreateUserRequest {
     pub password: Option<String>,
 }
 
-// TODO: password check
+// TODO: validate password
 #[post("/create")]
 pub async fn create_user(
     req: web::Json<CreateUserRequest>,

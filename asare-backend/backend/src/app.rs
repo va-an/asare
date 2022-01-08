@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::rebalancer::routes::rebalance_request;
 use crate::users::routes::{create_user, login_user};
-use crate::{Config, UserService};
+use crate::{portfolio, Config, UserService};
 use actix_web::{middleware, web, App, HttpServer};
 use async_trait::async_trait;
 
@@ -47,6 +47,12 @@ impl AsareHttpServer for ActixHttpServer {
                         .app_data(app_data.clone())
                         .service(create_user)
                         .service(login_user),
+                )
+                .service(
+                    web::scope("/v1/portfolios/")
+                        .service(portfolio::routes::create)
+                        .service(portfolio::routes::delete)
+                        .service(portfolio::routes::find),
                 )
                 .wrap(middleware::Logger::default())
         })

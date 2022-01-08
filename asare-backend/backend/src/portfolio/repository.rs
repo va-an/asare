@@ -1,6 +1,6 @@
 use std::{cell::RefCell, collections::HashMap};
 
-use crate::Portfolio;
+use crate::app::Portfolio;
 
 #[derive(Debug, PartialEq)]
 struct UserPortfolio {
@@ -67,7 +67,7 @@ impl PortfolioRepository for PortfolioRepoInMemory {
 #[cfg(test)]
 mod tests {
     use super::{PortfolioRepoInMemory, PortfolioRepository};
-    use crate::Portfolio;
+    use crate::app::Portfolio;
 
     fn some_portfolio() -> Portfolio {
         Portfolio::from([
