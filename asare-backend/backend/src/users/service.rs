@@ -38,4 +38,8 @@ impl UserService {
     pub fn find_all(&self) -> Vec<User> {
         self.user_repo.find_all()
     }
+
+    pub fn find_by_api_key(&self, api_key: &str) -> Option<User> {
+        self.user_repo.find_by_api_key(api_key)
+    }
 }

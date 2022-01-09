@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::UserService;
 use actix_web::{http::Error, post, web, HttpResponse};
 use serde::Deserialize;
@@ -12,7 +14,7 @@ pub struct CreateUserRequest {
 #[post("/create")]
 pub async fn create_user(
     req: web::Json<CreateUserRequest>,
-    user_service: web::Data<UserService>,
+    user_service: web::Data<Arc<UserService>>,
 ) -> Result<HttpResponse, Error> {
     let new_user = user_service.create_user(&req);
 

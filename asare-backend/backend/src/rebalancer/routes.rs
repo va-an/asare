@@ -2,7 +2,8 @@ use actix_web::{post, web, Error, HttpResponse};
 
 use crate::{
     app::Portfolio,
-    rebalancer::service::{RebalanceInput, RebalancerV1}, Rebalancer,
+    rebalancer::service::{RebalanceInput, RebalancerV1},
+    Rebalancer,
 };
 use serde_derive::Serialize;
 

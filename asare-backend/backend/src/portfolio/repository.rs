@@ -1,15 +1,15 @@
-use std::{cell::RefCell, collections::HashMap};
-
 use crate::app::Portfolio;
+use serde::Serialize;
+use std::{collections::HashMap, sync::Mutex};
 
-#[derive(Debug, PartialEq)]
-struct UserPortfolio {
+#[derive(Debug, PartialEq, Serialize)]
+pub struct UserPortfolio {
     id: i32,
     user_id: i32,
     portfolio: Portfolio,
 }
 
-trait PortfolioRepository {
+pub trait PortfolioRepository {
     fn create(&self, user_id: &i32, portfolio: &Portfolio) -> UserPortfolio;
 
     fn find_by_id(&self, id: &i32) -> UserPortfolio;
@@ -18,22 +18,22 @@ trait PortfolioRepository {
     fn delete_by_id(&self, id: &i32);
 }
 
-struct PortfolioRepoInMemory {
-    portfolios: RefCell<HashMap<i32, Portfolio>>,
-    id_counter: RefCell<i32>,
+pub struct PortfolioRepoInMemory {
+    portfolios: Mutex<HashMap<i32, UserPortfolio>>,
+    id_counter: Mutex<i32>,
 }
 
 impl PortfolioRepoInMemory {
-    fn new() -> PortfolioRepoInMemory {
+    pub fn new() -> PortfolioRepoInMemory {
         PortfolioRepoInMemory {
-            portfolios: RefCell::new(HashMap::new()),
-            id_counter: RefCell::new(0),
+            portfolios: Mutex::new(HashMap::new()),
+            id_counter: Mutex::new(0),
         }
     }
 
     fn next_id(&self) -> i32 {
-        let next = *self.id_counter.borrow() + 1;
-        *self.id_counter.borrow_mut() = next;
+        let next = *self.id_counter.lock().unwrap() + 1;
+        *self.id_counter.lock().unwrap() = next;
 
         next
     }
@@ -42,7 +42,14 @@ impl PortfolioRepoInMemory {
 impl PortfolioRepository for PortfolioRepoInMemory {
     fn create(&self, user_id: &i32, portfolio: &Portfolio) -> UserPortfolio {
         let id = self.next_id();
-        self.portfolios.borrow_mut().insert(id, portfolio.clone());
+        self.portfolios.lock().unwrap().insert(
+            id,
+            UserPortfolio {
+                id,
+                user_id: user_id.to_owned(),
+                portfolio: portfolio.to_owned(),
+            },
+        );
 
         UserPortfolio {
             id,
@@ -56,7 +63,8 @@ impl PortfolioRepository for PortfolioRepoInMemory {
     }
 
     fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
-        todo!()
+        // FIXME:
+        vec![]
     }
 
     fn delete_by_id(&self, id: &i32) {

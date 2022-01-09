@@ -3,16 +3,18 @@ use std::{collections::HashMap, sync::Mutex};
 
 #[derive(Debug, PartialEq, Clone, Serialize)]
 pub struct User {
-    id: i32,
-    login: String,
-    password: String, // FIXME: store hash instead raw password
-    api_key: String,
+    pub id: i32,
+    pub login: String,
+    pub password: String, // FIXME: store hash instead raw password
+    pub api_key: String,
 }
 
 pub trait UserReposotory {
     fn create(&self, login: &str, password: &str, api_key: &str) -> User;
     fn delete(&self, id: &i32);
+
     fn find_all(&self) -> Vec<User>;
+    fn find_by_api_key(&self, api_key: &str) -> Option<User>;
 }
 
 #[derive(Debug)]
@@ -63,6 +65,11 @@ impl UserReposotory for UserRepoInMemory {
             .values()
             .map(|user| user.clone())
             .collect()
+    }
+
+    fn find_by_api_key(&self, api_key: &str) -> Option<User> {
+        // FIXME:
+        None
     }
 }
 
