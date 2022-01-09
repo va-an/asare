@@ -4,13 +4,23 @@ use std::{collections::HashMap, sync::Mutex};
 
 #[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct UserPortfolio {
-    id: i32,
-    user_id: i32,
-    portfolio: Portfolio,
+    pub id: i32,
+    pub user_id: i32,
+    pub portfolio: Portfolio,
+}
+
+impl UserPortfolio {
+    pub fn new(user_id: &i32, portfolio: &Portfolio) -> UserPortfolio {
+        UserPortfolio {
+            id: -1,
+            user_id: user_id.to_owned(),
+            portfolio: portfolio.to_owned(),
+        }
+    }
 }
 
 pub trait PortfolioRepository {
-    fn create(&self, user_id: &i32, portfolio: &Portfolio) -> UserPortfolio;
+    fn create(&self, portfolio: &UserPortfolio) -> UserPortfolio;
 
     fn find_by_id(&self, id: &i32) -> UserPortfolio;
     fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio>;
@@ -40,22 +50,21 @@ impl PortfolioRepoInMemory {
 }
 
 impl PortfolioRepository for PortfolioRepoInMemory {
-    fn create(&self, user_id: &i32, portfolio: &Portfolio) -> UserPortfolio {
+    fn create(&self, user_portfolio: &UserPortfolio) -> UserPortfolio {
         let id = self.next_id();
-        self.portfolios.lock().unwrap().insert(
-            id,
-            UserPortfolio {
-                id,
-                user_id: user_id.to_owned(),
-                portfolio: portfolio.to_owned(),
-            },
-        );
 
-        UserPortfolio {
+        let new_portfolio = UserPortfolio {
             id,
-            user_id: *user_id,
-            portfolio: portfolio.clone(),
-        }
+            user_id: user_portfolio.user_id,
+            portfolio: user_portfolio.portfolio.to_owned(),
+        };
+
+        self.portfolios
+            .lock()
+            .unwrap()
+            .insert(id, new_portfolio.to_owned());
+
+        new_portfolio
     }
 
     fn find_by_id(&self, id: &i32) -> UserPortfolio {
@@ -79,15 +88,21 @@ impl PortfolioRepository for PortfolioRepoInMemory {
 
 #[cfg(test)]
 mod tests {
-    use super::{PortfolioRepoInMemory, PortfolioRepository};
+    use super::{PortfolioRepoInMemory, PortfolioRepository, UserPortfolio};
     use crate::app::Portfolio;
 
-    fn some_portfolio() -> Portfolio {
-        Portfolio::from([
+    fn some_portfolio() -> UserPortfolio {
+        let portfolio = Portfolio::from([
             ("A".to_string(), 75_000.0),
             ("B".to_string(), 100_000.0),
             ("C".to_string(), 125_000.0),
-        ])
+        ]);
+
+        UserPortfolio {
+            id: -1,
+            user_id: 1,
+            portfolio,
+        }
     }
 
     #[test]
@@ -95,8 +110,8 @@ mod tests {
         let port_repo = PortfolioRepoInMemory::new();
         let some_port = some_portfolio();
 
-        let port_1 = port_repo.create(&1, &some_port);
-        let port_2 = port_repo.create(&1, &some_port);
+        let port_1 = port_repo.create(&some_port);
+        let port_2 = port_repo.create(&some_port);
 
         assert_ne!(port_1, port_2);
     }

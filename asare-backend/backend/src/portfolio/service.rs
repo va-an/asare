@@ -11,6 +11,10 @@ impl PortfolioService {
         PortfolioService { port_repo }
     }
 
+    pub fn create(&self, portfolio: UserPortfolio) -> UserPortfolio {
+        self.port_repo.create(&portfolio)
+    }
+
     pub fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
         self.port_repo.find_by_user(user_id)
     }

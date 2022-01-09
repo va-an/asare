@@ -11,7 +11,7 @@ pub struct CreateUserRequest {
 }
 
 // TODO: validate password
-#[post("/create")]
+#[post("")]
 pub async fn create_user(
     req: web::Json<CreateUserRequest>,
     user_service: web::Data<Arc<UserService>>,
