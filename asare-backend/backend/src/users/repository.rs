@@ -68,8 +68,12 @@ impl UserReposotory for UserRepoInMemory {
     }
 
     fn find_by_api_key(&self, api_key: &str) -> Option<User> {
-        // FIXME:
-        None
+        self.users
+            .lock()
+            .unwrap()
+            .values()
+            .find(|user| user.api_key == api_key)
+            .map(|user| user.to_owned())
     }
 }
 

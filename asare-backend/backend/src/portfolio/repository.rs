@@ -2,7 +2,7 @@ use crate::app::Portfolio;
 use serde::Serialize;
 use std::{collections::HashMap, sync::Mutex};
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct UserPortfolio {
     id: i32,
     user_id: i32,
@@ -63,8 +63,13 @@ impl PortfolioRepository for PortfolioRepoInMemory {
     }
 
     fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
-        // FIXME:
-        vec![]
+        self.portfolios
+            .lock()
+            .unwrap()
+            .values()
+            .map(|p| p.to_owned())
+            .filter(|p| &p.user_id == user_id)
+            .collect()
     }
 
     fn delete_by_id(&self, id: &i32) {
