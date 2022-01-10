@@ -8,7 +8,7 @@ pub struct RebalanceInput {
     pub required_allocation: Portfolio,
 }
 
-pub struct RebalancerV1;
+pub struct RebalancerImpl;
 
 pub trait Rebalancer {
     fn calc_current_allocation(portfolio: &Portfolio) -> Portfolio;
@@ -16,7 +16,7 @@ pub trait Rebalancer {
     fn calc_purchase(input: &RebalanceInput) -> Portfolio;
 }
 
-impl Rebalancer for RebalancerV1 {
+impl Rebalancer for RebalancerImpl {
     fn calc_current_allocation(portfolio: &Portfolio) -> Portfolio {
         let sum: f32 = portfolio.values().sum();
 
@@ -37,7 +37,7 @@ impl Rebalancer for RebalancerV1 {
     }
 
     fn calc_purchase(input: &RebalanceInput) -> Portfolio {
-        let expected_portfolio = RebalancerV1::calc_expected_portfolio(input);
+        let expected_portfolio = RebalancerImpl::calc_expected_portfolio(input);
 
         expected_portfolio
             .iter()
@@ -83,7 +83,7 @@ mod tests {
 
     #[test]
     fn calculate_allocation() {
-        let result = RebalancerV1::calc_current_allocation(&current_portfolio());
+        let result = RebalancerImpl::calc_current_allocation(&current_portfolio());
 
         let sum: f32 = result.values().sum();
         assert_abs_diff_eq!(sum, 100.0);
@@ -95,7 +95,7 @@ mod tests {
 
     #[test]
     fn calculate_expected_portfolio() {
-        let expected_allocation = RebalancerV1::calc_expected_portfolio(&rebalance_input());
+        let expected_allocation = RebalancerImpl::calc_expected_portfolio(&rebalance_input());
 
         let sum: f32 = expected_allocation.values().sum();
         assert_abs_diff_eq!(sum, 300_000.0);
@@ -108,8 +108,8 @@ mod tests {
     #[test]
     fn calculate_purchase() {
         let current_portfolio = current_portfolio();
-        let expected_allocation = RebalancerV1::calc_expected_portfolio(&rebalance_input());
-        let purchases = RebalancerV1::calc_purchase(&rebalance_input());
+        let expected_allocation = RebalancerImpl::calc_expected_portfolio(&rebalance_input());
+        let purchases = RebalancerImpl::calc_purchase(&rebalance_input());
 
         for (ticker, value) in &expected_allocation {
             let current_value = current_portfolio.get(ticker).unwrap();

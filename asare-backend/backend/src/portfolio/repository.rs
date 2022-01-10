@@ -1,13 +1,5 @@
-use crate::app::Portfolio;
-use serde::Serialize;
+use crate::{app::Portfolio, entities::portfolios::UserPortfolio};
 use std::{collections::HashMap, sync::Mutex};
-
-#[derive(Debug, PartialEq, Serialize, Clone)]
-pub struct UserPortfolio {
-    pub id: i32,
-    pub user_id: i32,
-    pub portfolio: Portfolio,
-}
 
 impl UserPortfolio {
     pub fn new(user_id: &i32, portfolio: &Portfolio) -> UserPortfolio {
@@ -88,8 +80,11 @@ impl PortfolioRepository for PortfolioRepoInMemory {
 
 #[cfg(test)]
 mod tests {
-    use super::{PortfolioRepoInMemory, PortfolioRepository, UserPortfolio};
-    use crate::app::Portfolio;
+    use crate::{
+        app::Portfolio,
+        entities::portfolios::UserPortfolio,
+        portfolio::repository::{PortfolioRepoInMemory, PortfolioRepository},
+    };
 
     fn some_portfolio() -> UserPortfolio {
         let portfolio = Portfolio::from([

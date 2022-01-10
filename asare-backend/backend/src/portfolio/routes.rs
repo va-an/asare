@@ -1,6 +1,6 @@
-use super::repository::UserPortfolio;
 use crate::{
     app::{Portfolio, PortfolioInteractor},
+    entities::portfolios::UserPortfolio,
     users::api_key_matcher::UserApiKeyMatcher,
 };
 use actix_web::{delete, get, http::Error, post, web, HttpRequest, HttpResponse};
@@ -32,7 +32,7 @@ pub async fn create(
     match extract_user_id(&req, &portfolio_interactor.api_key_matcher) {
         Ok(user_id) => {
             let new_portfolio = UserPortfolio::new(&user_id, &create_request);
-            let created_portfolio = portfolio_interactor.service.create(new_portfolio);
+            let created_portfolio = portfolio_interactor.portfolios.create(new_portfolio);
             let portfolio_response = UserPortfolioResponse::from(&created_portfolio);
 
             Ok(HttpResponse::Ok().json(portfolio_response))
@@ -49,7 +49,7 @@ pub async fn find(
     match extract_user_id(&req, &portfolio_interactor.api_key_matcher) {
         Ok(user_id) => {
             let portfolios: Vec<UserPortfolioResponse> = portfolio_interactor
-                .service
+                .portfolios
                 .find_by_user(&user_id)
                 .iter()
                 .map(|user_portfolio| UserPortfolioResponse::from(user_portfolio))

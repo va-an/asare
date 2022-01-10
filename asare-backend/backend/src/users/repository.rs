@@ -1,13 +1,6 @@
-use serde::Serialize;
 use std::{collections::HashMap, sync::Mutex};
 
-#[derive(Debug, PartialEq, Clone, Serialize)]
-pub struct User {
-    pub id: i32,
-    pub login: String,
-    pub password: String, // FIXME: store hash instead raw password
-    pub api_key: String,
-}
+use crate::entities::users::User;
 
 pub trait UserReposotory {
     fn create(&self, login: &str, password: &str, api_key: &str) -> User;

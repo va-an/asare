@@ -1,22 +1,37 @@
-use crate::users::generators::{ApiKeyGenerator, UserPasswordGenerator};
+use serde::{Deserialize, Serialize};
 
-use super::{
-    repository::{User, UserRepoInMemory, UserReposotory},
-    routes::CreateUserRequest,
+use crate::users::{
+    generators::{ApiKeyGenerator, UserPasswordGenerator},
+    repository::{UserRepoInMemory, UserReposotory},
 };
 
 #[derive(Debug)]
-pub struct UserService {
+pub struct Users {
     user_repo: UserRepoInMemory,
 }
 
-impl UserService {
-    pub fn new() -> UserService {
+#[derive(Debug, Deserialize)]
+pub struct CreateUserRequest {
+    pub login: String,
+    pub password: Option<String>,
+}
+
+#[derive(Debug, PartialEq, Clone, Serialize)]
+pub struct User {
+    pub id: i32,
+    pub login: String,
+    pub password: String, // FIXME: store hash instead raw password
+    pub api_key: String,
+}
+
+impl Users {
+    pub fn new() -> Users {
         let user_repo = UserRepoInMemory::new();
 
-        UserService { user_repo }
+        Users { user_repo }
     }
 
+    // FIXME: make login field unique
     pub fn create_user(&self, create_user_request: &CreateUserRequest) -> User {
         let api_key = ApiKeyGenerator::generate();
 
@@ -30,6 +45,8 @@ impl UserService {
             .create(&create_user_request.login, &password, &api_key);
 
         let all_users = self.user_repo.find_all();
+
+        // FIXME: delete logging before release
         log::debug!("{:#?}", all_users);
 
         new_user

@@ -1,11 +1,12 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use crate::portfolio::service::PortfolioService;
+use crate::entities::portfolios::Portfolios;
+use crate::entities::users::Users;
 use crate::rebalancer::routes::rebalance_request;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
 use crate::users::routes::{create_user, login_user};
-use crate::{portfolio, Config, UserService};
+use crate::{portfolio, Config};
 use actix_web::{middleware, web, App, HttpServer};
 use async_trait::async_trait;
 
@@ -13,29 +14,30 @@ pub type Portfolio = HashMap<String, f32>;
 
 pub struct AsareApp {
     config: Config,
-    user_service: Arc<UserService>,
+    users: Arc<Users>,
     portfolio_interactor: PortfolioInteractor,
 }
 
 pub struct PortfolioInteractor {
-    pub service: PortfolioService,
+    pub portfolios: Portfolios,
     pub api_key_matcher: UserApiKeyMatcher,
 }
 
 impl AsareApp {
     pub fn new(config: Config) -> AsareApp {
-        let user_service = Arc::new(UserService::new());
-        let portfolio_service = PortfolioService::new();
-        let api_key_matcher = UserApiKeyMatcher::new(Arc::clone(&user_service));
+        let users = Arc::new(Users::new());
+
+        let portfolios = Portfolios::new();
+        let api_key_matcher = UserApiKeyMatcher::new(Arc::clone(&users));
 
         let portfolio_interactor = PortfolioInteractor {
-            service: portfolio_service,
+            portfolios,
             api_key_matcher,
         };
 
         AsareApp {
             config,
-            user_service,
+            users,
             portfolio_interactor,
         }
     }
@@ -54,7 +56,7 @@ pub struct ActixHttpServer;
 #[async_trait(?Send)]
 impl AsareHttpServer for ActixHttpServer {
     async fn run_http_server(app: AsareApp) -> std::io::Result<()> {
-        let user_app_data = web::Data::new(app.user_service);
+        let user_app_data = web::Data::new(app.users);
         let portfolio_app_data = web::Data::new(app.portfolio_interactor);
 
         HttpServer::new(move || {
