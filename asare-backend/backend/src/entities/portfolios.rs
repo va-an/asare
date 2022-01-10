@@ -5,8 +5,21 @@ use crate::{
     portfolio::repository::{PortfolioRepoInMemory, PortfolioRepository},
 };
 
-pub struct Portfolios {
+pub trait Portfolios {
+    fn create(&self, portfolio: UserPortfolio) -> UserPortfolio;
+    fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio>;
+}
+
+pub struct PortfoliosImpl {
     port_repo: PortfolioRepoInMemory,
+}
+
+impl PortfoliosImpl {
+    pub fn new() -> PortfoliosImpl {
+        let port_repo = PortfolioRepoInMemory::new();
+
+        PortfoliosImpl { port_repo }
+    }
 }
 
 #[derive(Debug, PartialEq, Serialize, Clone)]
@@ -16,18 +29,22 @@ pub struct UserPortfolio {
     pub portfolio: Portfolio,
 }
 
-impl Portfolios {
-    pub fn new() -> Portfolios {
-        let port_repo = PortfolioRepoInMemory::new();
-
-        Portfolios { port_repo }
+impl UserPortfolio {
+    pub fn new(user_id: &i32, portfolio: &Portfolio) -> UserPortfolio {
+        UserPortfolio {
+            id: -1,
+            user_id: user_id.to_owned(),
+            portfolio: portfolio.to_owned(),
+        }
     }
+}
 
-    pub fn create(&self, portfolio: UserPortfolio) -> UserPortfolio {
+impl Portfolios for PortfoliosImpl {
+    fn create(&self, portfolio: UserPortfolio) -> UserPortfolio {
         self.port_repo.create(&portfolio)
     }
 
-    pub fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
+    fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
         self.port_repo.find_by_user(user_id)
     }
 }

@@ -5,9 +5,22 @@ use crate::users::{
     repository::{UserRepoInMemory, UserReposotory},
 };
 
-#[derive(Debug)]
-pub struct Users {
+pub trait Users {
+    fn create_user(&self, create_user_request: &CreateUserRequest) -> User;
+    fn find_all(&self) -> Vec<User>;
+    fn find_by_api_key(&self, api_key: &str) -> Option<User>;
+}
+
+pub struct UsersImpl {
     user_repo: UserRepoInMemory,
+}
+
+impl UsersImpl {
+    pub fn new() -> UsersImpl {
+        let user_repo = UserRepoInMemory::new();
+
+        UsersImpl { user_repo }
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -24,15 +37,9 @@ pub struct User {
     pub api_key: String,
 }
 
-impl Users {
-    pub fn new() -> Users {
-        let user_repo = UserRepoInMemory::new();
-
-        Users { user_repo }
-    }
-
+impl Users for UsersImpl {
     // FIXME: make login field unique
-    pub fn create_user(&self, create_user_request: &CreateUserRequest) -> User {
+    fn create_user(&self, create_user_request: &CreateUserRequest) -> User {
         let api_key = ApiKeyGenerator::generate();
 
         let password = match &create_user_request.password {
@@ -52,11 +59,11 @@ impl Users {
         new_user
     }
 
-    pub fn find_all(&self) -> Vec<User> {
+    fn find_all(&self) -> Vec<User> {
         self.user_repo.find_all()
     }
 
-    pub fn find_by_api_key(&self, api_key: &str) -> Option<User> {
+    fn find_by_api_key(&self, api_key: &str) -> Option<User> {
         self.user_repo.find_by_api_key(api_key)
     }
 }

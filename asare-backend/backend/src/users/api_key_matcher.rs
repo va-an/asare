@@ -1,15 +1,14 @@
+use crate::entities::users::{Users, UsersImpl};
 use std::sync::Arc;
 
-use crate::entities::users::Users;
-
 pub struct UserApiKeyMatcher {
-    users: Arc<Users>,
+    users: Arc<UsersImpl>,
 }
 
 impl UserApiKeyMatcher {
-    pub fn new(user_service: Arc<Users>) -> UserApiKeyMatcher {
+    pub fn new(users: Arc<UsersImpl>) -> UserApiKeyMatcher {
         UserApiKeyMatcher {
-            users: Arc::clone(&user_service),
+            users: Arc::clone(&users),
         }
     }
 

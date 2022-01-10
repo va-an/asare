@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use crate::entities::portfolios::Portfolios;
-use crate::entities::users::Users;
+use crate::entities::portfolios::PortfoliosImpl;
+use crate::entities::users::UsersImpl;
 use crate::rebalancer::routes::rebalance_request;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
 use crate::users::routes::{create_user, login_user};
@@ -14,20 +14,20 @@ pub type Portfolio = HashMap<String, f32>;
 
 pub struct AsareApp {
     config: Config,
-    users: Arc<Users>,
+    users: Arc<UsersImpl>,
     portfolio_interactor: PortfolioInteractor,
 }
 
 pub struct PortfolioInteractor {
-    pub portfolios: Portfolios,
+    pub portfolios: PortfoliosImpl,
     pub api_key_matcher: UserApiKeyMatcher,
 }
 
 impl AsareApp {
     pub fn new(config: Config) -> AsareApp {
-        let users = Arc::new(Users::new());
+        let users = Arc::new(UsersImpl::new());
 
-        let portfolios = Portfolios::new();
+        let portfolios = PortfoliosImpl::new();
         let api_key_matcher = UserApiKeyMatcher::new(Arc::clone(&users));
 
         let portfolio_interactor = PortfolioInteractor {

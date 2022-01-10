@@ -1,15 +1,5 @@
-use crate::{app::Portfolio, entities::portfolios::UserPortfolio};
+use crate::entities::portfolios::UserPortfolio;
 use std::{collections::HashMap, sync::Mutex};
-
-impl UserPortfolio {
-    pub fn new(user_id: &i32, portfolio: &Portfolio) -> UserPortfolio {
-        UserPortfolio {
-            id: -1,
-            user_id: user_id.to_owned(),
-            portfolio: portfolio.to_owned(),
-        }
-    }
-}
 
 pub trait PortfolioRepository {
     fn create(&self, portfolio: &UserPortfolio) -> UserPortfolio;
