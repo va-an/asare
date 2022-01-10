@@ -1,9 +1,8 @@
+use crate::entities::users::User;
 use std::{collections::HashMap, sync::Mutex};
 
-use crate::entities::users::User;
-
 pub trait UserReposotory {
-    fn create(&self, login: &str, password: &str, api_key: &str) -> User;
+    fn create(&self, login: &str, password: &str, api_key: &str) -> Result<User, String>;
     fn delete(&self, id: &i32);
 
     fn find_all(&self) -> Vec<User>;
@@ -33,18 +32,26 @@ impl UserRepoInMemory {
 }
 
 impl UserReposotory for UserRepoInMemory {
-    fn create(&self, login: &str, password: &str, api_key: &str) -> User {
-        let id = self.next_id();
-        let user = User {
-            id,
-            login: login.to_owned(),
-            password: password.to_owned(),
-            api_key: api_key.to_owned(),
-        };
+    fn create(&self, login: &str, password: &str, api_key: &str) -> Result<User, String> {
+        let mut all = self.users.lock().unwrap();
+        let login_exists = all.values().find(|user| &user.login == login);
 
-        self.users.lock().unwrap().insert(user.id, user.clone());
+        match login_exists {
+            Some(_) => Result::Err(format!("User with login '{}' already exists", login)),
+            None => {
+                let id = self.next_id();
+                let user = User {
+                    id,
+                    login: login.to_owned(),
+                    password: password.to_owned(),
+                    api_key: api_key.to_owned(),
+                };
 
-        user
+                all.insert(user.id, user.clone());
+
+                Ok(user)
+            }
+        }
     }
 
     fn delete(&self, id: &i32) {

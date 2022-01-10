@@ -11,9 +11,10 @@ pub async fn create_user(
     req: web::Json<CreateUserRequest>,
     users: web::Data<Arc<UsersImpl>>,
 ) -> Result<HttpResponse, Error> {
-    let new_user = users.create_user(&req);
-
-    Ok(HttpResponse::Ok().json(new_user))
+    match users.create(&req) {
+        Ok(new_user) => Ok(HttpResponse::Ok().json(new_user)),
+        Err(message) => Ok(HttpResponse::InternalServerError().json(message)),
+    }
 }
 
 #[derive(Debug, Deserialize)]

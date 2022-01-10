@@ -6,7 +6,7 @@ use crate::users::{
 };
 
 pub trait Users {
-    fn create_user(&self, create_user_request: &CreateUserRequest) -> User;
+    fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String>;
     fn find_all(&self) -> Vec<User>;
     fn find_by_api_key(&self, api_key: &str) -> Option<User>;
 }
@@ -38,8 +38,7 @@ pub struct User {
 }
 
 impl Users for UsersImpl {
-    // FIXME: make login field unique
-    fn create_user(&self, create_user_request: &CreateUserRequest) -> User {
+    fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String> {
         let api_key = ApiKeyGenerator::generate();
 
         let password = match &create_user_request.password {
@@ -50,11 +49,6 @@ impl Users for UsersImpl {
         let new_user = self
             .user_repo
             .create(&create_user_request.login, &password, &api_key);
-
-        let all_users = self.user_repo.find_all();
-
-        // FIXME: delete logging before release
-        log::debug!("{:#?}", all_users);
 
         new_user
     }
