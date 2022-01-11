@@ -1,11 +1,10 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use crate::entities::portfolios::PortfoliosImpl;
-use crate::entities::users::{Users, UsersImpl};
+use crate::portfolio::portfolios_service::PortfoliosImpl;
 use crate::rebalancer::routes::rebalance_request;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
-use crate::users::repository::UserRepoInMemory;
+use crate::users::users_service::{Users, UsersImpl};
 use crate::utils::ChainingExt;
 use crate::{portfolio, users, Config};
 use actix_web::{middleware, web, App, HttpServer};
@@ -27,11 +26,10 @@ pub struct PortfolioInteractor {
 
 impl AsareApp {
     pub fn new(config: Config) -> AsareApp {
-        let users_repo = UserRepoInMemory::new().pipe(Box::new);
-        let users = UsersImpl::new(users_repo);
+        let users = UsersImpl::new();
 
         let portfolios = PortfoliosImpl::new();
-        let api_key_matcher = UserApiKeyMatcher::new(Arc::clone(&users));
+        let api_key_matcher = Arc::clone(&users).pipe(UserApiKeyMatcher::new);
 
         let portfolio_interactor = PortfolioInteractor {
             portfolios,

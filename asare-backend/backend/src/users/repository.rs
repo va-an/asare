@@ -1,5 +1,6 @@
-use crate::entities::users::User;
 use std::{collections::HashMap, sync::Mutex};
+
+use super::users_service::User;
 
 pub trait UserReposotory {
     fn create(&self, login: &str, password: &str, api_key: &str) -> Result<User, String>;

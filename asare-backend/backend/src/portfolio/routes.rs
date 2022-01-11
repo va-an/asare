@@ -1,10 +1,12 @@
 use crate::{
     app::{Portfolio, PortfolioInteractor},
-    entities::portfolios::{UserPortfolio, Portfolios},
+    portfolio::portfolios_service::Portfolios,
     users::api_key_matcher::UserApiKeyMatcher,
 };
 use actix_web::{delete, get, http::Error, post, web, HttpRequest, HttpResponse};
 use serde::Serialize;
+
+use super::portfolios_service::UserPortfolio;
 
 static API_KEY_HEADER: &str = "X-Api-Key";
 

@@ -1,6 +1,5 @@
 pub mod app;
 pub mod conf;
-pub mod entities;
 pub mod portfolio;
 pub mod rebalancer;
 pub mod users;

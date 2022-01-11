@@ -1,5 +1,6 @@
-use crate::entities::portfolios::UserPortfolio;
 use std::{collections::HashMap, sync::Mutex};
+
+use super::portfolios_service::UserPortfolio;
 
 pub trait PortfolioRepository {
     fn create(&self, portfolio: &UserPortfolio) -> UserPortfolio;
@@ -72,8 +73,10 @@ impl PortfolioRepository for PortfolioRepoInMemory {
 mod tests {
     use crate::{
         app::Portfolio,
-        entities::portfolios::UserPortfolio,
-        portfolio::repository::{PortfolioRepoInMemory, PortfolioRepository},
+        portfolio::{
+            portfolios_service::UserPortfolio,
+            repository::{PortfolioRepoInMemory, PortfolioRepository},
+        },
     };
 
     fn some_portfolio() -> UserPortfolio {

@@ -11,6 +11,8 @@ use crate::{
     utils::ChainingExt,
 };
 
+use super::repository::UserRepoInMemory;
+
 #[derive(Debug, PartialEq, Clone, Serialize)]
 pub struct User {
     pub id: i32,
@@ -38,7 +40,8 @@ pub struct UsersImpl {
 }
 
 impl UsersImpl {
-    pub fn new(user_repo: UserRepo) -> UsersType {
+    pub fn new() -> UsersType {
+        let user_repo = UserRepoInMemory::new().pipe(Box::new);
         UsersImpl { user_repo }.pipe(Arc::new)
     }
 }
