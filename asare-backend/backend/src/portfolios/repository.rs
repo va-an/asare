@@ -73,7 +73,7 @@ impl PortfolioRepository for PortfolioRepoInMemory {
 mod tests {
     use crate::{
         app::Portfolio,
-        portfolio::{
+        portfolios::{
             portfolios_service::UserPortfolio,
             repository::{PortfolioRepoInMemory, PortfolioRepository},
         },

@@ -1,12 +1,12 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use crate::portfolio::portfolios_service::PortfoliosImpl;
+use crate::portfolios::portfolios_service::PortfoliosImpl;
 use crate::rebalancer::routes::rebalance_request;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
 use crate::users::users_service::{Users, UsersImpl};
 use crate::utils::ChainingExt;
-use crate::{portfolio, users, Config};
+use crate::{portfolios, users, Config};
 use actix_web::{middleware, web, App, HttpServer};
 use async_trait::async_trait;
 
@@ -72,9 +72,9 @@ impl AsareHttpServer for ActixHttpServer {
                 .service(
                     web::scope("/v1/portfolios/")
                         .service(rebalance_request)
-                        .service(portfolio::routes::create)
-                        .service(portfolio::routes::delete)
-                        .service(portfolio::routes::find)
+                        .service(portfolios::routes::create)
+                        .service(portfolios::routes::delete)
+                        .service(portfolios::routes::find)
                         .app_data(portfolio_app_data.clone()),
                 )
                 .wrap(middleware::Logger::default())

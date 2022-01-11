@@ -1,12 +1,11 @@
-pub mod app;
-pub mod conf;
-pub mod portfolio;
-pub mod rebalancer;
-pub mod users;
-pub mod utils;
+mod app;
+mod conf;
+mod portfolios;
+mod rebalancer;
+mod users;
+mod utils;
 
-pub use crate::conf::Config;
-
+use crate::conf::Config;
 use app::AsareApp;
 use env_logger::Env;
 

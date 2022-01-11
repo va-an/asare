@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use crate::{
     app::Portfolio,
-    portfolio::repository::{PortfolioRepoInMemory, PortfolioRepository},
+    portfolios::repository::{PortfolioRepoInMemory, PortfolioRepository},
 };
 
 pub trait Portfolios {
