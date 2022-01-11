@@ -4,6 +4,7 @@ pub mod entities;
 pub mod portfolio;
 pub mod rebalancer;
 pub mod users;
+pub mod utils;
 
 pub use crate::conf::Config;
 

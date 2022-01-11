@@ -2,19 +2,21 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use crate::entities::portfolios::PortfoliosImpl;
-use crate::entities::users::UsersImpl;
+use crate::entities::users::{Users, UsersImpl};
 use crate::rebalancer::routes::rebalance_request;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
-use crate::users::routes::{create_user, login_user};
-use crate::{portfolio, Config};
+use crate::users::repository::UserRepoInMemory;
+use crate::utils::ChainingExt;
+use crate::{portfolio, users, Config};
 use actix_web::{middleware, web, App, HttpServer};
 use async_trait::async_trait;
 
 pub type Portfolio = HashMap<String, f32>;
+pub type UsersType = Arc<dyn Users + Sync + Send>;
 
 pub struct AsareApp {
     config: Config,
-    users: Arc<UsersImpl>,
+    users: UsersType,
     portfolio_interactor: PortfolioInteractor,
 }
 
@@ -25,7 +27,8 @@ pub struct PortfolioInteractor {
 
 impl AsareApp {
     pub fn new(config: Config) -> AsareApp {
-        let users = Arc::new(UsersImpl::new());
+        let users_repo = UserRepoInMemory::new().pipe(Box::new);
+        let users = UsersImpl::new(users_repo);
 
         let portfolios = PortfoliosImpl::new();
         let api_key_matcher = UserApiKeyMatcher::new(Arc::clone(&users));
@@ -56,7 +59,7 @@ pub struct ActixHttpServer;
 #[async_trait(?Send)]
 impl AsareHttpServer for ActixHttpServer {
     async fn run_http_server(app: AsareApp) -> std::io::Result<()> {
-        let user_app_data = web::Data::new(app.users);
+        let users_app_data = web::Data::new(app.users);
         let portfolio_app_data = web::Data::new(app.portfolio_interactor);
 
         HttpServer::new(move || {
@@ -64,9 +67,9 @@ impl AsareHttpServer for ActixHttpServer {
                 .service(web::scope("/v4/rebel/").service(rebalance_request))
                 .service(
                     web::scope("/v1/users/")
-                        .service(create_user)
-                        .service(login_user)
-                        .app_data(user_app_data.clone()),
+                        .service(users::routes::create_user)
+                        .service(users::routes::login_user)
+                        .app_data(users_app_data.clone()),
                 )
                 .service(
                     web::scope("/v1/portfolios/")

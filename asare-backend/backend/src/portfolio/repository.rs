@@ -49,7 +49,7 @@ impl PortfolioRepository for PortfolioRepoInMemory {
         new_portfolio
     }
 
-    fn find_by_id(&self, id: &i32) -> UserPortfolio {
+    fn find_by_id(&self, _id: &i32) -> UserPortfolio {
         todo!()
     }
 
@@ -63,7 +63,7 @@ impl PortfolioRepository for PortfolioRepoInMemory {
             .collect()
     }
 
-    fn delete_by_id(&self, id: &i32) {
+    fn delete_by_id(&self, _id: &i32) {
         todo!()
     }
 }

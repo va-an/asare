@@ -54,7 +54,7 @@ impl UserReposotory for UserRepoInMemory {
         }
     }
 
-    fn delete(&self, id: &i32) {
+    fn delete(&self, _id: &i32) {
         todo!()
     }
 

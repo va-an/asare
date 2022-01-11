@@ -1,15 +1,13 @@
-use std::sync::Arc;
-
 use actix_web::{http::Error, post, web, HttpResponse};
 use serde::Deserialize;
 
-use crate::entities::users::{CreateUserRequest, Users, UsersImpl};
+use crate::{app::UsersType, entities::users::CreateUserRequest};
 
 // TODO: validate password
 #[post("")]
 pub async fn create_user(
     req: web::Json<CreateUserRequest>,
-    users: web::Data<Arc<UsersImpl>>,
+    users: web::Data<UsersType>,
 ) -> Result<HttpResponse, Error> {
     match users.create(&req) {
         Ok(new_user) => Ok(HttpResponse::Ok().json(new_user)),
@@ -18,15 +16,15 @@ pub async fn create_user(
 }
 
 #[derive(Debug, Deserialize)]
-struct AuthUserRequest {
-    login: String,
-    password: String,
+pub struct AuthUserRequest {
+    _login: String,
+    _password: String,
 }
 
 #[post("/refresh_api_key")]
 pub async fn login_user(
-    req: web::Json<AuthUserRequest>,
-    user_service: web::Data<UsersImpl>,
+    _req: web::Json<AuthUserRequest>,
+    _user_service: web::Data<UsersType>,
 ) -> Result<HttpResponse, Error> {
     todo!();
 }
