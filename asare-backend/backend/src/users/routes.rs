@@ -1,15 +1,18 @@
 use actix_web::{http::Error, post, web, HttpResponse};
 use serde::Deserialize;
 
-use crate::users::users_service::{CreateUserRequest, UsersService};
+use crate::{
+    controllers::UsersController,
+    users::users_service::{CreateUserRequest, UsersService},
+};
 
 // TODO: validate password
 #[post("")]
 pub async fn create_user(
     req: web::Json<CreateUserRequest>,
-    users: web::Data<UsersService>,
+    ctl: web::Data<UsersController>,
 ) -> Result<HttpResponse, Error> {
-    match users.create(&req) {
+    match ctl.create(&req) {
         Ok(new_user) => Ok(HttpResponse::Ok().json(new_user)),
         Err(message) => Ok(HttpResponse::InternalServerError().json(message)),
     }

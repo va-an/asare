@@ -1,12 +1,12 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use crate::controllers::{HttpApiPresenter, RebalancerController};
+use crate::controllers::{HttpApiPresenter, RebalancerController, UsersController};
 use crate::portfolios::portfolios_service::PortfoliosImpl;
 use crate::rebalancer::routes::rebalance_request;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
 use crate::users::repository_builder::UserRepositoryBuilder;
-use crate::users::users_service::{UsersImpl, UsersService};
+use crate::users::users_service::UsersImpl;
 use crate::utils::ChainingExt;
 use crate::{portfolios, users, Config};
 use actix_web::{middleware, web, App, HttpServer};
@@ -16,9 +16,9 @@ pub type Portfolio = HashMap<String, f32>;
 
 pub struct AsareApp {
     config: Config,
-    users_svc: UsersService,
     portfolio_interactor: PortfolioInteractor,
     rebalancer_ctl: RebalancerController,
+    users_ctl: UsersController,
 }
 
 pub struct PortfolioInteractor {
@@ -43,11 +43,16 @@ impl AsareApp {
             presenter: Box::new(HttpApiPresenter {}),
         };
 
+        let users_ctl = UsersController {
+            users_svc,
+            presenter: Box::new(HttpApiPresenter {}),
+        };
+
         AsareApp {
             config,
-            users_svc,
             portfolio_interactor,
             rebalancer_ctl,
+            users_ctl,
         }
     }
 
@@ -65,9 +70,8 @@ pub struct ActixHttpServer;
 #[async_trait(?Send)]
 impl AsareHttpServer for ActixHttpServer {
     async fn run_http_server(app: AsareApp) -> std::io::Result<()> {
-        let rebalancer_ctl = app.rebalancer_ctl.pipe(web::Data::new);
-
-        let users_app_data = web::Data::new(app.users_svc);
+        let rebalancer_app_data = app.rebalancer_ctl.pipe(web::Data::new);
+        let users_app_data = web::Data::new(app.users_ctl);
         let portfolio_app_data = web::Data::new(app.portfolio_interactor);
 
         HttpServer::new(move || {
@@ -75,7 +79,7 @@ impl AsareHttpServer for ActixHttpServer {
                 .service(
                     web::scope("/v4/rebel/")
                         .service(rebalance_request)
-                        .app_data(rebalancer_ctl.clone()),
+                        .app_data(rebalancer_app_data.clone()),
                 )
                 .service(
                     web::scope("/v1/users/")

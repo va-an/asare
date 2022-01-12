@@ -1,6 +1,9 @@
-use crate::rebalancer::{
-    rebalancer_service::{RebalanceInput, Rebalancer, RebalancerImpl},
-    routes::RebalanceOutput,
+use crate::{
+    rebalancer::{
+        rebalancer_service::{RebalanceInput, Rebalancer, RebalancerImpl},
+        routes::RebalanceOutput,
+    },
+    users::users_service::{CreateUserRequest, User, UsersService},
 };
 
 pub type PresenterType = Box<dyn Presenter + Send + Sync>;
@@ -24,5 +27,16 @@ impl RebalancerController {
             current_allocation,
             required_operations,
         }
+    }
+}
+
+pub struct UsersController {
+    pub users_svc: UsersService,
+    pub presenter: PresenterType,
+}
+
+impl UsersController {
+    pub fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String> {
+        self.users_svc.create(create_user_request)
     }
 }
