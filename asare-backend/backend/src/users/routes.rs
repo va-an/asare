@@ -1,7 +1,7 @@
 use actix_web::{http::Error, post, web, HttpResponse};
 use serde::Deserialize;
 
-use crate::{app::UsersType, users::users_service::CreateUserRequest};
+use crate::users::users_service::{CreateUserRequest, UsersType};
 
 // TODO: validate password
 #[post("")]

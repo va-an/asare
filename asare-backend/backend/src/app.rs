@@ -4,14 +4,14 @@ use std::sync::Arc;
 use crate::portfolios::portfolios_service::PortfoliosImpl;
 use crate::rebalancer::routes::rebalance_request;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
-use crate::users::users_service::{Users, UsersImpl};
+use crate::users::repository_builder::UserRepositoryBuilder;
+use crate::users::users_service::{UsersImpl, UsersType};
 use crate::utils::ChainingExt;
 use crate::{portfolios, users, Config};
 use actix_web::{middleware, web, App, HttpServer};
 use async_trait::async_trait;
 
 pub type Portfolio = HashMap<String, f32>;
-pub type UsersType = Arc<dyn Users + Sync + Send>;
 
 pub struct AsareApp {
     config: Config,
@@ -26,7 +26,8 @@ pub struct PortfolioInteractor {
 
 impl AsareApp {
     pub fn new(config: Config) -> AsareApp {
-        let users = UsersImpl::new();
+        let users_repo = UserRepositoryBuilder::in_memory();
+        let users = UsersImpl::new(users_repo);
 
         let portfolios = PortfoliosImpl::new();
         let api_key_matcher = Arc::clone(&users).pipe(UserApiKeyMatcher::new);

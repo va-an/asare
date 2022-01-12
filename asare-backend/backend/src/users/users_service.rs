@@ -3,15 +3,13 @@ use std::sync::Arc;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    app::UsersType,
-    users::{
-        generators::{ApiKeyGenerator, UserPasswordGenerator},
-        repository::UserReposotory,
-    },
+    users::generators::{ApiKeyGenerator, UserPasswordGenerator},
     utils::ChainingExt,
 };
 
-use super::repository::UserRepoInMemory;
+use super::repository::UserRepo;
+
+pub type UsersType = Arc<dyn Users + Sync + Send>;
 
 #[derive(Debug, PartialEq, Clone, Serialize)]
 pub struct User {
@@ -33,15 +31,12 @@ pub trait Users {
     fn find_by_api_key(&self, api_key: &str) -> Option<User>;
 }
 
-type UserRepo = Box<dyn UserReposotory + Sync + Send>;
-
 pub struct UsersImpl {
     pub user_repo: UserRepo,
 }
 
 impl UsersImpl {
-    pub fn new() -> UsersType {
-        let user_repo = UserRepoInMemory::new().pipe(Box::new);
+    pub fn new(user_repo: UserRepo) -> UsersType {
         UsersImpl { user_repo }.pipe(Arc::new)
     }
 }

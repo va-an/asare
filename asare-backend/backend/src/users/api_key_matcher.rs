@@ -1,5 +1,6 @@
-use crate::app::UsersType;
 use std::sync::Arc;
+
+use super::users_service::UsersType;
 
 pub struct UserApiKeyMatcher {
     users: UsersType,
