@@ -1,13 +1,13 @@
 use std::sync::Arc;
 
-use super::users_service::UsersType;
+use super::users_service::UsersService;
 
 pub struct UserApiKeyMatcher {
-    users: UsersType,
+    users: UsersService,
 }
 
 impl UserApiKeyMatcher {
-    pub fn new(users: UsersType) -> UserApiKeyMatcher {
+    pub fn new(users: UsersService) -> UserApiKeyMatcher {
         UserApiKeyMatcher {
             users: Arc::clone(&users),
         }

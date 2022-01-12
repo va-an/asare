@@ -9,7 +9,7 @@ use crate::{
 
 use super::repository::UserRepo;
 
-pub type UsersType = Arc<dyn Users + Sync + Send>;
+pub type UsersService = Arc<dyn Users + Sync + Send>;
 
 #[derive(Debug, PartialEq, Clone, Serialize)]
 pub struct User {
@@ -36,7 +36,7 @@ pub struct UsersImpl {
 }
 
 impl UsersImpl {
-    pub fn new(user_repo: UserRepo) -> UsersType {
+    pub fn new(user_repo: UserRepo) -> UsersService {
         UsersImpl { user_repo }.pipe(Arc::new)
     }
 }

@@ -1,26 +1,23 @@
 use actix_web::{post, web, Error, HttpResponse};
 
 use crate::{
-    app::Portfolio,
-    rebalancer::rebalancer_service::{RebalanceInput, Rebalancer, RebalancerImpl},
+    app::Portfolio, controllers::RebalancerController,
+    rebalancer::rebalancer_service::RebalanceInput, utils::ChainingExt,
 };
 use serde_derive::Serialize;
 
 #[derive(Serialize, Debug)]
-struct RebalanceOutput {
-    current_allocation: Portfolio,
-    required_operations: Portfolio,
+pub struct RebalanceOutput {
+    pub current_allocation: Portfolio,
+    pub required_operations: Portfolio,
 }
 
 #[post("/rebalance")]
-pub async fn rebalance_request(req: web::Json<RebalanceInput>) -> Result<HttpResponse, Error> {
-    let current_allocation = RebalancerImpl::calc_current_allocation(&req.current_portfolio);
-    let required_operations = RebalancerImpl::calc_purchase(&req);
-
-    let output = RebalanceOutput {
-        current_allocation,
-        required_operations,
-    };
-
-    Ok(HttpResponse::Ok().json(output))
+pub async fn rebalance_request(
+    req: web::Json<RebalanceInput>,
+    ctl: web::Data<RebalancerController>,
+) -> Result<HttpResponse, Error> {
+    // TODO: wrap to HttpResponse in presenter
+    ctl.rebalance(&req)
+        .pipe(|output| Ok(HttpResponse::Ok().json(output)))
 }

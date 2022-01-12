@@ -1,5 +1,6 @@
 mod app;
 mod conf;
+mod controllers;
 mod portfolios;
 mod rebalancer;
 mod users;

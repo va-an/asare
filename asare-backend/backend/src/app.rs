@@ -1,11 +1,12 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
+use crate::controllers::{HttpApiPresenter, RebalancerController};
 use crate::portfolios::portfolios_service::PortfoliosImpl;
 use crate::rebalancer::routes::rebalance_request;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
 use crate::users::repository_builder::UserRepositoryBuilder;
-use crate::users::users_service::{UsersImpl, UsersType};
+use crate::users::users_service::{UsersImpl, UsersService};
 use crate::utils::ChainingExt;
 use crate::{portfolios, users, Config};
 use actix_web::{middleware, web, App, HttpServer};
@@ -15,8 +16,9 @@ pub type Portfolio = HashMap<String, f32>;
 
 pub struct AsareApp {
     config: Config,
-    users: UsersType,
+    users_svc: UsersService,
     portfolio_interactor: PortfolioInteractor,
+    rebalancer_ctl: RebalancerController,
 }
 
 pub struct PortfolioInteractor {
@@ -27,20 +29,25 @@ pub struct PortfolioInteractor {
 impl AsareApp {
     pub fn new(config: Config) -> AsareApp {
         let users_repo = UserRepositoryBuilder::in_memory();
-        let users = UsersImpl::new(users_repo);
+        let users_svc = UsersImpl::new(users_repo);
 
         let portfolios = PortfoliosImpl::new();
-        let api_key_matcher = Arc::clone(&users).pipe(UserApiKeyMatcher::new);
+        let api_key_matcher = Arc::clone(&users_svc).pipe(UserApiKeyMatcher::new);
 
         let portfolio_interactor = PortfolioInteractor {
             portfolios,
             api_key_matcher,
         };
 
+        let rebalancer_ctl = RebalancerController {
+            presenter: Box::new(HttpApiPresenter {}),
+        };
+
         AsareApp {
             config,
-            users,
+            users_svc,
             portfolio_interactor,
+            rebalancer_ctl,
         }
     }
 
@@ -58,12 +65,18 @@ pub struct ActixHttpServer;
 #[async_trait(?Send)]
 impl AsareHttpServer for ActixHttpServer {
     async fn run_http_server(app: AsareApp) -> std::io::Result<()> {
-        let users_app_data = web::Data::new(app.users);
+        let rebalancer_ctl = app.rebalancer_ctl.pipe(web::Data::new);
+
+        let users_app_data = web::Data::new(app.users_svc);
         let portfolio_app_data = web::Data::new(app.portfolio_interactor);
 
         HttpServer::new(move || {
             App::new()
-                .service(web::scope("/v4/rebel/").service(rebalance_request))
+                .service(
+                    web::scope("/v4/rebel/")
+                        .service(rebalance_request)
+                        .app_data(rebalancer_ctl.clone()),
+                )
                 .service(
                     web::scope("/v1/users/")
                         .service(users::routes::create_user)
@@ -72,7 +85,6 @@ impl AsareHttpServer for ActixHttpServer {
                 )
                 .service(
                     web::scope("/v1/portfolios/")
-                        .service(rebalance_request)
                         .service(portfolios::routes::create)
                         .service(portfolios::routes::delete)
                         .service(portfolios::routes::find)
