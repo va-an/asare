@@ -2,7 +2,8 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use crate::portfolios::portfolios_service::PortfoliosImpl;
-use crate::rebalancer::controller::{rebalance_request, RebalancerController};
+use crate::rebalancer::controller::RebalancerController;
+use crate::rebalancer::{self, routes};
 use crate::users::api_key_matcher::UserApiKeyMatcher;
 use crate::users::controller::UsersController;
 use crate::users::repository_builder::UserRepositoryBuilder;
@@ -72,7 +73,7 @@ impl AsareHttpServer for ActixHttpServer {
             App::new()
                 .service(
                     web::scope("/v4/rebel/")
-                        .service(rebalance_request)
+                        .service(rebalancer::routes::rebalance)
                         .app_data(rebalancer_app_data.clone()),
                 )
                 .service(

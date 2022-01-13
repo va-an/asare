@@ -1,5 +1,6 @@
-use crate::rebalancer::controller::RebalanceOutput;
 use actix_web::{Error, HttpResponse};
+
+use crate::rebalancer::rebalancer_service::RebalanceOutput;
 
 impl From<RebalanceOutput> for Result<HttpResponse, Error> {
     fn from(output: RebalanceOutput) -> Self {

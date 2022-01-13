@@ -1,13 +1,17 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::app::Portfolio;
-
-use super::controller::RebalanceOutput;
 
 #[derive(Deserialize, Debug)]
 pub struct RebalanceInput {
     pub current_portfolio: Portfolio,
     pub required_allocation: Portfolio,
+}
+
+#[derive(Serialize, Debug)]
+pub struct RebalanceOutput {
+    pub current_allocation: Portfolio,
+    pub required_operations: Portfolio,
 }
 
 pub struct RebalancerImpl;
