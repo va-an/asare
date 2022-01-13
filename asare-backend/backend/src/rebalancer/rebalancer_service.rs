@@ -2,6 +2,8 @@ use serde::Deserialize;
 
 use crate::app::Portfolio;
 
+use super::routes::RebalanceOutput;
+
 #[derive(Deserialize, Debug)]
 pub struct RebalanceInput {
     pub current_portfolio: Portfolio,
@@ -14,6 +16,7 @@ pub trait Rebalancer {
     fn calc_current_allocation(portfolio: &Portfolio) -> Portfolio;
     fn calc_expected_portfolio(input: &RebalanceInput) -> Portfolio;
     fn calc_purchase(input: &RebalanceInput) -> Portfolio;
+    fn rebalance(input: &RebalanceInput) -> RebalanceOutput;
 }
 
 impl Rebalancer for RebalancerImpl {
@@ -48,6 +51,16 @@ impl Rebalancer for RebalancerImpl {
                 )
             })
             .collect()
+    }
+
+    fn rebalance(input: &RebalanceInput) -> RebalanceOutput {
+        let current_allocation = Self::calc_current_allocation(&input.current_portfolio);
+        let required_operations = Self::calc_purchase(&input);
+
+        RebalanceOutput {
+            current_allocation,
+            required_operations,
+        }
     }
 }
 

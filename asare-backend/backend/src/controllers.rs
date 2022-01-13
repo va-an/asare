@@ -20,13 +20,7 @@ pub struct RebalancerController {
 
 impl RebalancerController {
     pub fn rebalance(&self, input: &RebalanceInput) -> RebalanceOutput {
-        let current_allocation = RebalancerImpl::calc_current_allocation(&input.current_portfolio);
-        let required_operations = RebalancerImpl::calc_purchase(&input);
-
-        RebalanceOutput {
-            current_allocation,
-            required_operations,
-        }
+        RebalancerImpl::rebalance(input)
     }
 }
 
