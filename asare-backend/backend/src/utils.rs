@@ -8,9 +8,10 @@ pub trait ChainingExt: Sized {
 
     fn tap<F>(self, f: F) -> Self
     where
-        F: FnOnce(),
+        Self: Clone,
+        F: FnOnce(Self),
     {
-        f();
+        f(self.to_owned());
         self
     }
 

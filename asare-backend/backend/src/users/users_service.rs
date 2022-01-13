@@ -52,7 +52,7 @@ impl Users for UsersImpl {
 
         self.user_repo
             .create(&create_user_request.login, &password, &api_key)
-            .tap(|| log::debug!("created users: {:#?}", self.find_all()))
+            .tap(|_| log::debug!("created users: {:#?}", self.find_all()))
     }
 
     fn find_all(&self) -> Vec<User> {
