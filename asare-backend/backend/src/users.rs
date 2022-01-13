@@ -1,4 +1,5 @@
 pub mod api_key_matcher;
+pub mod controller;
 pub mod repository;
 pub mod repository_builder;
 pub mod routes;

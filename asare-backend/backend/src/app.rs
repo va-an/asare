@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use crate::controllers::{HttpApiPresenter, RebalancerController, UsersController};
 use crate::portfolios::portfolios_service::PortfoliosImpl;
-use crate::rebalancer::routes::rebalance_request;
+use crate::rebalancer::controller::{rebalance_request, RebalancerController};
 use crate::users::api_key_matcher::UserApiKeyMatcher;
+use crate::users::controller::UsersController;
 use crate::users::repository_builder::UserRepositoryBuilder;
 use crate::users::users_service::UsersImpl;
 use crate::utils::ChainingExt;
@@ -39,14 +39,8 @@ impl AsareApp {
             api_key_matcher,
         };
 
-        let rebalancer_ctl = RebalancerController {
-            presenter: Box::new(HttpApiPresenter {}),
-        };
-
-        let users_ctl = UsersController {
-            users_svc,
-            presenter: Box::new(HttpApiPresenter {}),
-        };
+        let rebalancer_ctl = RebalancerController {};
+        let users_ctl = UsersController::new(users_svc);
 
         AsareApp {
             config,

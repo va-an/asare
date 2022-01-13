@@ -2,7 +2,7 @@ use serde::Deserialize;
 
 use crate::app::Portfolio;
 
-use super::routes::RebalanceOutput;
+use super::controller::RebalanceOutput;
 
 #[derive(Deserialize, Debug)]
 pub struct RebalanceInput {
