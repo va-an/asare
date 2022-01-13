@@ -5,8 +5,7 @@ use crate::{
     app::Portfolio,
     rebalancer::rebalancer_service::{RebalanceInput, Rebalancer, RebalancerImpl},
 };
-
-pub struct RebalancerController {}
+pub struct RebalancerController;
 
 impl RebalancerController {
     pub fn rebalance(&self, input: &RebalanceInput) -> RebalanceOutput {

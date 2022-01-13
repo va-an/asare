@@ -6,3 +6,9 @@ impl From<RebalanceOutput> for Result<HttpResponse, Error> {
         Ok(HttpResponse::Ok().json(output))
     }
 }
+
+impl From<RebalanceOutput> for String {
+    fn from(output: RebalanceOutput) -> Self {
+        format!("{:#?}", output)
+    }
+}
