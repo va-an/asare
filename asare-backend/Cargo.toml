@@ -1,2 +1,2 @@
 [workspace]
-members = ["backend", "domain"]
+members = ["domain", "backend", "telegram_bot"]

@@ -1,0 +1,11 @@
+[package]
+name = "telegram_bot"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+domain = { path = "../domain" }
+teloxide = { version = "0.5", features = ["macros", "auto-send"] }
+log = "0.4"
+pretty_env_logger = "0.4.0"
+tokio = { version = "1.8", features = ["rt-multi-thread", "macros"] }
