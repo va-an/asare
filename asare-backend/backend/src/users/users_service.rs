@@ -1,11 +1,9 @@
 use std::sync::Arc;
 
+use domain::utils::ChainingExt;
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    users::generators::{ApiKeyGenerator, UserPasswordGenerator},
-    utils::ChainingExt,
-};
+use crate::users::generators::{ApiKeyGenerator, UserPasswordGenerator};
 
 use super::repository::UserRepo;
 

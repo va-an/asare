@@ -71,12 +71,11 @@ impl PortfolioRepository for PortfolioRepoInMemory {
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        app::Portfolio,
-        portfolios::{
-            portfolios_service::UserPortfolio,
-            repository::{PortfolioRepoInMemory, PortfolioRepository},
-        },
+    use domain::Portfolio;
+
+    use crate::portfolios::{
+        portfolios_service::UserPortfolio,
+        repository::{PortfolioRepoInMemory, PortfolioRepository},
     };
 
     fn some_portfolio() -> UserPortfolio {

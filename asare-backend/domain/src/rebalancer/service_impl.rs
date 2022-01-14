@@ -1,30 +1,11 @@
-use serde::{Deserialize, Serialize};
+use crate::Portfolio;
 
-use crate::app::Portfolio;
-
-#[derive(Deserialize, Debug)]
-pub struct RebalanceInput {
-    pub current_portfolio: Portfolio,
-    pub required_allocation: Portfolio,
-}
-
-#[derive(Serialize, Debug)]
-pub struct RebalanceOutput {
-    pub current_allocation: Portfolio,
-    pub required_operations: Portfolio,
-}
+use super::service::{RebalanceInput, RebalanceOutput, Rebalancer};
 
 pub struct RebalancerImpl;
 
-pub trait Rebalancer {
-    fn calc_current_allocation(portfolio: &Portfolio) -> Portfolio;
-    fn calc_expected_portfolio(input: &RebalanceInput) -> Portfolio;
-    fn calc_purchase(input: &RebalanceInput) -> Portfolio;
-    fn rebalance(input: &RebalanceInput) -> RebalanceOutput;
-}
-
 impl Rebalancer for RebalancerImpl {
-    fn calc_current_allocation(portfolio: &Portfolio) -> Portfolio {
+    fn calc_current_allocation(&self, portfolio: &Portfolio) -> Portfolio {
         let sum: f32 = portfolio.values().sum();
 
         portfolio
@@ -33,7 +14,7 @@ impl Rebalancer for RebalancerImpl {
             .collect()
     }
 
-    fn calc_expected_portfolio(input: &RebalanceInput) -> Portfolio {
+    fn calc_expected_portfolio(&self, input: &RebalanceInput) -> Portfolio {
         let sum: f32 = input.current_portfolio.values().sum();
 
         input
@@ -43,8 +24,8 @@ impl Rebalancer for RebalancerImpl {
             .collect()
     }
 
-    fn calc_purchase(input: &RebalanceInput) -> Portfolio {
-        let expected_portfolio = RebalancerImpl::calc_expected_portfolio(input);
+    fn calc_purchase(&self, input: &RebalanceInput) -> Portfolio {
+        let expected_portfolio = self.calc_expected_portfolio(input);
 
         expected_portfolio
             .iter()
@@ -57,9 +38,9 @@ impl Rebalancer for RebalancerImpl {
             .collect()
     }
 
-    fn rebalance(input: &RebalanceInput) -> RebalanceOutput {
-        let current_allocation = Self::calc_current_allocation(&input.current_portfolio);
-        let required_operations = Self::calc_purchase(&input);
+    fn rebalance(&self, input: &RebalanceInput) -> RebalanceOutput {
+        let current_allocation = self.calc_current_allocation(&input.current_portfolio);
+        let required_operations = self.calc_purchase(&input);
 
         RebalanceOutput {
             current_allocation,
@@ -71,6 +52,8 @@ impl Rebalancer for RebalancerImpl {
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
+
+    use crate::rebalancer::service_builder::RebalancerSvcBuilder;
 
     use super::*;
     use approx::*;
@@ -100,7 +83,9 @@ mod tests {
 
     #[test]
     fn calculate_allocation() {
-        let result = RebalancerImpl::calc_current_allocation(&current_portfolio());
+        let svc = RebalancerSvcBuilder::default();
+
+        let result = svc.calc_current_allocation(&current_portfolio());
 
         let sum: f32 = result.values().sum();
         assert_abs_diff_eq!(sum, 100.0);
@@ -112,7 +97,9 @@ mod tests {
 
     #[test]
     fn calculate_expected_portfolio() {
-        let expected_allocation = RebalancerImpl::calc_expected_portfolio(&rebalance_input());
+        let svc = RebalancerSvcBuilder::default();
+
+        let expected_allocation = svc.calc_expected_portfolio(&rebalance_input());
 
         let sum: f32 = expected_allocation.values().sum();
         assert_abs_diff_eq!(sum, 300_000.0);
@@ -124,9 +111,11 @@ mod tests {
 
     #[test]
     fn calculate_purchase() {
+        let svc = RebalancerSvcBuilder::default();
+
         let current_portfolio = current_portfolio();
-        let expected_allocation = RebalancerImpl::calc_expected_portfolio(&rebalance_input());
-        let purchases = RebalancerImpl::calc_purchase(&rebalance_input());
+        let expected_allocation = svc.calc_expected_portfolio(&rebalance_input());
+        let purchases = svc.calc_purchase(&rebalance_input());
 
         for (ticker, value) in &expected_allocation {
             let current_value = current_portfolio.get(ticker).unwrap();

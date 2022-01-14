@@ -1,15 +1,17 @@
 use actix_web::{Error, HttpResponse};
+use domain::rebalancer::service::RebalanceOutput;
 
-use crate::rebalancer::rebalancer_service::RebalanceOutput;
+pub struct HttpApiPresenter;
 
-impl From<RebalanceOutput> for Result<HttpResponse, Error> {
-    fn from(output: RebalanceOutput) -> Self {
+impl HttpApiPresenter {
+    pub fn into(output: RebalanceOutput) -> Result<HttpResponse, Error> {
         Ok(HttpResponse::Ok().json(output))
     }
 }
 
-impl From<RebalanceOutput> for String {
-    fn from(output: RebalanceOutput) -> Self {
-        format!("{:#?}", output)
-    }
-}
+// TODO:
+// impl From<RebalanceOutput> for Result<HttpResponse, Error> {
+//     fn from(output: RebalanceOutput) -> Self {
+//         Ok(HttpResponse::Ok().json(output))
+//     }
+// }

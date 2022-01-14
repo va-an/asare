@@ -1,19 +1,16 @@
-use std::collections::HashMap;
 use std::sync::Arc;
 
 use crate::portfolios::portfolios_service::PortfoliosImpl;
-use crate::rebalancer::controller::RebalancerController;
-use crate::rebalancer::{self, routes};
+use crate::rebalancer;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
 use crate::users::controller::UsersController;
 use crate::users::repository_builder::UserRepositoryBuilder;
 use crate::users::users_service::UsersImpl;
-use crate::utils::ChainingExt;
 use crate::{portfolios, users, Config};
 use actix_web::{middleware, web, App, HttpServer};
 use async_trait::async_trait;
-
-pub type Portfolio = HashMap<String, f32>;
+use domain::rebalancer::{controller::RebalancerController, service_builder::RebalancerSvcBuilder};
+use domain::utils::ChainingExt;
 
 pub struct AsareApp {
     config: Config,
@@ -40,8 +37,10 @@ impl AsareApp {
             api_key_matcher,
         };
 
-        let rebalancer_ctl = RebalancerController {};
         let users_ctl = UsersController::new(users_svc);
+
+        let rebalancer_svc = RebalancerSvcBuilder::default();
+        let rebalancer_ctl = RebalancerController::new(rebalancer_svc);
 
         AsareApp {
             config,

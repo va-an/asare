@@ -1,5 +1,6 @@
+use domain::utils::ChainingExt;
+
 use super::{repository::UserReposotory, repository_in_memory::UserRepoInMemory};
-use crate::utils::ChainingExt;
 use std::{collections::HashMap, sync::Mutex};
 
 pub type UserRepo = Box<dyn UserReposotory + Sync + Send>;

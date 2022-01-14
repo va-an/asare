@@ -1,3 +1,4 @@
+// TODO: extract to "utils" crate
 pub trait ChainingExt: Sized {
     fn pipe<F, R>(self, f: F) -> R
     where
