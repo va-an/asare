@@ -5,13 +5,24 @@ use domain::{
 
 pub struct BotController;
 
-// FIXME: input validation
 impl BotController {
-    pub fn from_input(input: &str) -> RebalanceInput {
+    pub fn from_input(input: &str) -> Result<RebalanceInput, ()> {
         let input_list = input
             .lines()
             .map(|line| line.split(" ").collect::<Vec<&str>>())
             .collect::<Vec<Vec<&str>>>();
+
+        let lines_len_ok = input_list.iter().all(|line| line.len() == 3);
+        if !lines_len_ok {
+            return Err(());
+        }
+
+        let parse_digits_ok = input_list
+            .iter()
+            .all(|line| line[1].parse::<f32>().is_ok() & line[2].parse::<f32>().is_ok());
+        if !parse_digits_ok {
+            return Err(());
+        }
 
         let current_portfolio = input_list
             .iter()
@@ -33,10 +44,10 @@ impl BotController {
             })
             .collect::<Portfolio>();
 
-        RebalanceInput {
+        Ok(RebalanceInput {
             current_portfolio,
             required_allocation,
-        }
+        })
     }
 
     pub fn from_output(output: &RebalanceOutput) -> String {

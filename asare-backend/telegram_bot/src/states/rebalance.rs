@@ -12,13 +12,20 @@ async fn receive_input(
     cx: TransitionIn<AutoSend<Bot>>,
     input: String,
 ) -> TransitionOut<RebalanceDialogue> {
-    let rebalance_input = BotController::from_input(&input);
+    match BotController::from_input(&input) {
+        Ok(rebalance_input) => {
+            let output = RebalancerSvcBuilder::default()
+                .rebalance(&rebalance_input)
+                .pipe(|output| BotController::from_output(&output));
 
-    let output = RebalancerSvcBuilder::default()
-        .rebalance(&rebalance_input)
-        .pipe(|output| BotController::from_output(&output));
+            cx.answer(output).await?;
 
-    cx.answer(output).await?;
+            exit()
+        }
 
-    exit()
+        Err(_) => {
+            cx.answer("Can't parse rebalance input").await?;
+            exit()
+        }
+    }
 }
