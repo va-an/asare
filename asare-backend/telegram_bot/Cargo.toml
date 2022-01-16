@@ -6,6 +6,8 @@ edition = "2021"
 [dependencies]
 domain = { path = "../domain" }
 teloxide = { version = "0.5", features = ["macros", "auto-send"] }
+futures = "0.3.5"
 log = "0.4"
 pretty_env_logger = "0.4.0"
 tokio = { version = "1.8", features = ["rt-multi-thread", "macros"] }
+derive_more = "0.99"

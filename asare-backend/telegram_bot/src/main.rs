@@ -1,56 +1,20 @@
-use std::error::Error;
-use teloxide::{prelude::*, utils::command::BotCommand};
+use states::RebalanceDialogue;
+use teloxide::prelude::*;
 
-#[derive(BotCommand)]
-#[command(
-    rename = "lowercase",
-    description = "Bot for calculation asset allocation rebalance.\nThese commands are supported:\n"
-)]
-enum Command {
-    #[command(description = "calculate rebalance")]
-    Rebalance,
+mod conversions;
+mod states;
 
-    #[command(description = "show input example")]
-    Example,
-
-    #[command(description = "show all commands")]
-    Help,
-
-    #[command(description = "about this bot")]
-    About,
-}
-
-async fn answer(
+async fn rebalance_dialogue_handler(
     cx: UpdateWithCx<AutoSend<Bot>, Message>,
-    command: Command,
-) -> Result<(), Box<dyn Error + Send + Sync>> {
-    match command {
-        Command::Rebalance => todo!(),
-
-        Command::Example => {
-            cx.answer(concat!(
-                "Input format:",
-                "<ticker> <current amount> <requered allocation>"
-            ))
-            .await?;
-
-            cx.answer(concat!("A 75000 33\n", "B 100000 33\n", "C 125000 34\n"))
-                .await?
+    dialogue: RebalanceDialogue,
+) -> TransitionOut<RebalanceDialogue> {
+    match cx.update.text().map(ToOwned::to_owned) {
+        None => {
+            cx.answer("Send me a text message.").await?;
+            next(dialogue)
         }
-
-        Command::About => {
-            cx.answer(concat!(
-                "This bot created with love and open source \n",
-                "Code here - https://github.com/va-anufriev/asare \n",
-                "Feel free create a issues with feature or bugfix requests!"
-            ))
-            .await?
-        }
-
-        Command::Help => cx.answer(Command::descriptions()).await?,
-    };
-
-    Ok(())
+        Some(ans) => dialogue.react(cx, ans).await,
+    }
 }
 
 // TODO: get from env var ASARE_BOT_TOKEN instead of TELOXIDE_TOKEN
@@ -61,6 +25,10 @@ async fn main() {
 
     let bot = Bot::from_env().auto_send();
 
-    let bot_name: String = "asare bot".to_string();
-    teloxide::commands_repl(bot, bot_name, answer).await;
+    teloxide::dialogues_repl(bot, |message, dialogue| async move {
+        rebalance_dialogue_handler(message, dialogue)
+            .await
+            .expect("Something wrong with the bot!")
+    })
+    .await;
 }
