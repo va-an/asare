@@ -14,11 +14,11 @@ async fn receive_input(
 ) -> TransitionOut<RebalanceDialogue> {
     match BotController::from_input(&input) {
         Ok(rebalance_input) => {
-            let output = RebalancerSvcBuilder::default()
+            RebalancerSvcBuilder::default()
                 .rebalance(&rebalance_input)
-                .pipe(|output| BotController::from_output(&output));
-
-            cx.answer(output).await?;
+                .pipe(|output| BotController::from_output(&output))
+                .pipe(|formatted_output| cx.answer(formatted_output))
+                .await?;
 
             exit()
         }

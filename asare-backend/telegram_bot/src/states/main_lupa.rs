@@ -12,6 +12,12 @@ static HELP_MESSAGE: &str = concat!(
 
 pub static EXAMPLE_INPUT: &str = concat!("A 75000 33\n", "B 100000 33\n", "C 125000 34\n");
 
+static ABOUT_MESSAGE: &str = concat!(
+    "This bot created with love and open source \n",
+    "Code here - https://github.com/va-anufriev/asare \n",
+    "Feel free create a issues with feature or bugfix requests!"
+);
+
 #[derive(Clone)]
 pub struct MainLupaState;
 
@@ -51,13 +57,7 @@ async fn start(
         }
 
         "/about" => {
-            cx.answer(concat!(
-                "This bot created with love and open source \n",
-                "Code here - https://github.com/va-anufriev/asare \n",
-                "Feel free create a issues with feature or bugfix requests!"
-            ))
-            .await?;
-
+            cx.answer(ABOUT_MESSAGE).await?;
             next(MainLupaState)
         }
 
