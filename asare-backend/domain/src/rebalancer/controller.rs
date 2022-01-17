@@ -10,6 +10,6 @@ impl RebalancerController {
     }
 
     pub fn rebalance(&self, input: &RebalanceInput) -> RebalanceOutput {
-        self.rebalancer_svc.rebalance(input)
+        self.rebalancer_svc.rebalance_by_amount(input)
     }
 }

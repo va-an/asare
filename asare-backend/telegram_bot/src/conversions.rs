@@ -66,11 +66,11 @@ impl BotController {
 #[cfg(test)]
 mod tests {
     use super::BotController;
-    use crate::states::main_lupa::EXAMPLE_INPUT;
+    use crate::states::main_lupa::EXAMPLE_AMOUNT_INPUT;
 
     #[test]
     fn from_input_test() {
-        let input = EXAMPLE_INPUT;
+        let input = EXAMPLE_AMOUNT_INPUT;
 
         let result = BotController::from_input(input);
     }

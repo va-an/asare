@@ -1,4 +1,4 @@
-use crate::{price_provider::price_provider::PriceProviderType, Portfolio};
+use crate::{price_provider::price_provider::PriceProviderType, utils::ChainingExt, Portfolio};
 
 use super::service::{RebalanceInput, RebalanceOutput, Rebalancer};
 
@@ -40,8 +40,28 @@ impl Rebalancer for RebalancerImpl {
             .collect()
     }
 
-    fn rebalance(&self, input: &RebalanceInput) -> RebalanceOutput {
+    fn rebalance_by_amount(&self, input: &RebalanceInput) -> RebalanceOutput {
         let current_allocation = self.calc_current_allocation(&input.current_portfolio);
+        let required_operations = self.calc_purchase(&input);
+
+        RebalanceOutput {
+            current_allocation,
+            required_operations,
+        }
+    }
+
+    // FIXME: looks like calc_purchase calculating is broken here
+    fn rebalance_by_price(&self, input: &RebalanceInput) -> RebalanceOutput {
+        let current_allocation = input
+            .current_portfolio
+            .iter()
+            .map(|(ticker, amount)| {
+                let price = self.price_provider.fetch_price(ticker);
+                (ticker.to_owned(), price * amount)
+            })
+            .collect::<Portfolio>()
+            .pipe(|ticker_amount| self.calc_current_allocation(&ticker_amount));
+
         let required_operations = self.calc_purchase(&input);
 
         RebalanceOutput {

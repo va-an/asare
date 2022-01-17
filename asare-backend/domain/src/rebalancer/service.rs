@@ -7,7 +7,8 @@ pub trait Rebalancer {
     fn calc_current_allocation(&self, portfolio: &Portfolio) -> Portfolio;
     fn calc_expected_portfolio(&self, input: &RebalanceInput) -> Portfolio;
     fn calc_purchase(&self, input: &RebalanceInput) -> Portfolio;
-    fn rebalance(&self, input: &RebalanceInput) -> RebalanceOutput;
+    fn rebalance_by_amount(&self, input: &RebalanceInput) -> RebalanceOutput;
+    fn rebalance_by_price(&self, input: &RebalanceInput) -> RebalanceOutput;
 }
 
 #[derive(Deserialize, Debug)]

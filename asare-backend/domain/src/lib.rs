@@ -6,4 +6,5 @@ pub mod utils;
 
 pub type Ticker = String;
 pub type Price = f32;
-pub type Portfolio = HashMap<Ticker, Price>;
+
+pub type Portfolio = HashMap<Ticker, f32>;
