@@ -6,7 +6,10 @@ use super::{
 pub struct PriceProviderBuilder;
 
 impl PriceProviderBuilder {
-    fn default(api_provider: ApiProviderType, repo: PriceRepoType) -> PriceProviderType {
-        Box::new(PriceProviderImpl { api_provider, repo })
+    pub fn default(api_provider: ApiProviderType, prices_repo: PriceRepoType) -> PriceProviderType {
+        Box::new(PriceProviderImpl {
+            api_provider,
+            prices_repo,
+        })
     }
 }

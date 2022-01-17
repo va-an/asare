@@ -73,7 +73,5 @@ mod tests {
         let input = EXAMPLE_INPUT;
 
         let result = BotController::from_input(input);
-
-        todo!()
     }
 }

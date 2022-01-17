@@ -1,8 +1,10 @@
-use crate::Portfolio;
+use crate::{price_provider::price_provider::PriceProviderType, Portfolio};
 
 use super::service::{RebalanceInput, RebalanceOutput, Rebalancer};
 
-pub struct RebalancerImpl;
+pub struct RebalancerImpl {
+    pub price_provider: PriceProviderType,
+}
 
 impl Rebalancer for RebalancerImpl {
     fn calc_current_allocation(&self, portfolio: &Portfolio) -> Portfolio {
@@ -53,7 +55,13 @@ impl Rebalancer for RebalancerImpl {
 mod tests {
     use std::collections::HashMap;
 
-    use crate::rebalancer::service_builder::RebalancerSvcBuilder;
+    use crate::{
+        price_provider::{
+            api_provider_builder::ApiProviderBuilder, price_provider_builder::PriceProviderBuilder,
+            repository_builder::PricesRepoBuilder,
+        },
+        rebalancer::{service::RebalancerSvc, service_builder::RebalancerSvcBuilder},
+    };
 
     use super::*;
     use approx::*;
@@ -81,9 +89,18 @@ mod tests {
         }
     }
 
+    fn get_svc() -> RebalancerSvc {
+        let api_provider = ApiProviderBuilder::mock();
+        let prices_repo = PricesRepoBuilder::in_memory();
+        let price_provider = PriceProviderBuilder::default(api_provider, prices_repo);
+        let svc = RebalancerSvcBuilder::default(price_provider);
+
+        svc
+    }
+
     #[test]
     fn calculate_allocation() {
-        let svc = RebalancerSvcBuilder::default();
+        let svc = get_svc();
 
         let result = svc.calc_current_allocation(&current_portfolio());
 
@@ -97,7 +114,7 @@ mod tests {
 
     #[test]
     fn calculate_expected_portfolio() {
-        let svc = RebalancerSvcBuilder::default();
+        let svc = get_svc();
 
         let expected_allocation = svc.calc_expected_portfolio(&rebalance_input());
 
@@ -111,7 +128,7 @@ mod tests {
 
     #[test]
     fn calculate_purchase() {
-        let svc = RebalancerSvcBuilder::default();
+        let svc = get_svc();
 
         let current_portfolio = current_portfolio();
         let expected_allocation = svc.calc_expected_portfolio(&rebalance_input());

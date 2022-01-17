@@ -9,6 +9,9 @@ use crate::users::users_service::UsersImpl;
 use crate::{portfolios, users, Config};
 use actix_web::{middleware, web, App, HttpServer};
 use async_trait::async_trait;
+use domain::price_provider::api_provider_builder::ApiProviderBuilder;
+use domain::price_provider::price_provider_builder::PriceProviderBuilder;
+use domain::price_provider::repository_builder::PricesRepoBuilder;
 use domain::rebalancer::{controller::RebalancerController, service_builder::RebalancerSvcBuilder};
 use domain::utils::ChainingExt;
 
@@ -39,7 +42,11 @@ impl AsareApp {
 
         let users_ctl = UsersController::new(users_svc);
 
-        let rebalancer_svc = RebalancerSvcBuilder::default();
+        let api_provider = ApiProviderBuilder::mock();
+        let prices_repo = PricesRepoBuilder::in_memory();
+        let price_provider = PriceProviderBuilder::default(api_provider, prices_repo);
+        let rebalancer_svc = RebalancerSvcBuilder::default(price_provider);
+
         let rebalancer_ctl = RebalancerController::new(rebalancer_svc);
 
         AsareApp {

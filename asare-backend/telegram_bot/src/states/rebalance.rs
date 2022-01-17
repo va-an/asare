@@ -1,4 +1,11 @@
-use domain::{rebalancer::service_builder::RebalancerSvcBuilder, utils::ChainingExt};
+use domain::{
+    price_provider::{
+        api_provider_builder::ApiProviderBuilder, price_provider_builder::PriceProviderBuilder,
+        repository_builder::PricesRepoBuilder,
+    },
+    rebalancer::service_builder::RebalancerSvcBuilder,
+    utils::ChainingExt,
+};
 use teloxide::prelude::*;
 
 use crate::{conversions::BotController, states::RebalanceDialogue};
@@ -14,7 +21,11 @@ async fn receive_input(
 ) -> TransitionOut<RebalanceDialogue> {
     match BotController::from_input(&input) {
         Ok(rebalance_input) => {
-            RebalancerSvcBuilder::default()
+            let api_provider = ApiProviderBuilder::mock();
+            let prices_repo = PricesRepoBuilder::in_memory();
+            let price_provider = PriceProviderBuilder::default(api_provider, prices_repo);
+
+            RebalancerSvcBuilder::default(price_provider)
                 .rebalance(&rebalance_input)
                 .pipe(|output| BotController::from_output(&output))
                 .pipe(|formatted_output| cx.answer(formatted_output))
