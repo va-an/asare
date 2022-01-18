@@ -1,11 +1,11 @@
-use super::service::{RebalanceInput, RebalanceOutput, RebalancerSvc};
+use super::service::{RebalanceInput, RebalanceOutput, RebalancerSvcType};
 
 pub struct RebalancerController {
-    rebalancer_svc: RebalancerSvc,
+    rebalancer_svc: RebalancerSvcType,
 }
 
 impl RebalancerController {
-    pub fn new(rebalancer_svc: RebalancerSvc) -> RebalancerController {
+    pub fn new(rebalancer_svc: RebalancerSvcType) -> RebalancerController {
         RebalancerController { rebalancer_svc }
     }
 

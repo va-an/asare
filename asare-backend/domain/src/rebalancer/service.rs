@@ -1,7 +1,7 @@
 use crate::Portfolio;
 use serde::{Deserialize, Serialize};
 
-pub type RebalancerSvc = Box<dyn Rebalancer + Sync + Send>;
+pub type RebalancerSvcType = Box<dyn Rebalancer + Sync + Send>;
 
 pub trait Rebalancer {
     fn calc_current_allocation(&self, portfolio: &Portfolio) -> Portfolio;

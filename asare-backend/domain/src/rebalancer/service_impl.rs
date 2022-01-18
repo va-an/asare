@@ -78,7 +78,7 @@ mod tests {
             api_provider_builder::ApiProviderBuilder, price_provider_builder::PriceProviderBuilder,
             repository_builder::PricesRepoBuilder,
         },
-        rebalancer::{service::RebalancerSvc, service_builder::RebalancerSvcBuilder},
+        rebalancer::{service::RebalancerSvcType, service_builder::RebalancerSvcBuilder},
     };
 
     use super::*;
@@ -107,7 +107,7 @@ mod tests {
         }
     }
 
-    fn get_svc() -> RebalancerSvc {
+    fn get_svc() -> RebalancerSvcType {
         let api_provider = ApiProviderBuilder::mock();
         let prices_repo = PricesRepoBuilder::in_memory();
         let price_provider = PriceProviderBuilder::default(api_provider, prices_repo);

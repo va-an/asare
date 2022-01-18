@@ -1,11 +1,4 @@
-use domain::{
-    price_provider::{
-        api_provider_builder::ApiProviderBuilder, price_provider_builder::PriceProviderBuilder,
-        repository_builder::PricesRepoBuilder,
-    },
-    rebalancer::service_builder::RebalancerSvcBuilder,
-    utils::ChainingExt,
-};
+use domain::utils::ChainingExt;
 use teloxide::prelude::*;
 
 use crate::{
@@ -17,19 +10,14 @@ use super::RebalanceByPriceState;
 
 #[teloxide(subtransition)]
 async fn rebalance_by_amount(
-    _state: RebalanceByAmountState,
+    state: RebalanceByAmountState,
     cx: TransitionIn<AutoSend<Bot>>,
     input: String,
 ) -> TransitionOut<RebalanceDialogue> {
     match BotController::from_input(&input) {
         Ok(rebalance_input) => {
-            // FIXME: pass services instead of create on place
-            let api_provider = ApiProviderBuilder::mock();
-            let prices_repo = PricesRepoBuilder::in_memory();
-            let price_provider = PriceProviderBuilder::default(api_provider, prices_repo);
-
-            // FIXME: we don't need price_provider here
-            RebalancerSvcBuilder::default(price_provider)
+            state
+                .rebalancer_svc
                 .rebalance_by_amount(&rebalance_input)
                 .pipe(|output| BotController::from_output(&output))
                 .pipe(|formatted_output| cx.answer(formatted_output))
@@ -47,18 +35,14 @@ async fn rebalance_by_amount(
 
 #[teloxide(subtransition)]
 async fn rebalance_by_price(
-    _state: RebalanceByPriceState,
+    state: RebalanceByPriceState,
     cx: TransitionIn<AutoSend<Bot>>,
     input: String,
 ) -> TransitionOut<RebalanceDialogue> {
     match BotController::from_input(&input) {
         Ok(rebalance_input) => {
-            let api_provider = ApiProviderBuilder::mock();
-            let prices_repo = PricesRepoBuilder::in_memory();
-            let price_provider = PriceProviderBuilder::default(api_provider, prices_repo);
-
-            // TODO: send current portfolio before/with output
-            RebalancerSvcBuilder::default(price_provider)
+            state
+                .rebalancer_svc
                 .rebalance_by_price(&rebalance_input)
                 .pipe(|output| BotController::from_output(&output))
                 .pipe(|formatted_output| cx.answer(formatted_output))

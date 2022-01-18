@@ -1,4 +1,6 @@
-use crate::states::{RebalanceByAmountState, RebalanceDialogue, RebalanceByPriceState};
+use crate::states::{
+    MainLupaState, RebalanceByAmountState, RebalanceByPriceState, RebalanceDialogue,
+};
 use teloxide::prelude::*;
 
 static HELP_MESSAGE: &str = concat!(
@@ -19,31 +21,34 @@ static ABOUT_MESSAGE: &str = concat!(
     "Feel free create a issues with feature or bugfix requests!"
 );
 
-#[derive(Clone)]
-pub struct MainLupaState;
-
 #[teloxide(subtransition)]
 async fn start(
-    _state: MainLupaState,
+    main_lupa_state: MainLupaState,
     cx: TransitionIn<AutoSend<Bot>>,
     input: String,
 ) -> TransitionOut<RebalanceDialogue> {
     match input.as_str() {
         "/start" => {
             cx.answer(HELP_MESSAGE).await?;
-            next(MainLupaState)
+            next(main_lupa_state)
         }
 
         "/rebalance_by_amount" => {
             cx.answer("Enter your portfolio and desired allocation")
                 .await?;
-            next(RebalanceByAmountState)
+
+            next(RebalanceByAmountState {
+                rebalancer_svc: main_lupa_state.rebalancer_svc,
+            })
         }
 
         "/rebalance_by_price" => {
             cx.answer("Enter your portfolio and desired allocation")
                 .await?;
-            next(RebalanceByPriceState)
+
+            next(RebalanceByPriceState {
+                rebalancer_svc: main_lupa_state.rebalancer_svc,
+            })
         }
 
         // TODO: new example state with variant by_amount/by_price
@@ -56,24 +61,24 @@ async fn start(
 
             cx.answer(EXAMPLE_AMOUNT_INPUT).await?;
 
-            next(MainLupaState)
+            next(main_lupa_state)
         }
 
         // FIXME: fix info about rebalance commands
         "/help" => {
             cx.answer(HELP_MESSAGE).await?;
-            next(MainLupaState)
+            next(main_lupa_state)
         }
 
         "/about" => {
             cx.answer(ABOUT_MESSAGE).await?;
-            next(MainLupaState)
+            next(main_lupa_state)
         }
 
         _ => {
             cx.answer("Sorry, I don't understand this command.\nMaybe you need /help?")
                 .await?;
-            next(MainLupaState)
+            next(main_lupa_state)
         }
     }
 }
