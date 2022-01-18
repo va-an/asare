@@ -57,6 +57,7 @@ async fn rebalance_by_price(
             let prices_repo = PricesRepoBuilder::in_memory();
             let price_provider = PriceProviderBuilder::default(api_provider, prices_repo);
 
+            // TODO: send current portfolio before/with output
             RebalancerSvcBuilder::default(price_provider)
                 .rebalance_by_price(&rebalance_input)
                 .pipe(|output| BotController::from_output(&output))
