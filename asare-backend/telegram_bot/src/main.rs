@@ -1,14 +1,14 @@
 use states::RebalanceDialogue;
 use teloxide::{prelude::*, types::BotCommand};
 
-mod conversions;
-mod states;
+use crate::resources::{
+    ABOUT_COMMAND, EXAMPLE_COMMAND, HELP_COMMAND, REBALANCE_BY_AMOUNT_COMMAND,
+    REBALANCE_BY_PRICE_COMMAND,
+};
 
-static REBALANCE_BY_AMOUNT_COMMAND: &str = "rebalance_by_amount";
-static REBALANCE_BY_PRICE_COMMAND: &str = "rebalance_by_price";
-static EXAMPLE_COMMAND: &str = "example";
-static HELP_COMMAND: &str = "help";
-static ABOUT_COMMAND: &str = "about";
+mod conversions;
+mod resources;
+mod states;
 
 async fn rebalance_dialogue_handler(
     cx: UpdateWithCx<AutoSend<Bot>, Message>,

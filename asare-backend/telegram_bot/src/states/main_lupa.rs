@@ -1,25 +1,8 @@
-use crate::states::{
-    MainLupaState, RebalanceByAmountState, RebalanceByPriceState, RebalanceDialogue,
+use crate::{
+    resources::{ABOUT_MESSAGE, EXAMPLE_BY_AMOUNT_MESSAGE, EXAMPLE_BY_PRICE_MESSAGE, HELP_MESSAGE},
+    states::{MainLupaState, RebalanceByAmountState, RebalanceByPriceState, RebalanceDialogue},
 };
 use teloxide::prelude::*;
-
-static HELP_MESSAGE: &str = concat!(
-    "Bot for calculation asset allocation rebalance.\n",
-    "Commands:\n\n",
-    "/rebalance - calculate rebalance\n",
-    "/example - example input message for /rebalance\n",
-    "/help - help\n",
-    "/about - for feature request and bug reports"
-);
-
-pub static EXAMPLE_AMOUNT_INPUT: &str = concat!("A 75000 33\n", "B 100000 33\n", "C 125000 34\n");
-pub static EXAMPLE_PRICE_INPUT: &str = concat!("A 111.0 33\n", "B 56.0 33\n", "C 150.0 34\n");
-
-static ABOUT_MESSAGE: &str = concat!(
-    "This bot created with love and open source \n",
-    "Code here - https://github.com/va-anufriev/asare \n",
-    "Feel free create a issues with feature or bugfix requests!"
-);
 
 #[teloxide(subtransition)]
 async fn start(
@@ -51,20 +34,13 @@ async fn start(
             })
         }
 
-        // TODO: new example state with variant by_amount/by_price
         "/example" => {
-            cx.answer(concat!(
-                "Input format:",
-                "<ticker> <current amount> <requered allocation>"
-            ))
-            .await?;
-
-            cx.answer(EXAMPLE_AMOUNT_INPUT).await?;
+            cx.answer(EXAMPLE_BY_AMOUNT_MESSAGE).await?;
+            cx.answer(EXAMPLE_BY_PRICE_MESSAGE).await?;
 
             next(main_lupa_state)
         }
 
-        // FIXME: fix info about rebalance commands
         "/help" => {
             cx.answer(HELP_MESSAGE).await?;
             next(main_lupa_state)
