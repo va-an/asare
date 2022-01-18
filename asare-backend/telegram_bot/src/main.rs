@@ -8,7 +8,7 @@ static REBALANCE_BY_AMOUNT_COMMAND: &str = "rebalance_by_amount";
 static REBALANCE_BY_PRICE_COMMAND: &str = "rebalance_by_price";
 static EXAMPLE_COMMAND: &str = "example";
 static HELP_COMMAND: &str = "help";
-static ABOUT_COMMAND: &str = "abount";
+static ABOUT_COMMAND: &str = "about";
 
 async fn rebalance_dialogue_handler(
     cx: UpdateWithCx<AutoSend<Bot>, Message>,
