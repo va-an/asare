@@ -50,14 +50,19 @@ impl BotController {
         })
     }
 
+    // TODO: 2 digits after point (ex 123.46 instead of 123.4567)
     pub fn from_output(output: &RebalanceOutput) -> String {
+        fn show_allocation(p: &Portfolio) -> String {
+            p.iter().map(|(k, v)| format!("{}:\t{}%\n", k, v)).collect()
+        }
+
         fn port_as_str(p: &Portfolio) -> String {
             p.iter().map(|(k, v)| format!("{}:\t{}\n", k, v)).collect()
         }
 
         format!(
             "current allocation:\n{}\nrequired operations:\n{}",
-            port_as_str(&output.current_allocation),
+            show_allocation(&output.current_allocation),
             port_as_str(&output.required_operations)
         )
     }
