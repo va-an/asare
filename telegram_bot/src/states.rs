@@ -3,7 +3,7 @@ use std::sync::Arc;
 use derive_more::From;
 use domain::{
     price_provider::{
-        api_provider_builder::ApiProviderBuilder, price_provider_builder::PriceProviderBuilder,
+        finance_api_builder::FinanceApiBuilder, price_provider_builder::PriceProviderBuilder,
         repository_builder::PricesRepoBuilder,
     },
     rebalancer::{service::RebalancerSvcType, service_builder::RebalancerSvcBuilder},
@@ -38,9 +38,9 @@ pub enum RebalanceDialogue {
 
 impl Default for RebalanceDialogue {
     fn default() -> Self {
-        let api_provider = ApiProviderBuilder::mock();
+        let finance_api = FinanceApiBuilder::mock();
         let prices_repo = PricesRepoBuilder::in_memory();
-        let price_provider = PriceProviderBuilder::default(api_provider, prices_repo);
+        let price_provider = PriceProviderBuilder::default(finance_api, prices_repo);
         let rebalancer_svc = RebalancerSvcBuilder::default(price_provider).pipe(Arc::new);
 
         Self::MainLupa(MainLupaState { rebalancer_svc })

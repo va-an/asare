@@ -75,7 +75,7 @@ mod tests {
 
     use crate::{
         price_provider::{
-            api_provider_builder::ApiProviderBuilder, price_provider_builder::PriceProviderBuilder,
+            finance_api_builder::FinanceApiBuilder, price_provider_builder::PriceProviderBuilder,
             repository_builder::PricesRepoBuilder,
         },
         rebalancer::{service::RebalancerSvcType, service_builder::RebalancerSvcBuilder},
@@ -108,7 +108,7 @@ mod tests {
     }
 
     fn get_svc() -> RebalancerSvcType {
-        let api_provider = ApiProviderBuilder::mock();
+        let api_provider = FinanceApiBuilder::mock();
         let prices_repo = PricesRepoBuilder::in_memory();
         let price_provider = PriceProviderBuilder::default(api_provider, prices_repo);
         let svc = RebalancerSvcBuilder::default(price_provider);
