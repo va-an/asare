@@ -27,7 +27,7 @@ async fn rebalance_dialogue_handler(
 #[tokio::main]
 async fn main() {
     teloxide::enable_logging!();
-    log::info!("Starting simple_commands_bot...");
+    log::info!("Starting bot...");
 
     let bot = Bot::from_env().auto_send();
 

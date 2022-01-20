@@ -1,3 +1,5 @@
+use chrono::Duration;
+
 use crate::{utils::ChainingExt, Price, Ticker};
 
 use super::{
@@ -8,6 +10,21 @@ use super::{
 pub struct PriceProviderImpl {
     pub finance_api: FinanceApiType,
     pub prices_repo: PriceRepoType,
+    cache_ttl: Duration,
+}
+
+impl PriceProviderImpl {
+    pub fn new(
+        finance_api: FinanceApiType,
+        prices_repo: PriceRepoType,
+        cache_ttl: Duration,
+    ) -> PriceProviderImpl {
+        PriceProviderImpl {
+            finance_api,
+            prices_repo,
+            cache_ttl,
+        }
+    }
 }
 
 impl PriceProvider for PriceProviderImpl {

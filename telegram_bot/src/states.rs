@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use chrono::Duration;
 use derive_more::From;
 use domain::{
     price_provider::{
@@ -40,7 +41,8 @@ impl Default for RebalanceDialogue {
     fn default() -> Self {
         let finance_api = FinanceApiBuilder::mock();
         let prices_repo = PricesRepoBuilder::in_memory();
-        let price_provider = PriceProviderBuilder::default(finance_api, prices_repo);
+        let price_provider =
+            PriceProviderBuilder::default(finance_api, prices_repo, Duration::days(1));
         let rebalancer_svc = RebalancerSvcBuilder::default(price_provider).pipe(Arc::new);
 
         Self::MainLupa(MainLupaState { rebalancer_svc })

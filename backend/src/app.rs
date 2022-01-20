@@ -9,6 +9,7 @@ use crate::users::users_service::UsersImpl;
 use crate::{portfolios, users, Config};
 use actix_web::{middleware, web, App, HttpServer};
 use async_trait::async_trait;
+use chrono::Duration;
 use domain::price_provider::finance_api_builder::FinanceApiBuilder;
 use domain::price_provider::price_provider_builder::PriceProviderBuilder;
 use domain::price_provider::repository_builder::PricesRepoBuilder;
@@ -44,7 +45,8 @@ impl AsareApp {
 
         let finance_api = FinanceApiBuilder::mock();
         let prices_repo = PricesRepoBuilder::in_memory();
-        let price_provider = PriceProviderBuilder::default(finance_api, prices_repo);
+        let price_provider =
+            PriceProviderBuilder::default(finance_api, prices_repo, Duration::days(1));
         let rebalancer_svc = RebalancerSvcBuilder::default(price_provider);
 
         let rebalancer_ctl = RebalancerController::new(rebalancer_svc);

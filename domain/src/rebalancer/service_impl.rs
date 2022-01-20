@@ -83,6 +83,7 @@ mod tests {
 
     use super::*;
     use approx::*;
+    use chrono::Duration;
 
     fn current_portfolio() -> Portfolio {
         Portfolio::from([
@@ -110,7 +111,8 @@ mod tests {
     fn get_svc() -> RebalancerSvcType {
         let api_provider = FinanceApiBuilder::mock();
         let prices_repo = PricesRepoBuilder::in_memory();
-        let price_provider = PriceProviderBuilder::default(api_provider, prices_repo);
+        let price_provider =
+            PriceProviderBuilder::default(api_provider, prices_repo, Duration::seconds(1));
         let svc = RebalancerSvcBuilder::default(price_provider);
 
         svc
