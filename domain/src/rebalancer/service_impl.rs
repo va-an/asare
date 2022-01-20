@@ -55,7 +55,7 @@ impl Rebalancer for RebalancerImpl {
             .current_portfolio
             .iter()
             .map(|(ticker, amount)| {
-                let price = self.price_provider.fetch_price(ticker);
+                let price = self.price_provider.fetch_price(ticker.to_owned());
                 (ticker.to_owned(), price * amount)
             })
             .collect::<Portfolio>();
@@ -109,7 +109,7 @@ mod tests {
     }
 
     fn get_svc() -> RebalancerSvcType {
-        let api_provider = FinanceApiBuilder::mock();
+        let api_provider = FinanceApiBuilder::random();
         let prices_repo = PricesRepoBuilder::in_memory();
         let price_provider =
             PriceProviderBuilder::default(api_provider, prices_repo, Duration::seconds(1));

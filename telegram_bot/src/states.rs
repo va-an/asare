@@ -39,7 +39,7 @@ pub enum RebalanceDialogue {
 
 impl Default for RebalanceDialogue {
     fn default() -> Self {
-        let finance_api = FinanceApiBuilder::mock();
+        let finance_api = FinanceApiBuilder::random();
         let prices_repo = PricesRepoBuilder::in_memory();
         let price_provider =
             PriceProviderBuilder::default(finance_api, prices_repo, Duration::days(1));
