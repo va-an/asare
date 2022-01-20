@@ -1,4 +1,4 @@
-use chrono::Duration;
+use chrono::{Duration, Utc};
 
 use crate::{utils::ChainingExt, Price, Ticker};
 
@@ -6,7 +6,6 @@ use super::{
     finance_api::FinanceApiType, price_provider::PriceProvider, repository::PriceRepoType,
 };
 
-// TODO: cache ttl
 pub struct PriceProviderImpl {
     pub finance_api: FinanceApiType,
     pub prices_repo: PriceRepoType,
@@ -29,12 +28,23 @@ impl PriceProviderImpl {
 
 impl PriceProvider for PriceProviderImpl {
     fn fetch_price(&self, ticker: &Ticker) -> Price {
-        match self.prices_repo.find(&ticker) {
-            Some(price) => price,
-            None => self
-                .finance_api
+        let fetch_and_cache = |ticker: &Ticker| -> Price {
+            self.finance_api
                 .fetch_price(&ticker)
-                .tap(|price| self.prices_repo.save(&ticker, &price)),
-        }
+                .tap(|price| self.prices_repo.save(&ticker, &price))
+        };
+
+        self.prices_repo
+            .find(&ticker)
+            .map_or(fetch_and_cache(ticker), |price_cache| {
+                let cache_ttl_seconds = self.cache_ttl.num_seconds();
+                let now = Utc::now().timestamp();
+
+                if (now - price_cache.saved_timestamp) > cache_ttl_seconds {
+                    fetch_and_cache(ticker)
+                } else {
+                    price_cache.price
+                }
+            })
     }
 }
