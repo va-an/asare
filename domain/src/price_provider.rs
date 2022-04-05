@@ -5,6 +5,6 @@ pub mod price_provider_builder;
 pub mod repository;
 pub mod repository_builder;
 
-mod finance_api_mock;
+mod finance_api_random;
 mod price_provider_impl;
 mod repository_in_memory;
