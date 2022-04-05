@@ -1,70 +1,14 @@
-# rebalance with target
-POST http://localhost:8090/v2/rebel/rebalance
+# rebalance
+POST http://localhost:8072/v4/rebel/rebalance
 Content-Type: application/json
 
 {
-  "currentPortfolio": {
+  "current_portfolio": {
     "A": 75000,
     "B": 100000,
     "C": 125000
   },
-  "requiredAllocation": {
-    "A": 33,
-    "B": 33,
-    "C": 34
-  },
-  "target": 305000
-}
-
-###
-
-# rebalance without target
-POST http://localhost:8090/v2/rebel/rebalance
-Content-Type: application/json
-
-{
-  "currentPortfolio": {
-    "A": 75000,
-    "B": 100000,
-    "C": 125000
-  },
-  "requiredAllocation": {
-    "A": 33,
-    "B": 33,
-    "C": 34
-  }
-}
-
-###
-# rebalance v3
-POST http://localhost:8090/v3/rebel/rebalance
-Content-Type: application/json
-
-{
-  "currentPortfolio": {
-    "A": 75000,
-    "B": 100000,
-    "C": 125000
-  },
-  "requiredAllocation": {
-    "A": 33,
-    "B": 33,
-    "C": 34
-  }
-}
-
-###
-# rebalance v3
-POST https://api.asare.vaan.io/v3/rebel/rebalance
-Content-Type: application/json
-
-{
-  "currentPortfolio": {
-    "A": 75000,
-    "B": 100000,
-    "C": 125000
-  },
-  "requiredAllocation": {
+  "required_allocation": {
     "A": 33,
     "B": 33,
     "C": 34
