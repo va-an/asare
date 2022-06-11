@@ -1,4 +1,4 @@
-use super::{repository::UserReposotory, users_service::User};
+use super::{repository::UserRepository, users_service::User};
 use std::{collections::HashMap, sync::Mutex};
 
 #[derive(Debug)]
@@ -16,7 +16,7 @@ impl UserRepoInMemory {
     }
 }
 
-impl UserReposotory for UserRepoInMemory {
+impl UserRepository for UserRepoInMemory {
     fn create(&self, login: &str, password: &str, api_key: &str) -> Result<User, String> {
         let mut all = self.users.lock().unwrap();
         let login_exists = all.values().find(|user| &user.login == login);

@@ -1,8 +1,8 @@
 use super::users_service::User;
 
-pub type UserRepo = Box<dyn UserReposotory + Sync + Send>;
+pub type UserRepo = Box<dyn UserRepository + Sync + Send>;
 
-pub trait UserReposotory {
+pub trait UserRepository {
     fn create(&self, login: &str, password: &str, api_key: &str) -> Result<User, String>;
     fn delete(&self, id: &i32);
 
