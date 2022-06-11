@@ -12,12 +12,15 @@ use domain::{
 };
 use teloxide::macros::Transition;
 
+use crate::api_key_mapper::{mapper::ApiKeyMapperType, mapper_builder::ApiKeyMapperBuilder};
+
 pub mod main_lupa;
 pub mod rebalance;
 
 #[derive(Clone)]
 pub struct MainLupaState {
     pub rebalancer_svc: Arc<RebalancerSvcType>,
+    pub api_key_mapper: Arc<ApiKeyMapperType>,
 }
 
 #[derive(Clone)]
@@ -45,6 +48,11 @@ impl Default for RebalanceDialogue {
             PriceProviderBuilder::default(finance_api, prices_repo, Duration::days(1));
         let rebalancer_svc = RebalancerSvcBuilder::default(price_provider).pipe(Arc::new);
 
-        Self::MainLupa(MainLupaState { rebalancer_svc })
+        let api_key_mapper = ApiKeyMapperBuilder::json_file().pipe(Arc::new);
+
+        Self::MainLupa(MainLupaState {
+            rebalancer_svc,
+            api_key_mapper,
+        })
     }
 }
