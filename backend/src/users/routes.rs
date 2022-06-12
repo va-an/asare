@@ -14,7 +14,7 @@ pub async fn create_user(
 ) -> Result<HttpResponse, Error> {
     match ctl.create(&req) {
         Ok(new_user) => Ok(HttpResponse::Ok().json(new_user)),
-        Err(message) => Ok(HttpResponse::InternalServerError().json(message)),
+        Err(message) => Ok(HttpResponse::Conflict().json(message)),
     }
 }
 
