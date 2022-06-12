@@ -1,4 +1,6 @@
-use super::{repository::UserRepository, users_service::User};
+use domain::User;
+
+use super::repository::UserRepository;
 use std::{collections::HashMap, sync::Mutex};
 
 #[derive(Debug)]

@@ -1,21 +1,13 @@
 use std::sync::Arc;
 
-use domain::utils::ChainingExt;
-use serde::{Deserialize, Serialize};
+use domain::{utils::ChainingExt, User};
+use serde::Deserialize;
 
 use crate::users::generators::{ApiKeyGenerator, UserPasswordGenerator};
 
 use super::repository::UserRepo;
 
 pub type UsersService = Arc<dyn Users + Sync + Send>;
-
-#[derive(Debug, PartialEq, Clone, Serialize)]
-pub struct User {
-    pub id: i32,
-    pub login: String,
-    pub password: String, // FIXME: store hash instead raw password
-    pub api_key: String,
-}
 
 #[derive(Debug, Deserialize)]
 pub struct CreateUserRequest {

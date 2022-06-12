@@ -1,4 +1,6 @@
-use super::users_service::{CreateUserRequest, User, UsersService};
+use domain::User;
+
+use super::users_service::{CreateUserRequest, UsersService};
 
 pub struct UsersController {
     users_svc: UsersService,
