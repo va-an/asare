@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use chrono::Duration;
 use derive_more::From;
@@ -20,7 +20,7 @@ pub mod rebalance;
 #[derive(Clone)]
 pub struct MainLupaState {
     pub rebalancer_svc: Arc<RebalancerSvcType>,
-    pub api_key_mapper: Arc<ApiKeyMapperType>,
+    pub api_key_mapper: Arc<Mutex<ApiKeyMapperType>>,
 }
 
 #[derive(Clone)]
@@ -48,7 +48,9 @@ impl Default for RebalanceDialogue {
             PriceProviderBuilder::default(finance_api, prices_repo, Duration::days(1));
         let rebalancer_svc = RebalancerSvcBuilder::default(price_provider).pipe(Arc::new);
 
-        let api_key_mapper = ApiKeyMapperBuilder::json_file().pipe(Arc::new);
+        let api_key_mapper = ApiKeyMapperBuilder::pickle()
+            .pipe(Mutex::new)
+            .pipe(Arc::new);
 
         Self::MainLupa(MainLupaState {
             rebalancer_svc,
