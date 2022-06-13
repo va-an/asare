@@ -1,11 +1,11 @@
 use domain::utils::ChainingExt;
 
-use super::{mapper::ApiKeyMapperType, mapper_json_file::ApiKeyMapperJsonFile};
+use super::{mapper::ApiKeyMapperType, mapper_pickle::ApiKeyMapperPickleDb};
 
 pub struct ApiKeyMapperBuilder;
 
 impl ApiKeyMapperBuilder {
-    pub fn json_file() -> ApiKeyMapperType {
-        ApiKeyMapperJsonFile::new().pipe(Box::new)
+    pub fn pickle() -> ApiKeyMapperType {
+        ApiKeyMapperPickleDb::new().pipe(Box::new)
     }
 }
