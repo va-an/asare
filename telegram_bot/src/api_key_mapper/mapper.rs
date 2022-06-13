@@ -1,3 +1,4 @@
+// https://core.telegram.org/bots/api#user
 pub type UserId = i64;
 
 pub type ApiKeyMapperType = Box<dyn ApiKeyMapper + Send + Sync>;
