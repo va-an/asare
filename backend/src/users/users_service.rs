@@ -1,19 +1,12 @@
 use std::sync::Arc;
 
-use domain::{utils::ChainingExt, User};
-use serde::Deserialize;
+use domain::{users::{User, CreateUserRequest}, utils::ChainingExt};
 
 use crate::users::generators::{ApiKeyGenerator, UserPasswordGenerator};
 
 use super::repository::UserRepo;
 
 pub type UsersService = Arc<dyn Users + Sync + Send>;
-
-#[derive(Debug, Deserialize)]
-pub struct CreateUserRequest {
-    pub login: String,
-    pub password: Option<String>,
-}
 
 pub trait Users {
     fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String>;

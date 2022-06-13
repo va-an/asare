@@ -1,4 +1,4 @@
-use domain::User;
+use domain::users::User;
 
 use super::repository::UserRepository;
 use std::{collections::HashMap, sync::Mutex};

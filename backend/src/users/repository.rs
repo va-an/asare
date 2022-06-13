@@ -1,4 +1,4 @@
-use domain::User;
+use domain::users::User;
 
 pub type UserRepo = Box<dyn UserRepository + Sync + Send>;
 
