@@ -6,6 +6,7 @@ use crate::resources::{
     REBALANCE_BY_PRICE_COMMAND,
 };
 
+mod api_client;
 mod api_key_mapper;
 mod conversions;
 mod resources;
