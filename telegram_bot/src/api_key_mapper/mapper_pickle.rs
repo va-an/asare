@@ -1,9 +1,11 @@
+use std::sync::Mutex;
+
 use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 
 use super::mapper::{ApiKeyMapper, UserId};
 
 pub struct ApiKeyMapperPickleDb {
-    db: PickleDb,
+    db: Mutex<PickleDb>,
 }
 
 impl ApiKeyMapperPickleDb {
@@ -22,18 +24,20 @@ impl ApiKeyMapperPickleDb {
             SerializationMethod::Json,
         ));
 
-        ApiKeyMapperPickleDb { db }
+        ApiKeyMapperPickleDb { db: Mutex::new(db) }
     }
 }
 
 impl ApiKeyMapper for ApiKeyMapperPickleDb {
     fn find_api_key(&self, user_id: UserId) -> Option<String> {
-        self.db.get(&user_id.to_string())
+        self.db.lock().unwrap().get(&user_id.to_string())
     }
 
     // FIXME: return Result instead Unit
-    fn create(&mut self, user_id: UserId, api_key: &str) {
+    fn create(&self, user_id: UserId, api_key: &str) {
         self.db
+            .lock()
+            .unwrap()
             .set(&user_id.to_string(), &api_key.to_string())
             .unwrap();
     }
