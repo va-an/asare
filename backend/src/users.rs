@@ -3,7 +3,7 @@ pub mod controller;
 pub mod repository;
 pub mod repository_builder;
 pub mod routes;
-pub mod users_service;
+pub mod user_service;
 
 mod generators;
 mod repository_in_memory;

@@ -5,13 +5,13 @@ use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 
 use super::repository::UserRepository;
 
-pub struct UsersRepoPickle {
+pub struct UserRepoPickle {
     db: Mutex<PickleDb>,
     id_counter: Mutex<i32>,
 }
 
-impl UsersRepoPickle {
-    pub fn new() -> UsersRepoPickle {
+impl UserRepoPickle {
+    pub fn new() -> UserRepoPickle {
         // TODO: move to config
         let db_path = "users_pickle.db";
 
@@ -26,7 +26,7 @@ impl UsersRepoPickle {
             SerializationMethod::Json,
         ));
 
-        UsersRepoPickle {
+        UserRepoPickle {
             db: Mutex::new(db),
             id_counter: Mutex::new(0),
         }
@@ -40,7 +40,7 @@ impl UsersRepoPickle {
     }
 }
 
-impl UserRepository for UsersRepoPickle {
+impl UserRepository for UserRepoPickle {
     // FIXME: check uniq username in user_service
     fn create(&self, login: &str, password: &str, api_key: &str) -> Result<User, String> {
         let user = User {

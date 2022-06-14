@@ -9,7 +9,7 @@ use crate::users::generators::{ApiKeyGenerator, UserPasswordGenerator};
 
 use super::repository::UserRepo;
 
-pub type UsersService = Arc<dyn Users + Sync + Send>;
+pub type UserService = Arc<dyn Users + Sync + Send>;
 
 pub trait Users {
     fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String>;
@@ -22,7 +22,7 @@ pub struct UsersImpl {
 }
 
 impl UsersImpl {
-    pub fn new(user_repo: UserRepo) -> UsersService {
+    pub fn new(user_repo: UserRepo) -> UserService {
         UsersImpl { user_repo }.pipe(Arc::new)
     }
 }

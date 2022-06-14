@@ -2,7 +2,7 @@ use actix_web::{http::Error, post, web, HttpResponse};
 use domain::users::CreateUserRequest;
 use serde::Deserialize;
 
-use crate::users::{controller::UsersController, users_service::UsersService};
+use crate::users::{controller::UsersController, user_service::UserService};
 
 // TODO: validate password
 #[post("")]
@@ -25,7 +25,7 @@ pub struct AuthUserRequest {
 #[post("/refresh_api_key")]
 pub async fn login_user(
     _req: web::Json<AuthUserRequest>,
-    _user_service: web::Data<UsersService>,
+    _user_service: web::Data<UserService>,
 ) -> Result<HttpResponse, Error> {
     todo!();
 }

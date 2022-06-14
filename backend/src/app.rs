@@ -5,7 +5,7 @@ use crate::rebalancer;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
 use crate::users::controller::UsersController;
 use crate::users::repository_builder::UserRepositoryBuilder;
-use crate::users::users_service::UsersImpl;
+use crate::users::user_service::UsersImpl;
 use crate::{portfolios, users, Config};
 use actix_web::{middleware, web, App, HttpServer};
 use async_trait::async_trait;
@@ -20,7 +20,7 @@ pub struct AsareApp {
     config: Config,
     portfolio_interactor: PortfolioInteractor,
     rebalancer_ctl: RebalancerController,
-    users_ctl: UsersController,
+    user_ctl: UsersController,
 }
 
 pub struct PortfolioInteractor {
@@ -30,18 +30,18 @@ pub struct PortfolioInteractor {
 
 impl AsareApp {
     pub fn new(config: Config) -> AsareApp {
-        let users_repo = UserRepositoryBuilder::in_memory();
-        let users_svc = UsersImpl::new(users_repo);
+        let user_repo = UserRepositoryBuilder::pickle();
+        let user_svc = UsersImpl::new(user_repo);
 
         let portfolios = PortfoliosImpl::new();
-        let api_key_matcher = Arc::clone(&users_svc).pipe(UserApiKeyMatcher::new);
+        let api_key_matcher = Arc::clone(&user_svc).pipe(UserApiKeyMatcher::new);
 
         let portfolio_interactor = PortfolioInteractor {
             portfolios,
             api_key_matcher,
         };
 
-        let users_ctl = UsersController::new(users_svc);
+        let user_ctl = UsersController::new(user_svc);
 
         let finance_api = FinanceApiBuilder::random();
         let prices_repo = PricesRepoBuilder::in_memory();
@@ -55,7 +55,7 @@ impl AsareApp {
             config,
             portfolio_interactor,
             rebalancer_ctl,
-            users_ctl,
+            user_ctl,
         }
     }
 
@@ -74,7 +74,7 @@ pub struct ActixHttpServer;
 impl AsareHttpServer for ActixHttpServer {
     async fn run_http_server(app: AsareApp) -> std::io::Result<()> {
         let rebalancer_app_data = app.rebalancer_ctl.pipe(web::Data::new);
-        let users_app_data = web::Data::new(app.users_ctl);
+        let user_app_data = web::Data::new(app.user_ctl);
         let portfolio_app_data = web::Data::new(app.portfolio_interactor);
 
         HttpServer::new(move || {
@@ -88,7 +88,7 @@ impl AsareHttpServer for ActixHttpServer {
                     web::scope("/v1/users/")
                         .service(users::routes::create_user)
                         .service(users::routes::login_user)
-                        .app_data(users_app_data.clone()),
+                        .app_data(user_app_data.clone()),
                 )
                 .service(
                     web::scope("/v1/portfolios/")

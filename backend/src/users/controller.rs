@@ -1,17 +1,17 @@
-use domain::users::{User, CreateUserRequest};
+use domain::users::{CreateUserRequest, User};
 
-use super::users_service::UsersService;
+use super::user_service::UserService;
 
 pub struct UsersController {
-    users_svc: UsersService,
+    user_svc: UserService,
 }
 
 impl UsersController {
-    pub fn new(users_svc: UsersService) -> UsersController {
-        UsersController { users_svc }
+    pub fn new(user_svc: UserService) -> UsersController {
+        UsersController { user_svc }
     }
 
     pub fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String> {
-        self.users_svc.create(create_user_request)
+        self.user_svc.create(create_user_request)
     }
 }

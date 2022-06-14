@@ -1,19 +1,19 @@
 use std::sync::Arc;
 
-use super::users_service::UsersService;
+use super::user_service::UserService;
 
 pub struct UserApiKeyMatcher {
-    users: UsersService,
+    user_svc: UserService,
 }
 
 impl UserApiKeyMatcher {
-    pub fn new(users: UsersService) -> UserApiKeyMatcher {
+    pub fn new(users: UserService) -> UserApiKeyMatcher {
         UserApiKeyMatcher {
-            users: Arc::clone(&users),
+            user_svc: Arc::clone(&users),
         }
     }
 
     pub fn find_user_id(&self, api_key: &str) -> Option<i32> {
-        self.users.find_by_api_key(api_key).map(|user| user.id)
+        self.user_svc.find_by_api_key(api_key).map(|user| user.id)
     }
 }
