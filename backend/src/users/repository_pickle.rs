@@ -45,7 +45,7 @@ impl UserRepository for UserRepoPickle {
     fn create(&self, login: &str, password: &str, api_key: &str) -> Result<User, String> {
         let user = User {
             id: self.next_id(),
-            login: login.to_owned(),
+            username: login.to_owned(),
             password: password.to_owned(),
             api_key: api_key.to_owned(),
         };

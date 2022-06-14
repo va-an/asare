@@ -26,17 +26,17 @@ impl UserRepoInMemory {
 }
 
 impl UserRepository for UserRepoInMemory {
-    fn create(&self, login: &str, password: &str, api_key: &str) -> Result<User, String> {
+    fn create(&self, username: &str, password: &str, api_key: &str) -> Result<User, String> {
         let mut all = self.users.lock().unwrap();
-        let login_exists = all.values().find(|user| &user.login == login);
+        let login_exists = all.values().find(|user| &user.username == username);
 
         match login_exists {
-            Some(_) => Result::Err(format!("User with login '{}' already exists", login)),
+            Some(_) => Result::Err(format!("User with login '{}' already exists", username)),
             None => {
                 let id = self.next_id();
                 let user = User {
                     id,
-                    login: login.to_owned(),
+                    username: username.to_owned(),
                     password: password.to_owned(),
                     api_key: api_key.to_owned(),
                 };
