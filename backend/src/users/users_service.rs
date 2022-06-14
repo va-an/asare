@@ -1,6 +1,9 @@
 use std::sync::Arc;
 
-use domain::{users::{User, CreateUserRequest}, utils::ChainingExt};
+use domain::{
+    users::{CreateUserRequest, User},
+    utils::ChainingExt,
+};
 
 use crate::users::generators::{ApiKeyGenerator, UserPasswordGenerator};
 
@@ -25,6 +28,7 @@ impl UsersImpl {
 }
 
 impl Users for UsersImpl {
+    // TODO: check uniq username here instead of repo
     fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String> {
         let api_key = ApiKeyGenerator::generate();
 

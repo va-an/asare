@@ -8,10 +8,12 @@ use super::{
 pub struct UserRepositoryBuilder;
 
 impl UserRepositoryBuilder {
+    #[allow(dead_code)]
     pub fn in_memory() -> UserRepo {
         UserRepoInMemory::new().pipe(Box::new)
     }
 
+    #[allow(dead_code)]
     pub fn pickle() -> UserRepo {
         UsersRepoPickle::new().pipe(Box::new)
     }
