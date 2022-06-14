@@ -41,12 +41,8 @@ impl UsersRepoPickle {
 }
 
 impl UserRepository for UsersRepoPickle {
-    fn create(
-        &self,
-        login: &str,
-        password: &str,
-        api_key: &str,
-    ) -> Result<domain::users::User, String> {
+    // FIXME: check uniq username in user_service
+    fn create(&self, login: &str, password: &str, api_key: &str) -> Result<User, String> {
         let user = User {
             id: self.next_id(),
             login: login.to_owned(),
@@ -66,11 +62,16 @@ impl UserRepository for UsersRepoPickle {
         todo!()
     }
 
-    fn find_all(&self) -> Vec<domain::users::User> {
-        todo!()
+    fn find_all(&self) -> Vec<User> {
+        self.db
+            .lock()
+            .unwrap()
+            .iter()
+            .map(|u| u.get_value().unwrap())
+            .collect()
     }
 
-    fn find_by_api_key(&self, api_key: &str) -> Option<domain::users::User> {
+    fn find_by_api_key(&self, api_key: &str) -> Option<User> {
         todo!()
     }
 }
