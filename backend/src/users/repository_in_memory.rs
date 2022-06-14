@@ -5,11 +5,18 @@ use std::{collections::HashMap, sync::Mutex};
 
 #[derive(Debug)]
 pub struct UserRepoInMemory {
-    pub users: Mutex<HashMap<i32, User>>,
-    pub id_counter: Mutex<i32>,
+    users: Mutex<HashMap<i32, User>>,
+    id_counter: Mutex<i32>,
 }
 
 impl UserRepoInMemory {
+    pub fn new() -> UserRepoInMemory {
+        UserRepoInMemory {
+            users: Mutex::new(HashMap::new()),
+            id_counter: Mutex::new(0),
+        }
+    }
+
     fn next_id(&self) -> i32 {
         let next = *self.id_counter.lock().unwrap() + 1;
         *self.id_counter.lock().unwrap() = next;
