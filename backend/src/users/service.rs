@@ -1,4 +1,7 @@
-use std::sync::Arc;
+use std::{
+    collections::HashSet,
+    sync::{Arc, Mutex},
+};
 
 use domain::{
     users::{CreateUserRequest, User},
@@ -15,42 +18,59 @@ pub trait Users {
     fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String>;
     fn find_all(&self) -> Vec<User>;
     fn find_by_api_key(&self, api_key: &str) -> Option<User>;
+    fn delete(&self, username: String);
 }
 
 pub struct UsersImpl {
     user_repo: UserRepo,
+    usernames: Mutex<HashSet<String>>,
 }
 
 impl UsersImpl {
     pub fn new(user_repo: UserRepo) -> UserService {
-        UsersImpl { user_repo }.pipe(Arc::new)
+        let usernames = user_repo.find_all_usernames().pipe(Mutex::new);
+
+        UsersImpl {
+            user_repo,
+            usernames,
+        }
+        .pipe(Arc::new)
     }
 }
 
 impl Users for UsersImpl {
-    /*
-    TODO: check uniq username here instead of repo
-
-    1) store usernames in service in Set Usernames
-    2) get all usernames when start
-        2.1) new fn find_all_usernames() in trait
-        2.2) impl fn in trait impls
-    3) check user exists in Usernames when create()
-    4) add to Usernames when create()
-    5) delete from Usernames when delete()
-
-    */
     fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String> {
-        let api_key = ApiKeyGenerator::generate();
+        if self
+            .usernames
+            .lock()
+            .unwrap()
+            .contains(&create_user_request.login)
+        {
+            let error_msg = format!(
+                "User with login '{}' already exists",
+                create_user_request.login
+            );
 
-        let password = match &create_user_request.password {
-            Some(password) => password.to_owned(),
-            None => UserPasswordGenerator::generate(),
-        };
+            log::error!("{}", error_msg);
 
-        self.user_repo
-            .create(&create_user_request.login, &password, &api_key)
-            .tap(|_| log::debug!("created users: {:#?}", self.find_all()))
+            Result::Err(error_msg)
+        } else {
+            self.usernames
+                .lock()
+                .unwrap()
+                .insert(create_user_request.login.clone());
+
+            let api_key = ApiKeyGenerator::generate();
+
+            let password = match &create_user_request.password {
+                Some(password) => password.to_owned(),
+                None => UserPasswordGenerator::generate(),
+            };
+
+            self.user_repo
+                .create(&create_user_request.login, &password, &api_key)
+                .tap(|_| log::debug!("created users: {:#?}", self.find_all())) // TODO: delete after debug
+        }
     }
 
     fn find_all(&self) -> Vec<User> {
@@ -59,5 +79,10 @@ impl Users for UsersImpl {
 
     fn find_by_api_key(&self, api_key: &str) -> Option<User> {
         self.user_repo.find_by_api_key(api_key)
+    }
+
+    fn delete(&self, username: String) {
+        // TODO: delete from `usernames` Set when user delete
+        todo!()
     }
 }

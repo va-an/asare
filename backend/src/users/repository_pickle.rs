@@ -1,6 +1,6 @@
 use std::sync::Mutex;
 
-use domain::users::User;
+use domain::{users::User, utils::ChainingExt};
 use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 
 use super::repository::UserRepository;
@@ -24,12 +24,12 @@ impl UserRepoPickle {
             db_path,
             PickleDbDumpPolicy::AutoDump,
             SerializationMethod::Json,
-        ));
+        ))
+        .pipe(Mutex::new);
 
-        UserRepoPickle {
-            db: Mutex::new(db),
-            id_counter: Mutex::new(0),
-        }
+        let id_counter = Mutex::new(db.lock().unwrap().total_keys() as i32);
+
+        UserRepoPickle { db, id_counter }
     }
 
     fn next_id(&self) -> i32 {
@@ -41,7 +41,6 @@ impl UserRepoPickle {
 }
 
 impl UserRepository for UserRepoPickle {
-    // FIXME: check uniq username in user_service
     fn create(&self, login: &str, password: &str, api_key: &str) -> Result<User, String> {
         let user = User {
             id: self.next_id(),
@@ -73,5 +72,14 @@ impl UserRepository for UserRepoPickle {
 
     fn find_by_api_key(&self, api_key: &str) -> Option<User> {
         todo!()
+    }
+
+    fn find_all_usernames(&self) -> std::collections::HashSet<String> {
+        self.db
+            .lock()
+            .unwrap()
+            .iter()
+            .map(|user| user.get_value::<User>().unwrap().username)
+            .collect()
     }
 }

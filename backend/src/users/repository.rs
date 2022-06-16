@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use domain::users::User;
 
 pub type UserRepo = Box<dyn UserRepository + Sync + Send>;
@@ -8,4 +10,5 @@ pub trait UserRepository {
 
     fn find_all(&self) -> Vec<User>;
     fn find_by_api_key(&self, api_key: &str) -> Option<User>;
+    fn find_all_usernames(&self) -> HashSet<String>;
 }

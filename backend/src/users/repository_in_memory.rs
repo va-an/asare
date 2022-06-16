@@ -28,24 +28,17 @@ impl UserRepoInMemory {
 impl UserRepository for UserRepoInMemory {
     fn create(&self, username: &str, password: &str, api_key: &str) -> Result<User, String> {
         let mut all = self.users.lock().unwrap();
-        let login_exists = all.values().find(|user| &user.username == username);
 
-        match login_exists {
-            Some(_) => Result::Err(format!("User with login '{}' already exists", username)),
-            None => {
-                let id = self.next_id();
-                let user = User {
-                    id,
-                    username: username.to_owned(),
-                    password: password.to_owned(),
-                    api_key: api_key.to_owned(),
-                };
+        let user = User {
+            id: self.next_id(),
+            username: username.to_owned(),
+            password: password.to_owned(),
+            api_key: api_key.to_owned(),
+        };
 
-                all.insert(user.id, user.clone());
+        all.insert(user.id, user.clone());
 
-                Ok(user)
-            }
-        }
+        Ok(user)
     }
 
     fn delete(&self, _id: &i32) {
@@ -68,6 +61,15 @@ impl UserRepository for UserRepoInMemory {
             .values()
             .find(|user| user.api_key == api_key)
             .map(|user| user.to_owned())
+    }
+
+    fn find_all_usernames(&self) -> std::collections::HashSet<String> {
+        self.users
+            .lock()
+            .unwrap()
+            .values()
+            .map(|user| user.username.to_owned())
+            .collect()
     }
 }
 
