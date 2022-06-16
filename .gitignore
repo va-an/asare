@@ -12,3 +12,7 @@ Cargo.lock
 .idea
 .metals
 .vscode
+
+# pickle db files
+**/*.db
+
