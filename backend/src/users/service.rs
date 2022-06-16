@@ -18,7 +18,7 @@ pub trait Users {
 }
 
 pub struct UsersImpl {
-    pub user_repo: UserRepo,
+    user_repo: UserRepo,
 }
 
 impl UsersImpl {
