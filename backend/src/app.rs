@@ -5,7 +5,7 @@ use crate::rebalancer;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
 use crate::users::controller::UsersController;
 use crate::users::repository_builder::UserRepositoryBuilder;
-use crate::users::user_service::UsersImpl;
+use crate::users::service::UsersImpl;
 use crate::{portfolios, users, Config};
 use actix_web::{middleware, web, App, HttpServer};
 use async_trait::async_trait;

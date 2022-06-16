@@ -28,7 +28,18 @@ impl UsersImpl {
 }
 
 impl Users for UsersImpl {
-    // TODO: check uniq username here instead of repo
+    /*
+    TODO: check uniq username here instead of repo
+
+    1) store usernames in service in Set Usernames
+    2) get all usernames when start
+        2.1) new fn find_all_usernames() in trait
+        2.2) impl fn in trait impls
+    3) check user exists in Usernames when create()
+    4) add to Usernames when create()
+    5) delete from Usernames when delete()
+
+    */
     fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String> {
         let api_key = ApiKeyGenerator::generate();
 

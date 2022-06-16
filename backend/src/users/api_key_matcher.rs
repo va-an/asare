@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use super::user_service::UserService;
+use super::service::UserService;
 
 pub struct UserApiKeyMatcher {
     user_svc: UserService,
