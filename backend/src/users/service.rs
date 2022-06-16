@@ -44,11 +44,11 @@ impl Users for UsersImpl {
             .usernames
             .lock()
             .unwrap()
-            .contains(&create_user_request.login)
+            .contains(&create_user_request.username)
         {
             let error_msg = format!(
                 "User with login '{}' already exists",
-                create_user_request.login
+                create_user_request.username
             );
 
             log::error!("{}", error_msg);
@@ -58,7 +58,7 @@ impl Users for UsersImpl {
             self.usernames
                 .lock()
                 .unwrap()
-                .insert(create_user_request.login.clone());
+                .insert(create_user_request.username.clone());
 
             let api_key = ApiKeyGenerator::generate();
 
@@ -68,7 +68,7 @@ impl Users for UsersImpl {
             };
 
             self.user_repo
-                .create(&create_user_request.login, &password, &api_key)
+                .create(&create_user_request.username, &password, &api_key)
                 .tap(|_| log::debug!("created users: {:#?}", self.find_all())) // TODO: delete after debug
         }
     }

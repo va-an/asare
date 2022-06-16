@@ -4,7 +4,7 @@ static USERS_URL: &str = "http://localhost:8072/v1/users/"; // FIXME: localhost
 
 pub async fn create_user(login: &str) -> reqwest::Response {
     let create_user_request = CreateUserRequest {
-        login: login.to_string(),
+        username: login.to_string(),
         password: None,
     };
 

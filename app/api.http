@@ -22,7 +22,7 @@ POST http://localhost:8072/v1/users/
 Content-Type: application/json
 
 {
-  "login": "biba"
+  "username": "kuka"
 }
 
 ### create portfolio
