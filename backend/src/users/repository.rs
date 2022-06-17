@@ -5,7 +5,7 @@ use domain::users::User;
 pub type UserRepo = Box<dyn UserRepository + Sync + Send>;
 
 pub trait UserRepository {
-    fn create(&self, login: &str, password: &str, api_key: &str) -> Result<User, String>;
+    fn create(&self, username: &str, password: &str, api_key: &str) -> Result<User, String>;
     fn delete(&self, id: &i32);
 
     fn find_all(&self) -> Vec<User>;

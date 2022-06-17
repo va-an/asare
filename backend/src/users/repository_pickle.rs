@@ -41,10 +41,10 @@ impl UserRepoPickle {
 }
 
 impl UserRepository for UserRepoPickle {
-    fn create(&self, login: &str, password: &str, api_key: &str) -> Result<User, String> {
+    fn create(&self, username: &str, password: &str, api_key: &str) -> Result<User, String> {
         let user = User {
             id: self.next_id(),
-            username: login.to_owned(),
+            username: username.to_owned(),
             password: password.to_owned(),
             api_key: api_key.to_owned(),
         };
@@ -52,13 +52,16 @@ impl UserRepository for UserRepoPickle {
         self.db
             .lock()
             .unwrap()
-            .set(&user.id.to_string(), &user)
+            .set(&user.username, &user)
             .map(|_| user)
             .map_err(|err| err.to_string())
     }
 
     fn delete(&self, id: &i32) {
-        todo!()
+        match self.db.lock().unwrap().rem(&id.to_string()) {
+            Ok(_) => (),
+            Err(err) => log::error!("{}", err),
+        }
     }
 
     fn find_all(&self) -> Vec<User> {
@@ -66,20 +69,26 @@ impl UserRepository for UserRepoPickle {
             .lock()
             .unwrap()
             .iter()
-            .map(|u| u.get_value().unwrap())
+            .map(|v| v.get_value().unwrap())
             .collect()
     }
 
     fn find_by_api_key(&self, api_key: &str) -> Option<User> {
-        todo!()
+        self.db
+            .lock()
+            .unwrap()
+            .iter()
+            .map(|v| v.get_value::<User>().unwrap())
+            .find(|user| user.api_key == api_key)
     }
 
     fn find_all_usernames(&self) -> std::collections::HashSet<String> {
         self.db
             .lock()
             .unwrap()
+            .get_all()
             .iter()
-            .map(|user| user.get_value::<User>().unwrap().username)
+            .map(|k| k.to_owned())
             .collect()
     }
 }
