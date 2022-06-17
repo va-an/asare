@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::portfolios::portfolios_service::PortfoliosImpl;
+use crate::portfolios::service::PortfoliosImpl;
 use crate::rebalancer;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
 use crate::users::controller::UsersController;

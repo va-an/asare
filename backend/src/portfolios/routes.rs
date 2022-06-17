@@ -1,6 +1,6 @@
 use crate::{
     app::PortfolioInteractor,
-    portfolios::portfolios_service::{Portfolios, UserPortfolio},
+    portfolios::service::{Portfolios, UserPortfolio},
     users::api_key_matcher::UserApiKeyMatcher,
 };
 use actix_web::{delete, get, http::Error, post, web, HttpRequest, HttpResponse};

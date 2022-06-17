@@ -1,6 +1,6 @@
 use std::{collections::HashMap, sync::Mutex};
 
-use super::portfolios_service::UserPortfolio;
+use super::service::UserPortfolio;
 
 pub trait PortfolioRepository {
     fn create(&self, portfolio: &UserPortfolio) -> UserPortfolio;
@@ -74,8 +74,8 @@ mod tests {
     use domain::Portfolio;
 
     use crate::portfolios::{
-        portfolios_service::UserPortfolio,
         repository::{PortfolioRepoInMemory, PortfolioRepository},
+        service::UserPortfolio,
     };
 
     fn some_portfolio() -> UserPortfolio {
