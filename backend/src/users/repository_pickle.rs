@@ -57,8 +57,8 @@ impl UserRepository for UserRepoPickle {
             .map_err(|err| err.to_string())
     }
 
-    fn delete(&self, id: &i32) {
-        match self.db.lock().unwrap().rem(&id.to_string()) {
+    fn delete(&self, username: &str) {
+        match self.db.lock().unwrap().rem(username) {
             Ok(_) => (),
             Err(err) => log::error!("{}", err),
         }

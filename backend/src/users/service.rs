@@ -81,8 +81,9 @@ impl Users for UsersImpl {
         self.user_repo.find_by_api_key(api_key)
     }
 
-    fn delete(&self, username: String) {
+    fn delete(&self, _username: String) {
         // TODO: delete from `usernames` Set when user delete
+        // self.user_repo.delete(&username)
         todo!()
     }
 }
