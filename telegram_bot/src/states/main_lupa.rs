@@ -97,6 +97,11 @@ async fn start(
             next(main_lupa_state)
         }
 
+        "/portfolios" => {
+            cx.answer("in progress").await?;
+            next(main_lupa_state)
+        }
+
         "/help" => {
             cx.answer(HELP_MESSAGE).await?;
             next(main_lupa_state)

@@ -2,7 +2,7 @@ use states::RebalanceDialogue;
 use teloxide::{prelude::*, types::BotCommand};
 
 use crate::resources::{
-    ABOUT_COMMAND, EXAMPLE_COMMAND, HELP_COMMAND, REBALANCE_BY_AMOUNT_COMMAND,
+    ABOUT_COMMAND, EXAMPLE_COMMAND, HELP_COMMAND, PORTFOLIOS_COMMAND, REBALANCE_BY_AMOUNT_COMMAND,
     REBALANCE_BY_PRICE_COMMAND,
 };
 
@@ -36,6 +36,7 @@ async fn main() {
     let commands = vec![
         BotCommand::new(REBALANCE_BY_AMOUNT_COMMAND, "rebalance by amount"),
         BotCommand::new(REBALANCE_BY_PRICE_COMMAND, "rebalance by price"),
+        BotCommand::new(PORTFOLIOS_COMMAND, "manage portfolios"),
         BotCommand::new(EXAMPLE_COMMAND, "show example"),
         BotCommand::new(ABOUT_COMMAND, "source code"),
         BotCommand::new(HELP_COMMAND, "show help page"),

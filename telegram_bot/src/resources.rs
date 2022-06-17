@@ -1,5 +1,6 @@
 pub static REBALANCE_BY_AMOUNT_COMMAND: &str = "rebalance_by_amount";
 pub static REBALANCE_BY_PRICE_COMMAND: &str = "rebalance_by_price";
+pub static PORTFOLIOS_COMMAND: &str = "portfolios";
 pub static EXAMPLE_COMMAND: &str = "example";
 pub static HELP_COMMAND: &str = "help";
 pub static ABOUT_COMMAND: &str = "about";
@@ -10,6 +11,7 @@ Bot for calculation asset allocation rebalance.
 Commands:
 /rebalance_by_amount - calculate rebalance by ticker and amount
 /rebalance_by_price - calculate rebalance by ticker and price
+/portfolios - manage portfolios
 /example - example input message for /rebalance
 /help - help
 /about - for feature request and bug reports";
