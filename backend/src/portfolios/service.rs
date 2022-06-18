@@ -1,7 +1,7 @@
 use domain::Portfolio;
 use serde::Serialize;
 
-use crate::portfolios::repository::{PortfolioRepoInMemory, PortfolioRepository};
+use super::{repository_in_memory::PortfolioRepoInMemory, repository::PortfolioRepository};
 
 pub trait Portfolios {
     fn create(&self, portfolio: UserPortfolio) -> UserPortfolio;
