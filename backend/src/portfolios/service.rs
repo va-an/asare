@@ -1,5 +1,5 @@
 use domain::Portfolio;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use super::{repository::PortfolioRepository, repository_in_memory::PortfolioRepoInMemory};
 
@@ -20,7 +20,7 @@ impl PortfoliosImpl {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize, Clone)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub struct UserPortfolio {
     pub id: i32,
     pub user_id: i32,

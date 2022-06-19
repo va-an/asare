@@ -33,7 +33,13 @@ impl PortfolioRepository for PortfolioRepoPickle {
     }
 
     fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
-        todo!()
+        self.db
+            .lock()
+            .unwrap()
+            .iter()
+            .map(|v| v.get_value::<UserPortfolio>().unwrap())
+            .filter(|port| &port.user_id == user_id)
+            .collect()
     }
 
     fn delete_by_id(&self, id: &i32) {
