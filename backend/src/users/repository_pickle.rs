@@ -3,6 +3,8 @@ use std::sync::Mutex;
 use domain::{users::User, utils::ChainingExt};
 use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 
+use crate::utils::PickleUtils;
+
 use super::repository::UserRepository;
 
 pub struct UserRepoPickle {
@@ -14,18 +16,7 @@ impl UserRepoPickle {
     pub fn new() -> UserRepoPickle {
         // TODO: move to config
         let db_path = "users_pickle.db";
-
-        let db = PickleDb::load(
-            db_path,
-            PickleDbDumpPolicy::AutoDump,
-            SerializationMethod::Json,
-        )
-        .unwrap_or(PickleDb::new(
-            db_path,
-            PickleDbDumpPolicy::AutoDump,
-            SerializationMethod::Json,
-        ))
-        .pipe(Mutex::new);
+        let db = PickleUtils::load_or_new(db_path).pipe(Mutex::new);
 
         let id_counter = Mutex::new(db.lock().unwrap().total_keys() as i32);
 

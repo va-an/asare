@@ -1,7 +1,7 @@
 use domain::Portfolio;
 use serde::Serialize;
 
-use super::{repository_in_memory::PortfolioRepoInMemory, repository::PortfolioRepository};
+use super::{repository::PortfolioRepository, repository_in_memory::PortfolioRepoInMemory};
 
 pub trait Portfolios {
     fn create(&self, portfolio: UserPortfolio) -> UserPortfolio;
