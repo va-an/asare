@@ -1,4 +1,16 @@
-use resources::{ABOUT_MESSAGE, HELP_MESSAGE};
+use std::sync::{Arc, Mutex};
+
+use api_key_mapper::{mapper::ApiKeyMapperType, mapper_builder::ApiKeyMapperBuilder};
+use chrono::Duration;
+use domain::{
+    price_provider::{
+        finance_api_builder::FinanceApiBuilder, price_provider_builder::PriceProviderBuilder,
+        repository_builder::PricesRepoBuilder,
+    },
+    rebalancer::{service::RebalancerSvcType, service_builder::RebalancerSvcBuilder},
+    utils::ChainingExt,
+};
+use states::MainLupaState;
 // use states::RebalanceDialogue;
 use teloxide::{dispatching::dialogue::InMemStorage, prelude::*, types::BotCommand};
 
@@ -7,7 +19,7 @@ use crate::{
         ABOUT_COMMAND, EXAMPLE_COMMAND, HELP_COMMAND, PORTFOLIOS_COMMAND,
         REBALANCE_BY_AMOUNT_COMMAND, REBALANCE_BY_PRICE_COMMAND,
     },
-    states::main_lupa::start,
+    states::{main_lupa::start, rebalance::rebalance_by_amount},
 };
 
 mod api_client;
@@ -29,20 +41,38 @@ mod states;
 //     }
 // }
 
-type MyDialogue = Dialogue<MainLupaState, InMemStorage<MainLupaState>>;
+type MyDialogue = Dialogue<State, InMemStorage<State>>;
 type HandlerResult = Result<(), Box<dyn std::error::Error + Send + Sync>>;
 
 #[derive(Clone)]
-pub enum MainLupaState {
-    MainLupa,
+pub enum State {
+    MainLupa { state: MainLupaState },
+    RebalanceByAmount { state: MainLupaState },
     ReceiveFullName,
     ReceiveAge { full_name: String },
     ReceiveLocation { full_name: String, age: u8 },
 }
 
-impl Default for MainLupaState {
+impl Default for State {
     fn default() -> Self {
-        Self::MainLupa
+        let finance_api = FinanceApiBuilder::random();
+        let prices_repo = PricesRepoBuilder::in_memory();
+
+        let price_provider =
+            PriceProviderBuilder::default(finance_api, prices_repo, Duration::days(1));
+
+        let rebalancer_svc = RebalancerSvcBuilder::default(price_provider).pipe(Arc::new);
+
+        let api_key_mapper = ApiKeyMapperBuilder::pickle()
+            .pipe(Mutex::new)
+            .pipe(Arc::new);
+
+        State::MainLupa {
+            state: MainLupaState {
+                rebalancer_svc,
+                api_key_mapper,
+            },
+        }
     }
 }
 
@@ -75,16 +105,16 @@ async fn main() {
     Dispatcher::builder(
         bot,
         Update::filter_message()
-            .enter_dialogue::<Message, InMemStorage<MainLupaState>, MainLupaState>()
-            .branch(dptree::case![MainLupaState::MainLupa].endpoint(start))
-            .branch(dptree::case![MainLupaState::ReceiveFullName].endpoint(receive_full_name))
-            .branch(dptree::case![MainLupaState::ReceiveAge { full_name }].endpoint(receive_age))
+            .enter_dialogue::<Message, InMemStorage<State>, State>()
+            .branch(dptree::case![State::MainLupa { state }].endpoint(start))
+            .branch(dptree::case![State::RebalanceByAmount { state }].endpoint(rebalance_by_amount))
+            .branch(dptree::case![State::ReceiveFullName].endpoint(receive_full_name))
+            .branch(dptree::case![State::ReceiveAge { full_name }].endpoint(receive_age))
             .branch(
-                dptree::case![MainLupaState::ReceiveLocation { full_name, age }]
-                    .endpoint(receive_location),
+                dptree::case![State::ReceiveLocation { full_name, age }].endpoint(receive_location),
             ),
     )
-    .dependencies(dptree::deps![InMemStorage::<MainLupaState>::new()])
+    .dependencies(dptree::deps![InMemStorage::<State>::new()])
     .build()
     .setup_ctrlc_handler()
     .dispatch()
@@ -100,7 +130,7 @@ async fn receive_full_name(
         Some(text) => {
             bot.send_message(msg.chat.id, "How old are you?").await?;
             dialogue
-                .update(MainLupaState::ReceiveAge {
+                .update(State::ReceiveAge {
                     full_name: text.into(),
                 })
                 .await?;
@@ -124,7 +154,7 @@ async fn receive_age(
             bot.send_message(msg.chat.id, "What's your location?")
                 .await?;
             dialogue
-                .update(MainLupaState::ReceiveLocation { full_name, age })
+                .update(State::ReceiveLocation { full_name, age })
                 .await?;
         }
         _ => {

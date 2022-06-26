@@ -96,30 +96,39 @@ use teloxide::prelude::*;
 
 use crate::{
     resources::{ABOUT_MESSAGE, EXAMPLE_BY_AMOUNT_MESSAGE, EXAMPLE_BY_PRICE_MESSAGE, HELP_MESSAGE},
-    HandlerResult, MainLupaState, MyDialogue,
+    HandlerResult, MyDialogue, State,
 };
 
-pub async fn start(bot: AutoSend<Bot>, msg: Message, dialogue: MyDialogue) -> HandlerResult {
+use super::MainLupaState;
+
+pub async fn start(
+    bot: AutoSend<Bot>,
+    msg: Message,
+    dialogue: MyDialogue,
+    state: MainLupaState,
+) -> HandlerResult {
     match msg.text() {
         Some(input) => match input {
             "/start" => {
                 bot.send_message(msg.chat.id, HELP_MESSAGE).await?;
-                dialogue.update(MainLupaState::MainLupa).await?;
+                dialogue.update(State::MainLupa { state }).await?;
             }
 
             "/rebalance_by_amount" => {
-                bot.send_message(msg.chat.id, "not implemented").await?;
-                dialogue.update(MainLupaState::MainLupa).await?;
+                bot.send_message(msg.chat.id, "Enter your portfolio and desired allocation")
+                    .await?;
+
+                dialogue.update(State::RebalanceByAmount { state }).await?;
             }
 
             "/rebalance_by_price" => {
                 bot.send_message(msg.chat.id, "not implemented").await?;
-                dialogue.update(MainLupaState::MainLupa).await?;
+                dialogue.update(State::MainLupa { state }).await?;
             }
 
             "/portfolios" => {
                 bot.send_message(msg.chat.id, "in progress").await?;
-                dialogue.update(MainLupaState::MainLupa).await?;
+                dialogue.update(State::MainLupa { state }).await?;
             }
 
             "/example" => {
@@ -129,17 +138,17 @@ pub async fn start(bot: AutoSend<Bot>, msg: Message, dialogue: MyDialogue) -> Ha
                 bot.send_message(msg.chat.id, EXAMPLE_BY_PRICE_MESSAGE)
                     .await?;
 
-                dialogue.update(MainLupaState::MainLupa).await?;
+                dialogue.update(State::MainLupa { state }).await?;
             }
 
             "/help" => {
                 bot.send_message(msg.chat.id, HELP_MESSAGE).await?;
-                dialogue.update(MainLupaState::MainLupa).await?;
+                dialogue.update(State::MainLupa { state }).await?;
             }
 
             "/about" => {
                 bot.send_message(msg.chat.id, ABOUT_MESSAGE).await?;
-                dialogue.update(MainLupaState::MainLupa).await?;
+                dialogue.update(State::MainLupa { state }).await?;
             }
 
             _ => {

@@ -14,14 +14,20 @@
 
 // use crate::api_key_mapper::{mapper::ApiKeyMapperType, mapper_builder::ApiKeyMapperBuilder};
 
-pub mod main_lupa;
-// pub mod rebalance;
+use std::sync::{Arc, Mutex};
 
-// #[derive(Clone)]
-// pub struct MainLupaState {
-//     pub rebalancer_svc: Arc<RebalancerSvcType>,
-//     pub api_key_mapper: Arc<Mutex<ApiKeyMapperType>>,
-// }
+use domain::rebalancer::service::RebalancerSvcType;
+
+use crate::api_key_mapper::mapper::ApiKeyMapperType;
+
+pub mod main_lupa;
+pub mod rebalance;
+
+#[derive(Clone)]
+pub struct MainLupaState {
+    pub rebalancer_svc: Arc<RebalancerSvcType>,
+    pub api_key_mapper: Arc<Mutex<ApiKeyMapperType>>,
+}
 
 // #[derive(Clone)]
 // pub struct RebalanceByAmountState {

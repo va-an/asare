@@ -58,12 +58,32 @@
 //     }
 // }
 
-async fn rebalance_by_amount(bot: AutoSend<Bot>, msg: Message) -> HandlerResult {
-    bot.send_message(msg.chat.id, "rebalance_by_amount");
+use teloxide::prelude::*;
+
+use crate::{HandlerResult, MyDialogue, State};
+
+use super::MainLupaState;
+
+pub async fn rebalance_by_amount(
+    bot: AutoSend<Bot>,
+    msg: Message,
+    dialogue: MyDialogue,
+    state: MainLupaState,
+) -> HandlerResult {
+    bot.send_message(msg.chat.id, "rebalance_by_amount").await?;
+    dialogue.update(State::MainLupa { state }).await?;
+
     Ok(())
 }
 
-async fn rebalance_by_price(bot: AutoSend<Bot>, msg: Message) -> HandlerResult {
-    bot.send_message(msg.chat.id, "rebalance_by_price");
+pub async fn rebalance_by_price(
+    bot: AutoSend<Bot>,
+    msg: Message,
+    dialogue: MyDialogue,
+    state: MainLupaState,
+) -> HandlerResult {
+    bot.send_message(msg.chat.id, "rebalance_by_price").await?;
+    dialogue.update(State::MainLupa { state }).await?;
+
     Ok(())
 }
