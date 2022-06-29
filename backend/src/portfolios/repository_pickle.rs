@@ -24,11 +24,11 @@ impl PortfolioRepoPickle {
 }
 
 impl PortfolioRepository for PortfolioRepoPickle {
-    fn create(&self, portfolio: &UserPortfolio) -> UserPortfolio {
+    fn create(&self, _portfolio: &UserPortfolio) -> UserPortfolio {
         todo!()
     }
 
-    fn find_by_id(&self, id: &i32) -> UserPortfolio {
+    fn find_by_id(&self, _id: &i32) -> UserPortfolio {
         todo!()
     }
 

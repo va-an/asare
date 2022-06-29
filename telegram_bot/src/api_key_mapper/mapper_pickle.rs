@@ -2,7 +2,7 @@ use std::sync::Mutex;
 
 use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
 
-use super::mapper::{ApiKeyMapper, UserId};
+use super::mapper::ApiKeyMapper;
 
 pub struct ApiKeyMapperPickleDb {
     db: Mutex<PickleDb>,
@@ -29,12 +29,12 @@ impl ApiKeyMapperPickleDb {
 }
 
 impl ApiKeyMapper for ApiKeyMapperPickleDb {
-    fn find_api_key(&self, user_id: UserId) -> Option<String> {
+    fn find_api_key(&self, user_id: u64) -> Option<String> {
         self.db.lock().unwrap().get(&user_id.to_string())
     }
 
     // FIXME: return Result instead Unit
-    fn create(&self, user_id: UserId, api_key: &str) {
+    fn create(&self, user_id: u64, api_key: &str) {
         self.db
             .lock()
             .unwrap()
