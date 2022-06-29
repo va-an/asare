@@ -71,24 +71,6 @@
 //             cx.answer(HELP_MESSAGE).await?;
 //             next(main_lupa_state)
 //         }
-
-//         "/rebalance_by_amount" => {
-//             cx.answer("Enter your portfolio and desired allocation")
-//                 .await?;
-
-//             next(RebalanceByAmountState {
-//                 rebalancer_svc: main_lupa_state.rebalancer_svc,
-//             })
-//         }
-
-//         "/rebalance_by_price" => {
-//             cx.answer("Enter your portfolio and desired allocation")
-//                 .await?;
-
-//             next(RebalanceByPriceState {
-//                 rebalancer_svc: main_lupa_state.rebalancer_svc,
-//             })
-//         }
 //     }
 // }
 
@@ -122,8 +104,10 @@ pub async fn start(
             }
 
             "/rebalance_by_price" => {
-                bot.send_message(msg.chat.id, "not implemented").await?;
-                dialogue.update(State::MainLupa { state }).await?;
+                bot.send_message(msg.chat.id, "Enter your portfolio and desired allocation")
+                    .await?;
+
+                dialogue.update(State::RebalanceByPrice { state }).await?;
             }
 
             "/portfolios" => {
@@ -163,71 +147,6 @@ pub async fn start(
             bot.send_message(msg.chat.id, "Hmmm").await?;
         }
     };
-
-    Ok(())
-}
-
-async fn receive_full_name(
-    bot: AutoSend<Bot>,
-    msg: Message,
-    dialogue: MyDialogue,
-) -> HandlerResult {
-    match msg.text() {
-        Some(text) => {
-            bot.send_message(msg.chat.id, "How old are you?").await?;
-            dialogue
-                .update(State::ReceiveAge {
-                    full_name: text.into(),
-                })
-                .await?;
-        }
-        None => {
-            bot.send_message(msg.chat.id, "Send me plain text.").await?;
-        }
-    }
-
-    Ok(())
-}
-
-async fn receive_age(
-    bot: AutoSend<Bot>,
-    msg: Message,
-    dialogue: MyDialogue,
-    full_name: String, // Available from `State::ReceiveAge`.
-) -> HandlerResult {
-    match msg.text().map(|text| text.parse::<u8>()) {
-        Some(Ok(age)) => {
-            bot.send_message(msg.chat.id, "What's your location?")
-                .await?;
-
-            dialogue
-                .update(State::ReceiveLocation { full_name, age })
-                .await?;
-        }
-        _ => {
-            bot.send_message(msg.chat.id, "Send me a number.").await?;
-        }
-    }
-
-    Ok(())
-}
-
-async fn receive_location(
-    bot: AutoSend<Bot>,
-    msg: Message,
-    dialogue: MyDialogue,
-    (full_name, age): (String, u8), // Available from `State::ReceiveLocation`.
-) -> HandlerResult {
-    match msg.text() {
-        Some(location) => {
-            let message = format!("Full name: {full_name}\nAge: {age}\nLocation: {location}");
-            bot.send_message(msg.chat.id, message).await?;
-            dialogue.exit().await?;
-        }
-        None => {
-            bot.send_message(msg.chat.id, "Send me plain text.").await?;
-        }
-    }
 
     Ok(())
 }
