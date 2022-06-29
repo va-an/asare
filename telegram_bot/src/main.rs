@@ -21,7 +21,7 @@ type HandlerResult = Result<(), Box<dyn std::error::Error + Send + Sync>>;
 // TODO: get from env var ASARE_BOT_TOKEN instead of TELOXIDE_TOKEN
 #[tokio::main]
 async fn main() {
-    // teloxide::enable_logging!();
+    pretty_env_logger::init();
     log::info!("Starting bot...");
 
     let bot = Bot::from_env().auto_send();
