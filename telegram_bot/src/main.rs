@@ -1,3 +1,5 @@
+use std::env;
+
 use states::rebalance::rebalance_by_price;
 use teloxide::{dispatching::dialogue::InMemStorage, prelude::*, types::BotCommand};
 
@@ -18,13 +20,17 @@ mod states;
 type MyDialogue = Dialogue<State, InMemStorage<State>>;
 type HandlerResult = Result<(), Box<dyn std::error::Error + Send + Sync>>;
 
-// TODO: get from env var ASARE_BOT_TOKEN instead of TELOXIDE_TOKEN
+const ASARE_BOT_TOKEN: &str = "ASARE_BOT_TOKEN";
+
 #[tokio::main]
 async fn main() {
     pretty_env_logger::init();
     log::info!("Starting bot...");
 
-    let bot = Bot::from_env().auto_send();
+    let token = env::var(ASARE_BOT_TOKEN)
+        .expect(format!("{} env variable missing", ASARE_BOT_TOKEN).as_str());
+
+    let bot = Bot::new(token).auto_send();
 
     let commands = vec![
         BotCommand::new(REBALANCE_BY_AMOUNT_COMMAND, "rebalance by amount"),
