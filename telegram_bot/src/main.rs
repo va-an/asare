@@ -1,15 +1,9 @@
 use std::env;
 
 use states::rebalance::rebalance_by_price;
-use teloxide::{dispatching::dialogue::InMemStorage, prelude::*, types::BotCommand};
+use teloxide::{dispatching::dialogue::InMemStorage, prelude::*, utils::command::BotCommands};
 
-use crate::{
-    resources::{
-        ABOUT_COMMAND, EXAMPLE_COMMAND, HELP_COMMAND, PORTFOLIOS_COMMAND,
-        REBALANCE_BY_AMOUNT_COMMAND, REBALANCE_BY_PRICE_COMMAND,
-    },
-    states::{main_lupa::start, rebalance::rebalance_by_amount, State},
-};
+use crate::states::{main_lupa::start, rebalance::rebalance_by_amount, State};
 
 mod api_client;
 mod api_key_mapper;
@@ -22,6 +16,31 @@ type HandlerResult = Result<(), Box<dyn std::error::Error + Send + Sync>>;
 
 const ASARE_BOT_TOKEN: &str = "ASARE_BOT_TOKEN";
 
+#[derive(BotCommands)]
+#[command(rename = "snake_case", description = "These commands are supported:")]
+enum Command {
+    #[command(description = "start bot")]
+    Start,
+
+    #[command(description = "rebalance by amount")]
+    RebalanceByAmount,
+
+    #[command(description = "rebalance by price")]
+    RebalanceByPrice,
+
+    #[command(description = "manage portfolios")]
+    Portfolios,
+
+    #[command(description = "show example")]
+    Example,
+
+    #[command(description = "source code")]
+    About,
+
+    #[command(description = "show help page")]
+    Help,
+}
+
 #[tokio::main]
 async fn main() {
     pretty_env_logger::init();
@@ -32,16 +51,10 @@ async fn main() {
 
     let bot = Bot::new(token).auto_send();
 
-    let commands = vec![
-        BotCommand::new(REBALANCE_BY_AMOUNT_COMMAND, "rebalance by amount"),
-        BotCommand::new(REBALANCE_BY_PRICE_COMMAND, "rebalance by price"),
-        BotCommand::new(PORTFOLIOS_COMMAND, "manage portfolios"),
-        BotCommand::new(EXAMPLE_COMMAND, "show example"),
-        BotCommand::new(ABOUT_COMMAND, "source code"),
-        BotCommand::new(HELP_COMMAND, "show help page"),
-    ];
-
-    bot.set_my_commands(commands).send().await.unwrap();
+    bot.set_my_commands(Command::bot_commands())
+        .send()
+        .await
+        .unwrap();
 
     Dispatcher::builder(
         bot,

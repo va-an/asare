@@ -1,11 +1,11 @@
 use domain::{users::User, utils::ChainingExt};
 use reqwest::StatusCode;
-use teloxide::prelude::*;
+use teloxide::{prelude::*, utils::command::BotCommands};
 
 use crate::{
     api_client,
     resources::{ABOUT_MESSAGE, EXAMPLE_BY_AMOUNT_MESSAGE, EXAMPLE_BY_PRICE_MESSAGE, HELP_MESSAGE},
-    HandlerResult, MyDialogue, State,
+    Command, HandlerResult, MyDialogue, State,
 };
 
 use super::MainLupaState;
@@ -50,9 +50,9 @@ pub async fn start(
     dialogue: MyDialogue,
     state: MainLupaState,
 ) -> HandlerResult {
-    match msg.text() {
-        Some(input) => match input {
-            "/start" => {
+    if let Some(text) = msg.text() {
+        match BotCommands::parse(text, "asare bot") {
+            Ok(Command::Start) => {
                 let user_id: u64 = msg.from().expect("User not found").id.0;
                 let maybe_api_key = find_api_key(user_id, &state);
 
@@ -75,26 +75,26 @@ pub async fn start(
                 dialogue.update(State::MainLupa { state }).await?;
             }
 
-            "/rebalance_by_amount" => {
+            Ok(Command::RebalanceByAmount) => {
                 bot.send_message(msg.chat.id, "Enter your portfolio and desired allocation")
                     .await?;
 
                 dialogue.update(State::RebalanceByAmount { state }).await?;
             }
 
-            "/rebalance_by_price" => {
+            Ok(Command::RebalanceByPrice) => {
                 bot.send_message(msg.chat.id, "Enter your portfolio and desired allocation")
                     .await?;
 
                 dialogue.update(State::RebalanceByPrice { state }).await?;
             }
 
-            "/portfolios" => {
+            Ok(Command::Portfolios) => {
                 bot.send_message(msg.chat.id, "in progress").await?;
                 dialogue.update(State::MainLupa { state }).await?;
             }
 
-            "/example" => {
+            Ok(Command::Example) => {
                 bot.send_message(msg.chat.id, EXAMPLE_BY_AMOUNT_MESSAGE)
                     .await?;
 
@@ -104,28 +104,25 @@ pub async fn start(
                 dialogue.update(State::MainLupa { state }).await?;
             }
 
-            "/help" => {
+            Ok(Command::Help) => {
                 bot.send_message(msg.chat.id, HELP_MESSAGE).await?;
                 dialogue.update(State::MainLupa { state }).await?;
             }
 
-            "/about" => {
+            Ok(Command::About) => {
                 bot.send_message(msg.chat.id, ABOUT_MESSAGE).await?;
                 dialogue.update(State::MainLupa { state }).await?;
             }
 
-            _ => {
+            Err(_) => {
                 bot.send_message(
                     msg.chat.id,
                     "Sorry, I don't understand this command.\nMaybe you need /help?",
                 )
                 .await?;
             }
-        },
-        None => {
-            bot.send_message(msg.chat.id, "Hmmm").await?;
         }
-    };
+    }
 
     Ok(())
 }

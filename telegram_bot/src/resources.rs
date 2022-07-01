@@ -1,10 +1,3 @@
-pub static REBALANCE_BY_AMOUNT_COMMAND: &str = "rebalance_by_amount";
-pub static REBALANCE_BY_PRICE_COMMAND: &str = "rebalance_by_price";
-pub static PORTFOLIOS_COMMAND: &str = "portfolios";
-pub static EXAMPLE_COMMAND: &str = "example";
-pub static HELP_COMMAND: &str = "help";
-pub static ABOUT_COMMAND: &str = "about";
-
 pub static HELP_MESSAGE: &str = "
 Bot for calculation asset allocation rebalance.
 
