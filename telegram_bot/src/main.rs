@@ -65,8 +65,8 @@ async fn main() {
             .branch(dptree::case![State::RebalanceByPrice { state }].endpoint(rebalance_by_price)),
     )
     .dependencies(dptree::deps![InMemStorage::<State>::new()])
+    .enable_ctrlc_handler()
     .build()
-    .setup_ctrlc_handler()
     .dispatch()
     .await;
 }
