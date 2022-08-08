@@ -17,12 +17,12 @@ impl Config {
         Config::load_envy()
     }
 
-    fn parse_args() -> ArgMatches<'static> {
+    fn parse_args() -> ArgMatches {
         App::new("asare-backend-rs")
             .arg(
                 Arg::with_name("config")
                     .long("config")
-                    .short("c")
+                    .short('c')
                     .takes_value(true)
                     .help("Sets a path for .env file"),
             )

@@ -7,11 +7,11 @@ edition = "2021"
 domain = { path = "../domain" }
 
 # logging
-log = "0.4.0"
-env_logger = "0.9.0"
+log = "0.4"
+env_logger = "0.9"
 
 # web
-actix-web = "3"
+actix-web = "4"
 
 # json
 serde = "1.0"
@@ -20,11 +20,11 @@ serde_derive = "1.0"
 
 # config
 envy = "0.4.2"
-dotenv = "0.15.0"
+dotenv = "0.15"
 
-approx = "0.5.0"
-clap = "2.34.0"
-async-trait = "0.1.52"
-passwords = "3.1.8"
-chrono = "0.4.19"
-pickledb = "0.5.1"
+approx = "0.5"
+clap = "3"
+async-trait = "0.1"
+passwords = "3"
+chrono = "0.4"
+pickledb = "0.5"
