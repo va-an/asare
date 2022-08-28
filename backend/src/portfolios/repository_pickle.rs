@@ -7,11 +7,13 @@ use crate::utils::PickleUtils;
 
 use super::{repository::PortfolioRepository, service::UserPortfolio};
 
+#[allow(dead_code)]
 pub struct PortfolioRepoPickle {
     db: Mutex<PickleDb>,
     id_counter: Mutex<i32>,
 }
 
+#[allow(dead_code)]
 impl PortfolioRepoPickle {
     fn new() -> PortfolioRepoPickle {
         let db_path = "portfolios_pickle.db";
@@ -42,7 +44,7 @@ impl PortfolioRepository for PortfolioRepoPickle {
             .collect()
     }
 
-    fn delete_by_id(&self, id: &i32) {
+    fn delete_by_id(&self, _id: &i32) {
         todo!()
     }
 }

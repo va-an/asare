@@ -1,15 +1,11 @@
-use actix_web::{post, web, Error, HttpResponse};
-use domain::{
-    rebalancer::{controller::RebalancerController, service::RebalanceInput},
-    utils::ChainingExt,
-};
+use std::sync::Arc;
 
-use crate::presenters::HttpApiPresenter;
+use axum::{response::IntoResponse, Extension, Json};
+use domain::rebalancer::{controller::RebalancerController, service::RebalanceInput};
 
-#[post("/rebalance")]
 pub async fn rebalance(
-    req: web::Json<RebalanceInput>,
-    ctl: web::Data<RebalancerController>,
-) -> Result<HttpResponse, Error> {
-    ctl.rebalance(&req).pipe(HttpApiPresenter::into)
+    Extension(ctl): Extension<Arc<RebalancerController>>,
+    Json(req): Json<RebalanceInput>,
+) -> impl IntoResponse {
+    Json(ctl.rebalance(&req))
 }

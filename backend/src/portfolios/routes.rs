@@ -1,11 +1,18 @@
+use std::sync::Arc;
+
 use crate::{
     app::PortfolioInteractor,
     portfolios::service::{Portfolios, UserPortfolio},
     users::api_key_matcher::UserApiKeyMatcher,
 };
-use actix_web::{delete, get, http::Error, post, web, HttpRequest, HttpResponse};
+use axum::{
+    http::{HeaderMap, StatusCode},
+    response::IntoResponse,
+    Extension, Json,
+};
 use domain::Portfolio;
 use serde::Serialize;
+use serde_json::json;
 
 static API_KEY_HEADER: &str = "X-Api-Key";
 
@@ -24,30 +31,28 @@ impl UserPortfolioResponse {
     }
 }
 
-#[post("")]
 pub async fn create(
-    req: HttpRequest,
-    create_request: web::Json<Portfolio>,
-    portfolio_interactor: web::Data<PortfolioInteractor>,
-) -> Result<HttpResponse, Error> {
-    match extract_user_id(&req, &portfolio_interactor.api_key_matcher) {
+    Extension(portfolio_interactor): Extension<Arc<PortfolioInteractor>>,
+    headers: HeaderMap,
+    Json(create_request): Json<Portfolio>,
+) -> impl IntoResponse {
+    match extract_user_id(&headers, &portfolio_interactor.api_key_matcher) {
         Ok(user_id) => {
             let new_portfolio = UserPortfolio::new(&user_id, &create_request);
             let created_portfolio = portfolio_interactor.portfolios.create(new_portfolio);
             let portfolio_response = UserPortfolioResponse::from(&created_portfolio);
 
-            Ok(HttpResponse::Ok().json(portfolio_response))
+            (StatusCode::OK, Json(json!(portfolio_response)))
         }
-        Err(message) => Ok(HttpResponse::BadRequest().json(message)),
+        Err(message) => (StatusCode::BAD_REQUEST, Json(json!(message))),
     }
 }
 
-#[get("")]
 pub async fn find(
-    req: HttpRequest,
-    portfolio_interactor: web::Data<PortfolioInteractor>,
-) -> Result<HttpResponse, Error> {
-    match extract_user_id(&req, &portfolio_interactor.api_key_matcher) {
+    headers: HeaderMap,
+    Extension(portfolio_interactor): Extension<Arc<PortfolioInteractor>>,
+) -> impl IntoResponse {
+    match extract_user_id(&headers, &portfolio_interactor.api_key_matcher) {
         Ok(user_id) => {
             let portfolios: Vec<UserPortfolioResponse> = portfolio_interactor
                 .portfolios
@@ -56,19 +61,21 @@ pub async fn find(
                 .map(|user_portfolio| UserPortfolioResponse::from(user_portfolio))
                 .collect();
 
-            Ok(HttpResponse::Ok().json(portfolios))
+            (StatusCode::OK, Json(json!(portfolios)))
         }
-        Err(message) => Ok(HttpResponse::BadRequest().json(message)),
+        Err(message) => (StatusCode::BAD_REQUEST, Json(json!(message))),
     }
 }
 
-#[delete("")]
-pub async fn delete() -> Result<HttpResponse, Error> {
+pub async fn delete() -> impl IntoResponse {
     todo!();
 }
 
-fn extract_user_id(req: &HttpRequest, api_key_matcher: &UserApiKeyMatcher) -> Result<i32, String> {
-    match req.headers().get(API_KEY_HEADER) {
+fn extract_user_id(
+    headers: &HeaderMap,
+    api_key_matcher: &UserApiKeyMatcher,
+) -> Result<i32, String> {
+    match headers.get(API_KEY_HEADER) {
         Some(header_value) => {
             let api_key = header_value
                 .to_str()

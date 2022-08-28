@@ -1,7 +1,6 @@
 mod app;
 mod conf;
 mod portfolios;
-mod presenters;
 mod rebalancer;
 mod users;
 mod utils;
@@ -10,8 +9,9 @@ use crate::conf::Config;
 use app::AsareApp;
 use env_logger::Env;
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
+#[tokio::main]
+async fn main() {
+    // TODO: tracing
     env_logger::Builder::from_env(Env::default().default_filter_or("debug")).init();
 
     let config = Config::load();

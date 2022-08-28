@@ -1,14 +1,15 @@
 use std::sync::Arc;
 
 use crate::portfolios::service::PortfoliosImpl;
-use crate::rebalancer;
+use crate::rebalancer::routes::rebalance;
 use crate::users::api_key_matcher::UserApiKeyMatcher;
 use crate::users::controller::UsersController;
 use crate::users::repository_builder::UserRepositoryBuilder;
 use crate::users::service::UsersImpl;
 use crate::{portfolios, users, Config};
-use actix_web::{middleware, web, App, HttpServer};
-use async_trait::async_trait;
+
+use axum::routing::{get, post};
+use axum::{Extension, Router};
 use chrono::Duration;
 use domain::price_provider::finance_api_builder::FinanceApiBuilder;
 use domain::price_provider::price_provider_builder::PriceProviderBuilder;
@@ -59,49 +60,30 @@ impl AsareApp {
         }
     }
 
-    pub async fn run(self) -> std::io::Result<()> {
-        ActixHttpServer::run_http_server(self).await
-    }
-}
+    pub async fn run(self) {
+        let rebalancer_ctl = Arc::new(self.rebalancer_ctl);
+        let portfolio_interactor = Arc::new(self.portfolio_interactor);
+        let user_ctl = Arc::new(self.user_ctl);
 
-#[async_trait(?Send)]
-pub trait AsareHttpServer {
-    async fn run_http_server(app: AsareApp) -> std::io::Result<()>;
-}
-pub struct ActixHttpServer;
+        let app = Router::new()
+            .route("/v4/rebel/rebalance", post(rebalance))
+            .route(
+                "/v1/portfolios/",
+                get(portfolios::routes::find)
+                    .post(portfolios::routes::create)
+                    .delete(portfolios::routes::delete),
+            )
+            .route("/v1/users/", post(users::routes::create_user))
+            .route("/v1/users/refresh_api_key", post(users::routes::login_user))
+            .layer(Extension(rebalancer_ctl))
+            .layer(Extension(portfolio_interactor))
+            .layer(Extension(user_ctl));
 
-#[async_trait(?Send)]
-impl AsareHttpServer for ActixHttpServer {
-    async fn run_http_server(app: AsareApp) -> std::io::Result<()> {
-        let rebalancer_app_data = app.rebalancer_ctl.pipe(web::Data::new);
-        let user_app_data = web::Data::new(app.user_ctl);
-        let portfolio_app_data = web::Data::new(app.portfolio_interactor);
+        let socket = format!("{}:{}", self.config.http_host, self.config.http_port);
 
-        HttpServer::new(move || {
-            App::new()
-                .service(
-                    web::scope("/v4/rebel/")
-                        .service(rebalancer::routes::rebalance)
-                        .app_data(rebalancer_app_data.clone()),
-                )
-                .service(
-                    web::scope("/v1/users/")
-                        .service(users::routes::create_user)
-                        .service(users::routes::login_user)
-                        .app_data(user_app_data.clone()),
-                )
-                .service(
-                    web::scope("/v1/portfolios/")
-                        .service(portfolios::routes::create)
-                        .service(portfolios::routes::delete)
-                        .service(portfolios::routes::find)
-                        .app_data(portfolio_app_data.clone()),
-                )
-                .wrap(middleware::Logger::default())
-        })
-        .bind((app.config.http_host.to_owned(), app.config.http_port))?
-        .workers(8)
-        .run()
-        .await
+        axum::Server::bind(&socket.parse().unwrap())
+            .serve(app.into_make_service())
+            .await
+            .unwrap()
     }
 }

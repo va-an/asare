@@ -1,7 +1,7 @@
 use std::sync::Mutex;
 
 use domain::{users::User, utils::ChainingExt};
-use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
+use pickledb::PickleDb;
 
 use crate::utils::PickleUtils;
 
