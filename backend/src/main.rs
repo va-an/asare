@@ -14,8 +14,8 @@ async fn main() {
     // TODO: tracing
     env_logger::Builder::from_env(Env::default().default_filter_or("debug")).init();
 
-    let config = Config::load();
-    let app = AsareApp::new(config);
+    let config = Config::load().await;
+    let app = AsareApp::new(config).await;
 
     app.run().await
 }

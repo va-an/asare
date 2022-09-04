@@ -16,6 +16,7 @@ use domain::price_provider::price_provider_builder::PriceProviderBuilder;
 use domain::price_provider::repository_builder::PricesRepoBuilder;
 use domain::rebalancer::{controller::RebalancerController, service_builder::RebalancerSvcBuilder};
 use domain::utils::ChainingExt;
+use sqlx::postgres::PgPoolOptions;
 
 pub struct AsareApp {
     config: Config,
@@ -30,7 +31,20 @@ pub struct PortfolioInteractor {
 }
 
 impl AsareApp {
-    pub fn new(config: Config) -> AsareApp {
+    pub async fn new(config: Config) -> AsareApp {
+        let db_url = format!(
+            "postgres://{}:{}@{}:{}/{}",
+            config.db.user, config.db.password, config.db.host, config.db.port, config.db.name
+        );
+
+        let pool = PgPoolOptions::new()
+            .max_connections(config.db.max_connections)
+            .connect(&db_url)
+            .await
+            .unwrap();
+
+        sqlx::migrate!().run(&pool).await.unwrap();
+
         let user_repo = UserRepositoryBuilder::pickle();
         let user_svc = UsersImpl::new(user_repo);
 

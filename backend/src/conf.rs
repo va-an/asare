@@ -1,66 +1,51 @@
-use clap::{App, Arg, ArgMatches};
-use dotenv::dotenv;
+use clap::{arg, crate_version, Command};
 use serde::Deserialize;
+use tokio::{fs, io::AsyncReadExt};
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug, Deserialize)]
+pub struct Db {
+    pub user: String,
+    pub password: String,
+    pub host: String,
+    pub port: u16,
+    pub name: String,
+    pub max_connections: u32,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct Config {
     pub http_host: String,
     pub http_port: u16,
+    pub db: Db,
 }
 
 impl Config {
-    pub fn load() -> Config {
-        let args = Config::parse_args();
-        let dotenv_path = args.value_of("config");
+    pub async fn load() -> Config {
+        let arg_matches = Command::new("asare-backend-rs")
+            .version(crate_version!())
+            .args(&[arg!(-c --config [FILE] "Load config from file")])
+            .get_matches();
 
-        Config::load_dotenv(dotenv_path);
-        Config::load_envy()
-    }
+        let default_config_path = "backend.conf".to_string();
 
-    fn parse_args() -> ArgMatches {
-        App::new("asare-backend-rs")
-            .arg(
-                Arg::with_name("config")
-                    .long("config")
-                    .short('c')
-                    .takes_value(true)
-                    .help("Sets a path for .env file"),
-            )
-            .get_matches()
-    }
+        let config_path = arg_matches
+            .get_one::<String>("config")
+            .unwrap_or(&default_config_path);
 
-    // TODO: to Result
-    fn load_dotenv(dotenv_path: Option<&str>) {
-        match dotenv_path {
-            Some(config_path) => match dotenv::from_path(config_path) {
-                Ok(_) => log::debug!("dotenv - loaded .env file from {}", config_path),
-                Err(error) => {
-                    log::error!("dotenv - error with load .env file from {}", config_path);
-                    panic!("{:#?}", error)
-                }
-            },
-            None => match dotenv() {
-                Ok(_) => log::debug!("dotenv - loaded config"),
-                Err(error) => {
-                    log::error!("error loading .env file");
-                    panic!("{:#?}", error)
-                }
-            },
-        }
-    }
+        let mut config_file = fs::File::open(config_path)
+            .await
+            .expect(&format!("can't open '{}'", config_path));
 
-    // TODO: to Result
-    fn load_envy() -> Config {
-        let config = match envy::from_env::<Config>() {
-            Ok(config) => {
-                log::info!("Loaded config: \n{:#?}", config);
-                config
-            }
-            Err(error) => {
-                log::error!("Error loading config: {}", error);
-                panic!("{:#?}", error)
-            }
-        };
+        let mut config_str = String::new();
+
+        config_file
+            .read_to_string(&mut config_str)
+            .await
+            .expect("can't read from 'backend.json'");
+
+        let config = serde_json::from_str(&config_str)
+            .expect(&format!("can't load config from {}", config_path));
+        log::info!("Loaded config: \n{:#?}", config);
 
         config
     }

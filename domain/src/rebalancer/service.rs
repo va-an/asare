@@ -1,5 +1,6 @@
+use serde::{Deserialize, Serialize};
+
 use crate::Portfolio;
-use serde_derive::{Deserialize, Serialize};
 
 pub type RebalancerSvcType = Box<dyn Rebalancer + Sync + Send>;
 

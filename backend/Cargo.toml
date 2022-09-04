@@ -6,27 +6,24 @@ edition = "2021"
 [dependencies]
 domain = { path = "../domain" }
 
-tokio = { version = "1.20.1", features = ["full"] }
+tokio = { version = "1", features = ["full"] }
 
 # logging
 log = "0.4"
 env_logger = "0.9"
 
 # web
-axum = "0.5.15"
+axum = "0.5"
 
 # json
-serde = "1.0"
+serde = { version = "1", features = ["derive"] }
 serde_json = "1.0"
-serde_derive = "1.0"
 
-# config
-envy = "0.4.2"
-dotenv = "0.15"
+# db
+pickledb = "0.5"
+sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "postgres", "migrate"] }
 
 approx = "0.5"
-clap = "3"
-async-trait = "0.1"
+clap = { version = "3", features = ["cargo"] }
 passwords = "3"
 chrono = "0.4"
-pickledb = "0.5"
