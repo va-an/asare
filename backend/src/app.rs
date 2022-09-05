@@ -8,7 +8,7 @@ use crate::users::repository_builder::UserRepositoryBuilder;
 use crate::users::service::UsersImpl;
 use crate::{portfolios, users, Config};
 
-use axum::routing::{get, post};
+use axum::routing::{delete, get, post};
 use axum::{Extension, Router};
 use chrono::Duration;
 use domain::price_provider::finance_api_builder::FinanceApiBuilder;
@@ -86,10 +86,9 @@ impl AsareApp {
         let router_portfolios = Router::new()
             .route(
                 "/v1/portfolios/",
-                get(portfolios::routes::find)
-                    .post(portfolios::routes::create)
-                    .delete(portfolios::routes::delete),
+                get(portfolios::routes::find).post(portfolios::routes::create),
             )
+            .route("/v1/portfolios/:id", delete(portfolios::routes::delete))
             .layer(Extension(portfolio_interactor));
 
         let router_users = Router::new()

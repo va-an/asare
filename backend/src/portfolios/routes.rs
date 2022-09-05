@@ -6,6 +6,7 @@ use crate::{
     users::api_key_matcher::UserApiKeyMatcher,
 };
 use axum::{
+    extract::Path,
     http::{HeaderMap, StatusCode},
     response::IntoResponse,
     Extension, Json,
@@ -68,8 +69,18 @@ pub async fn find(
     }
 }
 
-pub async fn delete() -> impl IntoResponse {
-    todo!();
+pub async fn delete(
+    headers: HeaderMap,
+    Path(id): Path<i32>,
+    Extension(portfolio_interactor): Extension<Arc<PortfolioInteractor>>,
+) -> impl IntoResponse {
+    match extract_user_id(&headers, &portfolio_interactor.api_key_matcher).await {
+        Ok(user_id) => {
+            portfolio_interactor.portfolios.delete(id).await;
+            (StatusCode::OK, Json(json!("")))
+        }
+        Err(message) => (StatusCode::BAD_REQUEST, Json(json!(message))),
+    }
 }
 
 async fn extract_user_id(
