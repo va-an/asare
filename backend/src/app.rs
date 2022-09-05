@@ -75,44 +75,36 @@ impl AsareApp {
     }
 
     pub async fn run(self) {
-        let router_rebalance = {
-            let rebalancer_ctl = Arc::new(self.rebalancer_ctl);
+        let rebalancer_ctl = Arc::new(self.rebalancer_ctl);
+        let portfolio_interactor = Arc::new(self.portfolio_interactor);
+        let user_ctl = Arc::new(self.user_ctl);
 
-            Router::new()
-                .route("/v4/rebel/rebalance", post(rebalance))
-                .layer(Extension(rebalancer_ctl))
-        };
+        let router_rebalance = Router::new()
+            .route("/v4/rebel/rebalance", post(rebalance))
+            .layer(Extension(rebalancer_ctl));
 
-        let router_portfolios = {
-            let portfolio_interactor = Arc::new(self.portfolio_interactor);
+        let router_portfolios = Router::new()
+            .route(
+                "/v1/portfolios/",
+                get(portfolios::routes::find)
+                    .post(portfolios::routes::create)
+                    .delete(portfolios::routes::delete),
+            )
+            .layer(Extension(portfolio_interactor));
 
-            Router::new()
-                .route(
-                    "/v1/portfolios/",
-                    get(portfolios::routes::find)
-                        .post(portfolios::routes::create)
-                        .delete(portfolios::routes::delete),
-                )
-                .layer(Extension(portfolio_interactor))
-        };
-
-        let router_users = {
-            let user_ctl = Arc::new(self.user_ctl);
-
-            Router::new()
-                .route("/v1/users/", post(users::routes::create_user))
-                .route("/v1/users/refresh_api_key", post(users::routes::login_user))
-                .layer(Extension(user_ctl))
-        };
+        let router_users = Router::new()
+            .route("/v1/users/", post(users::routes::create_user))
+            .route("/v1/users/refresh_api_key", post(users::routes::login_user))
+            .layer(Extension(user_ctl));
 
         let app = Router::new()
             .merge(router_rebalance)
             .merge(router_portfolios)
             .merge(router_users);
 
-        let socket = format!("{}:{}", self.config.http_host, self.config.http_port);
+        let address = format!("{}:{}", self.config.http_host, self.config.http_port);
 
-        axum::Server::bind(&socket.parse().unwrap())
+        axum::Server::bind(&address.parse().unwrap())
             .serve(app.into_make_service())
             .await
             .unwrap()
