@@ -27,3 +27,4 @@ approx = "0.5"
 clap = { version = "3", features = ["cargo"] }
 passwords = "3"
 chrono = "0.4"
+async-trait = "0.1"

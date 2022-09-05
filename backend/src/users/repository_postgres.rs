@@ -1,4 +1,8 @@
-use sqlx::PgPool;
+use std::{collections::HashSet, iter::FromIterator};
+
+use async_trait::async_trait;
+use domain::users::User;
+use sqlx::{postgres::PgRow, PgPool, Row};
 
 use super::repository::UserRepository;
 
@@ -12,29 +16,50 @@ impl UserRepoPostgres {
     }
 }
 
+#[async_trait]
 impl UserRepository for UserRepoPostgres {
-    fn create(
-        &self,
-        username: &str,
-        password: &str,
-        api_key: &str,
-    ) -> Result<domain::users::User, String> {
+    async fn create(&self, username: &str, password: &str, api_key: &str) -> Result<User, String> {
+        sqlx::query(
+            "INSERT INTO users (username, password, api_key) 
+            VALUES ($1, $2, $3) 
+            RETURNING *;",
+        )
+        .bind(username)
+        .bind(password)
+        .bind(api_key)
+        .map(|row: PgRow| User {
+            id: row.get("id"),
+            username: row.get("username"),
+            password: row.get("password"),
+            api_key: row.get("api_key"),
+        })
+        .fetch_one(&self.pool)
+        .await
+        .map_err(|e| e.to_string())
+    }
+
+    async fn delete(&self, username: &str) {
         todo!()
     }
 
-    fn delete(&self, username: &str) {
+    async fn find_all(&self) -> Vec<User> {
         todo!()
     }
 
-    fn find_all(&self) -> Vec<domain::users::User> {
+    async fn find_by_api_key(&self, api_key: &str) -> Option<User> {
         todo!()
     }
 
-    fn find_by_api_key(&self, api_key: &str) -> Option<domain::users::User> {
-        todo!()
-    }
+    async fn find_all_usernames(&self) -> std::collections::HashSet<String> {
+        let usernames = sqlx::query("SELECT username FROM users;")
+            .map(|row: PgRow| {
+                let username: String = row.get("username");
+                username
+            })
+            .fetch_all(&self.pool)
+            .await
+            .unwrap();
 
-    fn find_all_usernames(&self) -> std::collections::HashSet<String> {
-        todo!()
+        HashSet::from_iter(usernames)
     }
 }

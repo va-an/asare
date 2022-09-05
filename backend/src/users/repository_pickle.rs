@@ -1,5 +1,6 @@
 use std::sync::Mutex;
 
+use async_trait::async_trait;
 use domain::{users::User, utils::ChainingExt};
 use pickledb::PickleDb;
 
@@ -31,8 +32,9 @@ impl UserRepoPickle {
     }
 }
 
+#[async_trait]
 impl UserRepository for UserRepoPickle {
-    fn create(&self, username: &str, password: &str, api_key: &str) -> Result<User, String> {
+    async fn create(&self, username: &str, password: &str, api_key: &str) -> Result<User, String> {
         let user = User {
             id: self.next_id(),
             username: username.to_owned(),
@@ -48,14 +50,14 @@ impl UserRepository for UserRepoPickle {
             .map_err(|err| err.to_string())
     }
 
-    fn delete(&self, username: &str) {
+    async fn delete(&self, username: &str) {
         match self.db.lock().unwrap().rem(username) {
             Ok(_) => (),
             Err(err) => log::error!("{}", err),
         }
     }
 
-    fn find_all(&self) -> Vec<User> {
+    async fn find_all(&self) -> Vec<User> {
         self.db
             .lock()
             .unwrap()
@@ -64,7 +66,7 @@ impl UserRepository for UserRepoPickle {
             .collect()
     }
 
-    fn find_by_api_key(&self, api_key: &str) -> Option<User> {
+    async fn find_by_api_key(&self, api_key: &str) -> Option<User> {
         self.db
             .lock()
             .unwrap()
@@ -73,7 +75,7 @@ impl UserRepository for UserRepoPickle {
             .find(|user| user.api_key == api_key)
     }
 
-    fn find_all_usernames(&self) -> std::collections::HashSet<String> {
+    async fn find_all_usernames(&self) -> std::collections::HashSet<String> {
         self.db
             .lock()
             .unwrap()

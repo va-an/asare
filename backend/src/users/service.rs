@@ -3,6 +3,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+use async_trait::async_trait;
 use domain::{
     users::{CreateUserRequest, User},
     utils::ChainingExt,
@@ -14,11 +15,12 @@ use super::repository::UserRepo;
 
 pub type UserService = Arc<dyn Users + Sync + Send>;
 
+#[async_trait]
 pub trait Users {
-    fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String>;
-    fn find_all(&self) -> Vec<User>;
-    fn find_by_api_key(&self, api_key: &str) -> Option<User>;
-    fn delete(&self, username: String);
+    async fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String>;
+    async fn find_all(&self) -> Vec<User>;
+    async fn find_by_api_key(&self, api_key: &str) -> Option<User>;
+    async fn delete(&self, username: String);
 }
 
 pub struct UsersImpl {
@@ -27,19 +29,22 @@ pub struct UsersImpl {
 }
 
 impl UsersImpl {
-    pub fn new(user_repo: UserRepo) -> UserService {
-        let usernames = user_repo.find_all_usernames().pipe(Mutex::new);
-
-        UsersImpl {
-            user_repo,
-            usernames,
-        }
-        .pipe(Arc::new)
+    pub async fn new(user_repo: UserRepo) -> UserService {
+        user_repo
+            .find_all_usernames()
+            .await
+            .pipe(Mutex::new)
+            .pipe(|usernames| UsersImpl {
+                user_repo,
+                usernames,
+            })
+            .pipe(Arc::new)
     }
 }
 
+#[async_trait]
 impl Users for UsersImpl {
-    fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String> {
+    async fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String> {
         if self
             .usernames
             .lock()
@@ -69,19 +74,19 @@ impl Users for UsersImpl {
 
             self.user_repo
                 .create(&create_user_request.username, &password, &api_key)
-                .tap(|_| log::debug!("created users: {:#?}", self.find_all())) // TODO: delete after debug
+                .await
         }
     }
 
-    fn find_all(&self) -> Vec<User> {
-        self.user_repo.find_all()
+    async fn find_all(&self) -> Vec<User> {
+        self.user_repo.find_all().await
     }
 
-    fn find_by_api_key(&self, api_key: &str) -> Option<User> {
-        self.user_repo.find_by_api_key(api_key)
+    async fn find_by_api_key(&self, api_key: &str) -> Option<User> {
+        self.user_repo.find_by_api_key(api_key).await
     }
 
-    fn delete(&self, _username: String) {
+    async fn delete(&self, _username: String) {
         // TODO: delete from `usernames` Set when user delete
         // self.user_repo.delete(&username)
         todo!()

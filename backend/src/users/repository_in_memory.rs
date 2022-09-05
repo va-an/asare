@@ -1,3 +1,4 @@
+use async_trait::async_trait;
 use domain::users::User;
 
 use super::repository::UserRepository;
@@ -25,8 +26,9 @@ impl UserRepoInMemory {
     }
 }
 
+#[async_trait]
 impl UserRepository for UserRepoInMemory {
-    fn create(&self, username: &str, password: &str, api_key: &str) -> Result<User, String> {
+    async fn create(&self, username: &str, password: &str, api_key: &str) -> Result<User, String> {
         let mut all = self.users.lock().unwrap();
 
         let user = User {
@@ -41,11 +43,11 @@ impl UserRepository for UserRepoInMemory {
         Ok(user)
     }
 
-    fn delete(&self, _username: &str) {
+    async fn delete(&self, _username: &str) {
         todo!()
     }
 
-    fn find_all(&self) -> Vec<User> {
+    async fn find_all(&self) -> Vec<User> {
         self.users
             .lock()
             .unwrap()
@@ -54,7 +56,7 @@ impl UserRepository for UserRepoInMemory {
             .collect()
     }
 
-    fn find_by_api_key(&self, api_key: &str) -> Option<User> {
+    async fn find_by_api_key(&self, api_key: &str) -> Option<User> {
         self.users
             .lock()
             .unwrap()
@@ -63,7 +65,7 @@ impl UserRepository for UserRepoInMemory {
             .map(|user| user.to_owned())
     }
 
-    fn find_all_usernames(&self) -> std::collections::HashSet<String> {
+    async fn find_all_usernames(&self) -> std::collections::HashSet<String> {
         self.users
             .lock()
             .unwrap()
@@ -77,11 +79,17 @@ impl UserRepository for UserRepoInMemory {
 mod tests {
     use crate::users::{generators::ApiKeyGenerator, repository_builder::UserRepositoryBuilder};
 
-    #[test]
-    fn create_user() {
+    #[tokio::test]
+    async fn create_user() {
         let user_repo = UserRepositoryBuilder::in_memory();
-        let user_1 = user_repo.create("one", "pass1", &ApiKeyGenerator::generate());
-        let user_2 = user_repo.create("two", "pass2", &ApiKeyGenerator::generate());
+
+        let user_1 = user_repo
+            .create("one", "pass1", &ApiKeyGenerator::generate())
+            .await;
+
+        let user_2 = user_repo
+            .create("two", "pass2", &ApiKeyGenerator::generate())
+            .await;
 
         assert_ne!(user_1, user_2);
     }

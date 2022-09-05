@@ -16,3 +16,5 @@ Cargo.lock
 # pickle db files
 **/*.db
 
+# conf
+./backend.conf

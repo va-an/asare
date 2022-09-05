@@ -36,7 +36,7 @@ pub async fn create(
     headers: HeaderMap,
     Json(create_request): Json<Portfolio>,
 ) -> impl IntoResponse {
-    match extract_user_id(&headers, &portfolio_interactor.api_key_matcher) {
+    match extract_user_id(&headers, &portfolio_interactor.api_key_matcher).await {
         Ok(user_id) => {
             let new_portfolio = UserPortfolio::new(&user_id, &create_request);
             let created_portfolio = portfolio_interactor.portfolios.create(new_portfolio);
@@ -52,7 +52,7 @@ pub async fn find(
     headers: HeaderMap,
     Extension(portfolio_interactor): Extension<Arc<PortfolioInteractor>>,
 ) -> impl IntoResponse {
-    match extract_user_id(&headers, &portfolio_interactor.api_key_matcher) {
+    match extract_user_id(&headers, &portfolio_interactor.api_key_matcher).await {
         Ok(user_id) => {
             let portfolios: Vec<UserPortfolioResponse> = portfolio_interactor
                 .portfolios
@@ -71,7 +71,7 @@ pub async fn delete() -> impl IntoResponse {
     todo!();
 }
 
-fn extract_user_id(
+async fn extract_user_id(
     headers: &HeaderMap,
     api_key_matcher: &UserApiKeyMatcher,
 ) -> Result<i32, String> {
@@ -82,7 +82,7 @@ fn extract_user_id(
                 .ok()
                 .expect("Error with extracting header string");
 
-            match api_key_matcher.find_user_id(api_key) {
+            match api_key_matcher.find_user_id(api_key).await {
                 Some(user_id) => Ok(user_id),
                 None => Err("Not found user by API key".to_string()),
             }

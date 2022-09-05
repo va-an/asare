@@ -45,8 +45,8 @@ impl AsareApp {
 
         sqlx::migrate!().run(&pool).await.unwrap();
 
-        let user_repo = UserRepositoryBuilder::pickle();
-        let user_svc = UsersImpl::new(user_repo);
+        let user_repo = UserRepositoryBuilder::postgres(pool.clone());
+        let user_svc = UsersImpl::new(user_repo).await;
 
         let portfolios = PortfoliosImpl::new();
         let api_key_matcher = Arc::clone(&user_svc).pipe(UserApiKeyMatcher::new);
