@@ -1,5 +1,6 @@
 use std::sync::Mutex;
 
+use async_trait::async_trait;
 use domain::utils::ChainingExt;
 use pickledb::PickleDb;
 
@@ -25,16 +26,17 @@ impl PortfolioRepoPickle {
     }
 }
 
+#[async_trait]
 impl PortfolioRepository for PortfolioRepoPickle {
-    fn create(&self, _portfolio: &UserPortfolio) -> UserPortfolio {
+    async fn create(&self, _portfolio: &UserPortfolio) -> UserPortfolio {
         todo!()
     }
 
-    fn find_by_id(&self, _id: &i32) -> UserPortfolio {
+    async fn find_by_id(&self, _id: &i32) -> UserPortfolio {
         todo!()
     }
 
-    fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
+    async fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
         self.db
             .lock()
             .unwrap()
@@ -44,7 +46,7 @@ impl PortfolioRepository for PortfolioRepoPickle {
             .collect()
     }
 
-    fn delete_by_id(&self, _id: &i32) {
+    async fn delete_by_id(&self, _id: &i32) {
         todo!()
     }
 }

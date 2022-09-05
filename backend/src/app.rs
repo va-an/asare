@@ -48,7 +48,7 @@ impl AsareApp {
         let user_repo = UserRepositoryBuilder::postgres(pool.clone());
         let user_svc = UsersImpl::new(user_repo).await;
 
-        let portfolios = PortfoliosImpl::new();
+        let portfolios = PortfoliosImpl::new(pool.clone());
         let api_key_matcher = Arc::clone(&user_svc).pipe(UserApiKeyMatcher::new);
 
         let portfolio_interactor = PortfolioInteractor {

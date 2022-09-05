@@ -1,10 +1,13 @@
+use async_trait::async_trait;
+
 use super::service::UserPortfolio;
 
+#[async_trait]
 pub trait PortfolioRepository {
-    fn create(&self, portfolio: &UserPortfolio) -> UserPortfolio;
+    async fn create(&self, portfolio: &UserPortfolio) -> UserPortfolio;
 
-    fn find_by_id(&self, id: &i32) -> UserPortfolio;
-    fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio>;
+    async fn find_by_id(&self, id: &i32) -> UserPortfolio;
+    async fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio>;
 
-    fn delete_by_id(&self, id: &i32);
+    async fn delete_by_id(&self, id: &i32);
 }

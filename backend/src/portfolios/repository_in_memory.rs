@@ -1,5 +1,7 @@
 use std::{collections::HashMap, sync::Mutex};
 
+use async_trait::async_trait;
+
 use super::{repository::PortfolioRepository, service::UserPortfolio};
 
 pub struct PortfolioRepoInMemory {
@@ -23,8 +25,9 @@ impl PortfolioRepoInMemory {
     }
 }
 
+#[async_trait]
 impl PortfolioRepository for PortfolioRepoInMemory {
-    fn create(&self, user_portfolio: &UserPortfolio) -> UserPortfolio {
+    async fn create(&self, user_portfolio: &UserPortfolio) -> UserPortfolio {
         let id = self.next_id();
 
         let new_portfolio = UserPortfolio {
@@ -41,11 +44,11 @@ impl PortfolioRepository for PortfolioRepoInMemory {
         new_portfolio
     }
 
-    fn find_by_id(&self, _id: &i32) -> UserPortfolio {
+    async fn find_by_id(&self, _id: &i32) -> UserPortfolio {
         todo!()
     }
 
-    fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
+    async fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
         self.portfolios
             .lock()
             .unwrap()
@@ -55,7 +58,7 @@ impl PortfolioRepository for PortfolioRepoInMemory {
             .collect()
     }
 
-    fn delete_by_id(&self, _id: &i32) {
+    async fn delete_by_id(&self, _id: &i32) {
         todo!()
     }
 }
@@ -64,7 +67,10 @@ impl PortfolioRepository for PortfolioRepoInMemory {
 mod tests {
     use domain::Portfolio;
 
-    use crate::portfolios::{service::UserPortfolio, repository_in_memory::PortfolioRepoInMemory, repository::PortfolioRepository};
+    use crate::portfolios::{
+        repository::PortfolioRepository, repository_in_memory::PortfolioRepoInMemory,
+        service::UserPortfolio,
+    };
 
     fn some_portfolio() -> UserPortfolio {
         let portfolio = Portfolio::from([
@@ -80,13 +86,13 @@ mod tests {
         }
     }
 
-    #[test]
+    #[tokio::test]
     fn create_and_find_portfolio() {
         let port_repo = PortfolioRepoInMemory::new();
         let some_port = some_portfolio();
 
-        let port_1 = port_repo.create(&some_port);
-        let port_2 = port_repo.create(&some_port);
+        let port_1 = port_repo.create(&some_port).await;
+        let port_2 = port_repo.create(&some_port).await;
 
         assert_ne!(port_1, port_2);
     }

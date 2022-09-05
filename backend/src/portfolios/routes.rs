@@ -39,7 +39,7 @@ pub async fn create(
     match extract_user_id(&headers, &portfolio_interactor.api_key_matcher).await {
         Ok(user_id) => {
             let new_portfolio = UserPortfolio::new(&user_id, &create_request);
-            let created_portfolio = portfolio_interactor.portfolios.create(new_portfolio);
+            let created_portfolio = portfolio_interactor.portfolios.create(new_portfolio).await;
             let portfolio_response = UserPortfolioResponse::from(&created_portfolio);
 
             (StatusCode::OK, Json(json!(portfolio_response)))
@@ -57,6 +57,7 @@ pub async fn find(
             let portfolios: Vec<UserPortfolioResponse> = portfolio_interactor
                 .portfolios
                 .find_by_user(&user_id)
+                .await
                 .iter()
                 .map(|user_portfolio| UserPortfolioResponse::from(user_portfolio))
                 .collect();
