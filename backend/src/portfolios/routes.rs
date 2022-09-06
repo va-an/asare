@@ -43,9 +43,9 @@ pub async fn create(
             let created_portfolio = portfolio_interactor.portfolios.create(new_portfolio).await;
             let portfolio_response = UserPortfolioResponse::from(&created_portfolio);
 
-            (StatusCode::OK, Json(json!(portfolio_response)))
+            (StatusCode::OK, Json(json!(portfolio_response))).into_response()
         }
-        Err(message) => (StatusCode::BAD_REQUEST, Json(json!(message))),
+        Err(message) => (StatusCode::BAD_REQUEST, message).into_response(),
     }
 }
 
@@ -57,15 +57,15 @@ pub async fn find(
         Ok(user_id) => {
             let portfolios: Vec<UserPortfolioResponse> = portfolio_interactor
                 .portfolios
-                .find_by_user(&user_id)
+                .find_by_user(user_id)
                 .await
                 .iter()
                 .map(|user_portfolio| UserPortfolioResponse::from(user_portfolio))
                 .collect();
 
-            (StatusCode::OK, Json(json!(portfolios)))
+            (StatusCode::OK, Json(json!(portfolios))).into_response()
         }
-        Err(message) => (StatusCode::BAD_REQUEST, Json(json!(message))),
+        Err(message) => (StatusCode::BAD_REQUEST, message).into_response(),
     }
 }
 
@@ -76,10 +76,10 @@ pub async fn delete(
 ) -> impl IntoResponse {
     match extract_user_id(&headers, &portfolio_interactor.api_key_matcher).await {
         Ok(user_id) => {
-            portfolio_interactor.portfolios.delete(id).await;
-            (StatusCode::OK, Json(json!("")))
+            portfolio_interactor.portfolios.delete(id, user_id).await;
+            StatusCode::OK.into_response()
         }
-        Err(message) => (StatusCode::BAD_REQUEST, Json(json!(message))),
+        Err(message) => (StatusCode::BAD_REQUEST, message).into_response(),
     }
 }
 

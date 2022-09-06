@@ -32,21 +32,21 @@ impl PortfolioRepository for PortfolioRepoPickle {
         todo!()
     }
 
-    async fn find_by_id(&self, _id: &i32) -> UserPortfolio {
+    async fn find_by_id(&self, _id: i32) -> UserPortfolio {
         todo!()
     }
 
-    async fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
+    async fn find_by_user(&self, user_id: i32) -> Vec<UserPortfolio> {
         self.db
             .lock()
             .unwrap()
             .iter()
             .map(|v| v.get_value::<UserPortfolio>().unwrap())
-            .filter(|port| &port.user_id == user_id)
+            .filter(|port| port.user_id == user_id)
             .collect()
     }
 
-    async fn delete_by_id(&self, _id: &i32) {
+    async fn delete_by_id(&self, _id: i32, _user_id: i32) {
         todo!()
     }
 }

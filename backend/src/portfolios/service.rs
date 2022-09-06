@@ -11,8 +11,8 @@ use super::{
 #[async_trait]
 pub trait Portfolios {
     async fn create(&self, portfolio: UserPortfolio) -> UserPortfolio;
-    async fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio>;
-    async fn delete(&self, id: i32);
+    async fn find_by_user(&self, user_id: i32) -> Vec<UserPortfolio>;
+    async fn delete(&self, id: i32, user_id: i32);
 }
 
 pub struct PortfoliosImpl {
@@ -50,11 +50,11 @@ impl Portfolios for PortfoliosImpl {
         self.port_repo.create(&portfolio).await
     }
 
-    async fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
+    async fn find_by_user(&self, user_id: i32) -> Vec<UserPortfolio> {
         self.port_repo.find_by_user(user_id).await
     }
 
-    async fn delete(&self, id: i32) {
-        self.port_repo.delete_by_id(&id).await
+    async fn delete(&self, id: i32, user_id: i32) {
+        self.port_repo.delete_by_id(id, user_id).await
     }
 }

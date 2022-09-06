@@ -18,8 +18,7 @@ impl PortfolioRepoPostgres {
 impl PortfolioRepository for PortfolioRepoPostgres {
     async fn create(&self, portfolio: &UserPortfolio) -> UserPortfolio {
         sqlx::query(
-            "
-            INSERT INTO portfolios (user_id, portfolio) 
+            "INSERT INTO portfolios (user_id, portfolio) 
             VALUES ($1, $2) 
             RETURNING *;",
         )
@@ -35,10 +34,9 @@ impl PortfolioRepository for PortfolioRepoPostgres {
         .unwrap()
     }
 
-    async fn find_by_id(&self, id: &i32) -> UserPortfolio {
+    async fn find_by_id(&self, id: i32) -> UserPortfolio {
         sqlx::query(
-            "
-            SELECT * FROM portfolios 
+            "SELECT * FROM portfolios 
             WHERE id = $1",
         )
         .bind(id)
@@ -52,10 +50,9 @@ impl PortfolioRepository for PortfolioRepoPostgres {
         .unwrap()
     }
 
-    async fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
+    async fn find_by_user(&self, user_id: i32) -> Vec<UserPortfolio> {
         sqlx::query(
-            "
-            SELECT * FROM portfolios 
+            "SELECT * FROM portfolios 
             WHERE user_id = $1",
         )
         .bind(user_id)
@@ -69,13 +66,14 @@ impl PortfolioRepository for PortfolioRepoPostgres {
         .unwrap()
     }
 
-    async fn delete_by_id(&self, id: &i32) {
+    async fn delete_by_id(&self, id: i32, user_id: i32) {
         sqlx::query(
-            "
-            DELETE FROM portfolios 
-            WHERE id = $1",
+            "DELETE FROM portfolios 
+            WHERE id = $1
+                AND user_id = $2",
         )
         .bind(id)
+        .bind(user_id)
         .execute(&self.pool)
         .await
         .unwrap();

@@ -17,4 +17,4 @@ Cargo.lock
 **/*.db
 
 # conf
-./backend.conf
+backend.conf

@@ -13,8 +13,8 @@ pub async fn create_user(
     Extension(ctl): Extension<Arc<UsersController>>,
 ) -> impl IntoResponse {
     match ctl.create(&req).await {
-        Ok(new_user) => (StatusCode::OK, Json(json!(new_user))),
-        Err(message) => (StatusCode::CONFLICT, Json(json!(message))),
+        Ok(new_user) => (StatusCode::OK, Json(json!(new_user))).into_response(),
+        Err(message) => (StatusCode::CONFLICT, message).into_response(),
     }
 }
 

@@ -39,11 +39,14 @@ impl UserRepository for UserRepoPostgres {
     }
 
     async fn delete(&self, username: &str) {
-        sqlx::query("DELETE FROM users WHERE username = $1;")
-            .bind(username)
-            .execute(&self.pool)
-            .await
-            .unwrap();
+        sqlx::query(
+            "DELETE FROM users 
+            WHERE username = $1;",
+        )
+        .bind(username)
+        .execute(&self.pool)
+        .await
+        .unwrap();
     }
 
     async fn find_all(&self) -> Vec<User> {
@@ -54,11 +57,14 @@ impl UserRepository for UserRepoPostgres {
     }
 
     async fn find_by_api_key(&self, api_key: &str) -> Option<User> {
-        sqlx::query_as::<_, User>("SELECT * FROM users WHERE api_key = $1")
-            .bind(api_key)
-            .fetch_optional(&self.pool)
-            .await
-            .unwrap()
+        sqlx::query_as::<_, User>(
+            "SELECT * FROM users 
+            WHERE api_key = $1",
+        )
+        .bind(api_key)
+        .fetch_optional(&self.pool)
+        .await
+        .unwrap()
     }
 
     async fn find_all_usernames(&self) -> std::collections::HashSet<String> {

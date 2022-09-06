@@ -44,21 +44,21 @@ impl PortfolioRepository for PortfolioRepoInMemory {
         new_portfolio
     }
 
-    async fn find_by_id(&self, _id: &i32) -> UserPortfolio {
+    async fn find_by_id(&self, _id: i32) -> UserPortfolio {
         todo!()
     }
 
-    async fn find_by_user(&self, user_id: &i32) -> Vec<UserPortfolio> {
+    async fn find_by_user(&self, user_id: i32) -> Vec<UserPortfolio> {
         self.portfolios
             .lock()
             .unwrap()
             .values()
             .map(|p| p.to_owned())
-            .filter(|p| &p.user_id == user_id)
+            .filter(|p| p.user_id == user_id)
             .collect()
     }
 
-    async fn delete_by_id(&self, _id: &i32) {
+    async fn delete_by_id(&self, _id: i32, _user_id: i32) {
         todo!()
     }
 }
@@ -87,7 +87,7 @@ mod tests {
     }
 
     #[tokio::test]
-    fn create_and_find_portfolio() {
+    async fn create_and_find_portfolio() {
         let port_repo = PortfolioRepoInMemory::new();
         let some_port = some_portfolio();
 
