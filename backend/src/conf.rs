@@ -21,6 +21,10 @@ pub struct Config {
 
 impl Config {
     pub async fn load() -> Config {
+        // from `build.rs`
+        let version = env!("ASARE_BACKEND_VERSION");
+        log::info!("{}", version);
+
         let arg_matches = Command::new("asare-backend-rs")
             .version(crate_version!())
             .args(&[arg!(-c --config [FILE] "Load config from file")])
