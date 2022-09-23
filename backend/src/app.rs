@@ -98,7 +98,7 @@ impl AsareApp {
 
         let router_users = Router::new()
             .route("/v1/users/", post(users::routes::create_user))
-            .route("/v1/users/refresh_api_key", get(users::routes::login_user))
+            .route("/v1/users/refresh_api_key", post(users::routes::login_user))
             .layer(Extension(user_ctl));
 
         let router_version =
