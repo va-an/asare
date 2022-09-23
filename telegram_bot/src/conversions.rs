@@ -9,7 +9,7 @@ impl BotController {
     pub fn from_input(input: &str) -> Result<RebalanceInput, ()> {
         let input_list = input
             .lines()
-            .map(|line| line.split(" ").collect::<Vec<&str>>())
+            .map(|line| line.split(' ').collect::<Vec<&str>>())
             .collect::<Vec<Vec<&str>>>();
 
         let lines_len_ok = input_list.iter().all(|line| line.len() == 3);

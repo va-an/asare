@@ -60,7 +60,7 @@ pub async fn find(
                 .find_by_user(user_id)
                 .await
                 .iter()
-                .map(|user_portfolio| UserPortfolioResponse::from(user_portfolio))
+                .map(UserPortfolioResponse::from)
                 .collect();
 
             (StatusCode::OK, Json(json!(portfolios))).into_response()

@@ -48,12 +48,7 @@ impl UserRepository for UserRepoInMemory {
     }
 
     async fn find_all(&self) -> Vec<User> {
-        self.users
-            .lock()
-            .unwrap()
-            .values()
-            .map(|user| user.clone())
-            .collect()
+        self.users.lock().unwrap().values().cloned().collect()
     }
 
     async fn find_by_api_key(&self, api_key: &str) -> Option<User> {
