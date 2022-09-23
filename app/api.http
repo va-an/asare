@@ -40,3 +40,6 @@ X-Api-Key: oNS5KZJVhkSkazoRP8Gb35Cy3Uk7VEq3
 
 GET http://localhost:8072/v1/portfolios/
 X-Api-Key: oNS5KZJVhkSkazoRP8Gb35Cy3Uk7VEq3
+
+### get version
+GET http://localhost:8072/version

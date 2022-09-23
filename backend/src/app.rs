@@ -8,6 +8,7 @@ use crate::users::repository_builder::UserRepositoryBuilder;
 use crate::users::service::UsersImpl;
 use crate::{portfolios, users, Config};
 
+use axum::response::IntoResponse;
 use axum::routing::{delete, get, post};
 use axum::{Extension, Router};
 use chrono::Duration;
@@ -75,6 +76,10 @@ impl AsareApp {
     }
 
     pub async fn run(self) {
+        // from `build.rs`
+        let version = env!("ASARE_BACKEND_VERSION");
+        log::info!("version {}", version);
+
         let rebalancer_ctl = Arc::new(self.rebalancer_ctl);
         let portfolio_interactor = Arc::new(self.portfolio_interactor);
         let user_ctl = Arc::new(self.user_ctl);
@@ -93,13 +98,17 @@ impl AsareApp {
 
         let router_users = Router::new()
             .route("/v1/users/", post(users::routes::create_user))
-            .route("/v1/users/refresh_api_key", post(users::routes::login_user))
+            .route("/v1/users/refresh_api_key", get(users::routes::login_user))
             .layer(Extension(user_ctl));
+
+        let router_version =
+            Router::new().route("/version", get(move || async { version.into_response() }));
 
         let app = Router::new()
             .merge(router_rebalance)
             .merge(router_portfolios)
-            .merge(router_users);
+            .merge(router_users)
+            .merge(router_version);
 
         let address = format!("{}:{}", self.config.http_host, self.config.http_port);
 
