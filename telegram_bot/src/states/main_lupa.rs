@@ -83,14 +83,16 @@ pub async fn start(
             }
 
             Ok(Command::RebalanceByPrice) => {
-                bot.send_message(msg.chat.id, "Enter your portfolio and desired allocation")
-                    .await?;
+                bot.send_message(msg.chat.id, "not yet implemented").await?;
+
+                // bot.send_message(msg.chat.id, "Enter your portfolio and desired allocation")
+                //     .await?;
 
                 dialogue.update(State::RebalanceByPrice { state }).await?;
             }
 
             Ok(Command::Portfolios) => {
-                bot.send_message(msg.chat.id, "in progress").await?;
+                bot.send_message(msg.chat.id, "not yet implemented").await?;
                 dialogue.update(State::MainLupa { state }).await?;
             }
 
