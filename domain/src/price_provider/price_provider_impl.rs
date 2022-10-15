@@ -3,7 +3,7 @@ use chrono::{Duration, Utc};
 use crate::{utils::ChainingExt, Price, Ticker};
 
 use super::{
-    finance_api::FinanceApiType, price_provider::PriceProvider, repository::PriceRepoType,
+    finance_api::FinanceApiType, price_provider_trait::PriceProvider, repository::PriceRepoType,
 };
 
 pub struct PriceProviderImpl {
@@ -30,8 +30,8 @@ impl PriceProvider for PriceProviderImpl {
     fn fetch_price(&self, ticker: Ticker) -> Price {
         let fetch_and_cache = |ticker: &Ticker| -> Price {
             self.finance_api
-                .fetch_price(&ticker)
-                .tap(|price| self.prices_repo.save(&ticker, &price))
+                .fetch_price(ticker)
+                .tap(|price| self.prices_repo.save(ticker, &price))
         };
 
         self.prices_repo
@@ -57,8 +57,8 @@ mod tests {
     use chrono::Duration;
 
     use crate::price_provider::{
-        finance_api_builder::FinanceApiBuilder, price_provider::PriceProviderType,
-        price_provider_builder::PriceProviderBuilder, repository_builder::PricesRepoBuilder,
+        finance_api_builder::FinanceApiBuilder, price_provider_builder::PriceProviderBuilder,
+        price_provider_trait::PriceProviderType, repository_builder::PricesRepoBuilder,
     };
 
     fn get_price_provider() -> PriceProviderType {

@@ -3,10 +3,7 @@ use domain::Portfolio;
 use serde::{Deserialize, Serialize};
 use sqlx::{FromRow, PgPool};
 
-use super::{
-    repository::PortfolioRepository, repository_in_memory::PortfolioRepoInMemory,
-    repository_postgres::PortfolioRepoPostgres,
-};
+use super::{repository::PortfolioRepository, repository_postgres::PortfolioRepoPostgres};
 
 #[async_trait]
 pub trait Portfolios {

@@ -23,9 +23,7 @@ async fn create_user_if_need(user_id: u64, main_lupa_state: &MainLupaState) -> S
     let create_user_response = api_client::create_user(&user_id_str).await;
 
     match create_user_response.status() {
-        StatusCode::CONFLICT => {
-            format!("user already exists")
-        }
+        StatusCode::CONFLICT => "user already exists".to_string(),
         StatusCode::OK => {
             let user = create_user_response
                 .json::<User>()

@@ -1,4 +1,4 @@
-use crate::price_provider::price_provider::PriceProviderType;
+use crate::price_provider::price_provider_trait::PriceProviderType;
 
 use super::{service::RebalancerSvcType, service_impl::RebalancerImpl};
 

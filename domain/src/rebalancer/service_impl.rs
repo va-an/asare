@@ -1,4 +1,4 @@
-use crate::{price_provider::price_provider::PriceProviderType, Portfolio};
+use crate::{price_provider::price_provider_trait::PriceProviderType, Portfolio};
 
 use super::service::{RebalanceInput, RebalanceOutput, Rebalancer};
 
@@ -42,7 +42,7 @@ impl Rebalancer for RebalancerImpl {
 
     fn rebalance_by_amount(&self, input: &RebalanceInput) -> RebalanceOutput {
         let current_allocation = self.calc_current_allocation(&input.current_portfolio);
-        let required_operations = self.calc_purchase(&input);
+        let required_operations = self.calc_purchase(input);
 
         RebalanceOutput {
             current_allocation,

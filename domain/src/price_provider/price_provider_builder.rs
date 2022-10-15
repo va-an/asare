@@ -3,8 +3,8 @@ use chrono::Duration;
 use crate::utils::ChainingExt;
 
 use super::{
-    finance_api::FinanceApiType, price_provider::PriceProviderType,
-    price_provider_impl::PriceProviderImpl, repository::PriceRepoType,
+    finance_api::FinanceApiType, price_provider_impl::PriceProviderImpl,
+    price_provider_trait::PriceProviderType, repository::PriceRepoType,
 };
 
 pub struct PriceProviderBuilder;

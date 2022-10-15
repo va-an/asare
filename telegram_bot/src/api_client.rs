@@ -10,12 +10,10 @@ pub async fn create_user(login: &str) -> reqwest::Response {
 
     let client = reqwest::Client::new(); // TODO: create and share?
 
-    let response = client
+    client
         .post(USERS_URL)
         .json(&create_user_request)
         .send()
         .await
-        .expect("error with create user request");
-
-    response
+        .expect("error with create user request")
 }

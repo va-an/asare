@@ -34,7 +34,7 @@ impl Config {
 
         let mut config_file = fs::File::open(config_path)
             .await
-            .expect(&format!("can't open '{}'", config_path));
+            .unwrap_or_else(|_| panic!("can't open '{}'", config_path));
 
         let mut config_str = String::new();
 
@@ -44,7 +44,8 @@ impl Config {
             .expect("can't read from 'backend.json'");
 
         let config = serde_json::from_str(&config_str)
-            .expect(&format!("can't load config from {}", config_path));
+            .unwrap_or_else(|_| panic!("can't load config from {}", config_path));
+
         log::info!("Loaded config: \n{:#?}", config);
 
         config

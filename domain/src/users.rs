@@ -7,7 +7,7 @@ pub struct CreateUserRequest {
     pub password: Option<String>,
 }
 
-#[derive(Debug, PartialEq, Clone, Serialize, Deserialize, FromRow)]
+#[derive(Debug, PartialEq, Eq, Clone, Serialize, Deserialize, FromRow)]
 pub struct User {
     pub id: i32,
     pub username: String,

@@ -10,7 +10,7 @@ pub struct PortfolioRepoInMemory {
 }
 
 impl PortfolioRepoInMemory {
-    pub fn new() -> PortfolioRepoInMemory {
+    pub fn new() -> Self {
         PortfolioRepoInMemory {
             portfolios: Mutex::new(HashMap::new()),
             id_counter: Mutex::new(0),

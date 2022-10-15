@@ -91,7 +91,6 @@ async fn extract_user_id(
         Some(header_value) => {
             let api_key = header_value
                 .to_str()
-                .ok()
                 .expect("Error with extracting header string");
 
             match api_key_matcher.find_user_id(api_key).await {

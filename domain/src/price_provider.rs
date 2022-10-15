@@ -1,7 +1,7 @@
 pub mod finance_api;
 pub mod finance_api_builder;
-pub mod price_provider;
 pub mod price_provider_builder;
+pub mod price_provider_trait;
 pub mod repository;
 pub mod repository_builder;
 

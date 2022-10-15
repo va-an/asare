@@ -18,11 +18,13 @@ impl ApiKeyMapperPickleDb {
             PickleDbDumpPolicy::AutoDump,
             SerializationMethod::Json,
         )
-        .unwrap_or(PickleDb::new(
-            db_path,
-            PickleDbDumpPolicy::AutoDump,
-            SerializationMethod::Json,
-        ));
+        .unwrap_or_else(|_| {
+            PickleDb::new(
+                db_path,
+                PickleDbDumpPolicy::AutoDump,
+                SerializationMethod::Json,
+            )
+        });
 
         ApiKeyMapperPickleDb { db: Mutex::new(db) }
     }

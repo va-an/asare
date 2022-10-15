@@ -47,7 +47,7 @@ async fn main() {
     log::info!("Starting bot...");
 
     let token = env::var(ASARE_BOT_TOKEN)
-        .expect(format!("{} env variable missing", ASARE_BOT_TOKEN).as_str());
+        .unwrap_or_else(|_| panic!("{} env variable missing", ASARE_BOT_TOKEN));
 
     let bot = Bot::new(token).auto_send();
 
