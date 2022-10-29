@@ -1,5 +1,6 @@
-# asare
-Asset allocation rebalancer.
+[![Rust](https://github.com/va-an/asare/actions/workflows/rust.yml/badge.svg)](https://github.com/va-an/asare/actions/workflows/rust.yml)
+
+# asare - Asset Allocation Rebalancer
 
 # Backend
 run for local dev:
