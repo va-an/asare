@@ -17,7 +17,10 @@ type HandlerResult = Result<(), Box<dyn std::error::Error + Send + Sync>>;
 const ASARE_BOT_TOKEN: &str = "ASARE_BOT_TOKEN";
 
 #[derive(BotCommands)]
-#[command(rename = "snake_case", description = "These commands are supported:")]
+#[command(
+    rename_rule = "snake_case",
+    description = "These commands are supported:"
+)]
 enum Command {
     #[command(description = "start bot")]
     Start,
@@ -49,7 +52,7 @@ async fn main() {
     let token = env::var(ASARE_BOT_TOKEN)
         .unwrap_or_else(|_| panic!("{} env variable missing", ASARE_BOT_TOKEN));
 
-    let bot = Bot::new(token).auto_send();
+    let bot = Bot::new(token);
 
     bot.set_my_commands(Command::bot_commands())
         .send()

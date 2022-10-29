@@ -6,7 +6,7 @@ use crate::{conversions::BotController, HandlerResult, MyDialogue, State};
 use super::MainLupaState;
 
 pub async fn rebalance_by_amount(
-    bot: AutoSend<Bot>,
+    bot: Bot,
     msg: Message,
     dialogue: MyDialogue,
     state: MainLupaState,
@@ -38,7 +38,7 @@ pub async fn rebalance_by_amount(
 }
 
 pub async fn rebalance_by_price(
-    bot: AutoSend<Bot>,
+    bot: Bot,
     msg: Message,
     dialogue: MyDialogue,
     state: MainLupaState,

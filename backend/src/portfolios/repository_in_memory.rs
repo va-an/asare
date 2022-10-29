@@ -10,6 +10,7 @@ pub struct PortfolioRepoInMemory {
 }
 
 impl PortfolioRepoInMemory {
+    #[allow(dead_code)]
     pub fn new() -> Self {
         PortfolioRepoInMemory {
             portfolios: Mutex::new(HashMap::new()),

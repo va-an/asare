@@ -43,7 +43,7 @@ async fn create_user_if_need(user_id: u64, main_lupa_state: &MainLupaState) -> S
 }
 
 pub async fn start(
-    bot: AutoSend<Bot>,
+    bot: Bot,
     msg: Message,
     dialogue: MyDialogue,
     state: MainLupaState,
