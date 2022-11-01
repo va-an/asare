@@ -3,11 +3,13 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+use argon2::Config;
 use async_trait::async_trait;
 use domain::{
     users::{CreateUserRequest, User},
     utils::ChainingExt,
 };
+use rand::Rng;
 
 use crate::users::generators::{ApiKeyGenerator, UserPasswordGenerator};
 
@@ -45,12 +47,13 @@ impl UsersImpl {
 #[async_trait]
 impl Users for UsersImpl {
     async fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String> {
-        if self
+        let is_user_exists = self
             .usernames
             .lock()
             .unwrap()
-            .contains(&create_user_request.username)
-        {
+            .contains(&create_user_request.username);
+
+        if is_user_exists {
             let error_msg = format!(
                 "User with login '{}' already exists",
                 create_user_request.username
@@ -67,13 +70,20 @@ impl Users for UsersImpl {
 
             let api_key = ApiKeyGenerator::generate();
 
-            let password = match &create_user_request.password {
-                Some(password) => password.to_owned(),
-                None => UserPasswordGenerator::generate(),
+            let password_encoded = {
+                let password = match &create_user_request.password {
+                    Some(password) => password.to_owned(),
+                    None => UserPasswordGenerator::generate(),
+                };
+
+                let salt = rand::thread_rng().gen::<[u8; 32]>();
+                let config = Config::default();
+
+                argon2::hash_encoded(password.as_bytes(), &salt, &config).unwrap()
             };
 
             self.user_repo
-                .create(&create_user_request.username, &password, &api_key)
+                .create(&create_user_request.username, &password_encoded, &api_key)
                 .await
         }
     }
