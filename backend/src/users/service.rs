@@ -22,7 +22,7 @@ pub trait Users {
     async fn create(&self, create_user_request: &CreateUserRequest) -> Result<User, String>;
     async fn find_all(&self) -> Vec<User>;
     async fn find_by_api_key(&self, api_key: &str) -> Option<User>;
-    async fn delete(&self, username: String);
+    async fn delete(&self, username: String) -> Result<(), String>;
 }
 
 pub struct UsersImpl {
@@ -96,9 +96,8 @@ impl Users for UsersImpl {
         self.user_repo.find_by_api_key(api_key).await
     }
 
-    async fn delete(&self, _username: String) {
-        // TODO: delete from `usernames` Set when user delete
-        // self.user_repo.delete(&username)
-        todo!()
+    async fn delete(&self, username: String) -> Result<(), String> {
+        self.usernames.lock().unwrap().remove(&username);
+        self.user_repo.delete(&username).await
     }
 }

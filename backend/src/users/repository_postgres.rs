@@ -38,15 +38,19 @@ impl UserRepository for UserRepoPostgres {
         .map_err(|e| e.to_string())
     }
 
-    async fn delete(&self, username: &str) {
-        sqlx::query(
+    async fn delete(&self, username: &str) -> Result<(), String> {
+        let query = sqlx::query(
             "DELETE FROM users 
             WHERE username = $1;",
         )
         .bind(username)
         .execute(&self.pool)
-        .await
-        .unwrap();
+        .await;
+
+        match query {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err.to_string()),
+        }
     }
 
     async fn find_all(&self) -> Vec<User> {

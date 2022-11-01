@@ -43,7 +43,7 @@ impl UserRepository for UserRepoInMemory {
         Ok(user)
     }
 
-    async fn delete(&self, _username: &str) {
+    async fn delete(&self, _username: &str) -> Result<(), String> {
         todo!()
     }
 
