@@ -3,7 +3,6 @@ mod conf;
 mod portfolios;
 mod rebalancer;
 mod users;
-mod utils;
 
 use crate::conf::Config;
 use app::AsareApp;
