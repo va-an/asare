@@ -6,10 +6,9 @@ use crate::{
     users::api_key_matcher::UserApiKeyMatcher,
 };
 use axum::{
-    extract::Path,
+    extract::{Json, Path, State},
     http::{HeaderMap, StatusCode},
     response::IntoResponse,
-    Extension, Json,
 };
 use domain::Portfolio;
 use serde::Serialize;
@@ -33,7 +32,7 @@ impl UserPortfolioResponse {
 }
 
 pub async fn create(
-    Extension(portfolio_interactor): Extension<Arc<PortfolioInteractor>>,
+    State(portfolio_interactor): State<Arc<PortfolioInteractor>>,
     headers: HeaderMap,
     Json(create_request): Json<Portfolio>,
 ) -> impl IntoResponse {
@@ -51,7 +50,7 @@ pub async fn create(
 
 pub async fn find(
     headers: HeaderMap,
-    Extension(portfolio_interactor): Extension<Arc<PortfolioInteractor>>,
+    State(portfolio_interactor): State<Arc<PortfolioInteractor>>,
 ) -> impl IntoResponse {
     match extract_user_id(&headers, &portfolio_interactor.api_key_matcher).await {
         Ok(user_id) => {
@@ -70,9 +69,9 @@ pub async fn find(
 }
 
 pub async fn delete(
+    State(portfolio_interactor): State<Arc<PortfolioInteractor>>,
     headers: HeaderMap,
     Path(id): Path<i32>,
-    Extension(portfolio_interactor): Extension<Arc<PortfolioInteractor>>,
 ) -> impl IntoResponse {
     match extract_user_id(&headers, &portfolio_interactor.api_key_matcher).await {
         Ok(user_id) => {

@@ -10,7 +10,7 @@ use crate::{portfolios, users, Config};
 
 use axum::response::IntoResponse;
 use axum::routing::{delete, get, post};
-use axum::{Extension, Router};
+use axum::Router;
 use chrono::Duration;
 use domain::price_provider::finance_api_builder::FinanceApiBuilder;
 use domain::price_provider::price_provider_builder::PriceProviderBuilder;
@@ -86,7 +86,7 @@ impl AsareApp {
 
         let router_rebalance = Router::new()
             .route("/v4/rebel/rebalance", post(rebalance))
-            .layer(Extension(rebalancer_ctl));
+            .with_state(rebalancer_ctl);
 
         let router_portfolios = Router::new()
             .route(
@@ -94,12 +94,12 @@ impl AsareApp {
                 get(portfolios::routes::find).post(portfolios::routes::create),
             )
             .route("/v1/portfolios/:id", delete(portfolios::routes::delete))
-            .layer(Extension(portfolio_interactor));
+            .with_state(portfolio_interactor);
 
         let router_users = Router::new()
             .route("/v1/users/", post(users::routes::create_user))
             .route("/v1/users/refresh_api_key", post(users::routes::login_user))
-            .layer(Extension(user_ctl));
+            .with_state(user_ctl);
 
         let router_version =
             Router::new().route("/version", get(move || async { version.into_response() }));

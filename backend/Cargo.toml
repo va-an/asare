@@ -10,10 +10,10 @@ tokio = { version = "1", features = ["full"] }
 
 # logging
 log = "0.4"
-env_logger = "0.9"
+env_logger = "0.10"
 
 # web
-axum = "0.5"
+axum = "0.6"
 
 # json
 serde = { version = "1", features = ["derive"] }
@@ -27,7 +27,7 @@ passwords = "3"
 rust-argon2 = "1.0.0"
 
 approx = "0.5"
-clap = { version = "3", features = ["cargo"] }
+clap = { version = "4", features = ["cargo"] }
 chrono = "0.4"
 async-trait = "0.1"
 rand = "0.8"

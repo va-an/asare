@@ -1,10 +1,11 @@
 use std::sync::Arc;
 
-use axum::{response::IntoResponse, Extension, Json};
+use axum::extract::{Json, State};
+use axum::response::IntoResponse;
 use domain::rebalancer::{controller::RebalancerController, service::RebalanceInput};
 
 pub async fn rebalance(
-    Extension(ctl): Extension<Arc<RebalancerController>>,
+    State(ctl): State<Arc<RebalancerController>>,
     Json(req): Json<RebalanceInput>,
 ) -> impl IntoResponse {
     Json(ctl.rebalance(&req))

@@ -1,16 +1,17 @@
 use std::sync::Arc;
 
-use axum::{http::StatusCode, response::IntoResponse, Extension, Json};
+use axum::extract::{Json, State};
+use axum::{http::StatusCode, response::IntoResponse};
 use domain::users::CreateUserRequest;
 use serde::Deserialize;
 use serde_json::json;
 
-use crate::users::{controller::UsersController, service::UserService};
+use crate::users::controller::UsersController;
 
 // TODO: validate password
 pub async fn create_user(
+    State(ctl): State<Arc<UsersController>>,
     Json(req): Json<CreateUserRequest>,
-    Extension(ctl): Extension<Arc<UsersController>>,
 ) -> impl IntoResponse {
     match ctl.create(&req).await {
         Ok(new_user) => (StatusCode::OK, Json(json!(new_user))).into_response(),
@@ -25,8 +26,8 @@ pub struct AuthUserRequest {
 }
 
 pub async fn login_user(
+    State(_user_service): State<Arc<UsersController>>,
     Json(_req): Json<AuthUserRequest>,
-    Extension(_user_service): Extension<Arc<UserService>>,
 ) -> impl IntoResponse {
     todo!();
 }
