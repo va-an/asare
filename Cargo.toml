@@ -1,2 +1,3 @@
 [workspace]
 members = ["domain", "backend", "telegram_bot"]
+resolver = "2"

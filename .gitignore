@@ -12,9 +12,10 @@ Cargo.lock
 .idea
 .metals
 .vscode
+.DS_Store
 
 # pickle db files
 **/*.db
 
 # conf
-backend.conf
+backend.toml

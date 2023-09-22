@@ -31,3 +31,4 @@ clap = { version = "4", features = ["cargo"] }
 chrono = "0.4"
 async-trait = "0.1"
 rand = "0.8"
+config = "0.13.3"

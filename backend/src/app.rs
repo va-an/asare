@@ -6,7 +6,7 @@ use crate::users::api_key_matcher::UserApiKeyMatcher;
 use crate::users::controller::UsersController;
 use crate::users::repository_builder::UserRepositoryBuilder;
 use crate::users::service::UsersImpl;
-use crate::{portfolios, users, Config};
+use crate::{portfolios, users, AppConfig};
 
 use axum::response::IntoResponse;
 use axum::routing::{delete, get, post};
@@ -20,7 +20,7 @@ use domain::utils::ChainingExt;
 use sqlx::postgres::PgPoolOptions;
 
 pub struct AsareApp {
-    config: Config,
+    config: AppConfig,
     portfolio_interactor: PortfolioInteractor,
     rebalancer_ctl: RebalancerController,
     user_ctl: UsersController,
@@ -32,7 +32,7 @@ pub struct PortfolioInteractor {
 }
 
 impl AsareApp {
-    pub async fn new(config: Config) -> AsareApp {
+    pub async fn new(config: AppConfig) -> AsareApp {
         let db_url = format!(
             "postgres://{}:{}@{}:{}/{}",
             config.db.user, config.db.password, config.db.host, config.db.port, config.db.name
